@@ -1,0 +1,13 @@
+--- a/node_modules/react-native-screens/ios/RNSScreen.mm
++++ b/node_modules/react-native-screens/ios/RNSScreen.mm
+@@ -1966,6 +1966,10 @@
+ 
+ - (UIStatusBarStyle)preferredStatusBarStyle
+ {
++  // no explicit style on this screen: let the system adapt the status bar to the content behind it
++  if (!self.screenView.hasStatusBarStyleSet) {
++    return UIStatusBarStyleDefault;
++  }
+   return [RNSScreenWindowTraits statusBarStyleForRNSStatusBarStyle:self.screenView.statusBarStyle];
+ }
+ 
