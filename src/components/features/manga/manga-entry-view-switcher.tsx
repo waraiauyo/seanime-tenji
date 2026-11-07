@@ -1,4 +1,5 @@
 import { TabBarIcon } from "@/components/navigation/tab-bar-icon"
+import { GlassBar } from "@/components/shared/glass-bar"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import * as React from "react"
@@ -39,9 +40,10 @@ export function MangaEntryViewSwitcher({ currentView, onViewChange, bottomInset,
                 bottom: Math.max(bottomInset, Platform.OS === "ios" ? 20 : 10),
             }}
         >
-            <View
-                className="flex-row justify-between overflow-hidden rounded-full bg-background px-5 py-4"
-                style={{ elevation: 10 }}
+            <GlassBar
+                className="flex-row justify-between px-5 py-4"
+                solidClassName="overflow-hidden rounded-full bg-background"
+                solidStyle={{ elevation: 10 }}
             >
                 {items.map(item => {
                     const disabled = isOffline && OFFLINE_DISABLED_VIEWS.has(item.view)
@@ -56,7 +58,7 @@ export function MangaEntryViewSwitcher({ currentView, onViewChange, bottomInset,
                         />
                     )
                 })}
-            </View>
+            </GlassBar>
         </View>
     )
 }
