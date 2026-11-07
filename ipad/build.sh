@@ -3,6 +3,7 @@
 #
 #   ./ipad/build.sh                  full build and install
 #   SKIP_DEPS=1 ./ipad/build.sh      reuse the existing node_modules
+#   SKIP_PREBUILD=1 ./ipad/build.sh  reuse the existing ios/ project (JS-only changes, faster)
 #   NO_INSTALL=1 ./ipad/build.sh     build only
 #
 # Overrides: TEAM_ID, BUNDLE_ID, DEVICE (UDID; defaults to the first paired iPad).
@@ -35,9 +36,11 @@ for p in patches/*.patch; do
   fi
 done
 
-step "Generating the native iOS project"
-EXPO_IOS_BUNDLE_ID="$BUNDLE_ID" EXPO_APPLE_TEAM_ID="$TEAM_ID" CI=1 \
-  npx expo prebuild --platform ios --clean
+if [ "${SKIP_PREBUILD:-0}" != 1 ] || [ ! -d ios ]; then
+  step "Generating the native iOS project"
+  EXPO_IOS_BUNDLE_ID="$BUNDLE_ID" EXPO_APPLE_TEAM_ID="$TEAM_ID" CI=1 \
+    npx expo prebuild --platform ios --clean
+fi
 
 step "Building (Release)"
 xcodebuild -quiet \
