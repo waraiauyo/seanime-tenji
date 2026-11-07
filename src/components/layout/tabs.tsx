@@ -1,6 +1,6 @@
 import { Status } from "@/api/generated/types"
 import { TabBarIcon } from "@/components/navigation/tab-bar-icon"
-import { GlassBar } from "@/components/shared/glass-bar"
+import { BAR_ITEM_INACTIVE, GlassBar } from "@/components/shared/glass-bar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { COLORS } from "@/constants/colors"
 import { cn } from "@/lib/utils"
@@ -137,7 +137,7 @@ export function TabBarButton(props: {
                 name={props.tab?.icon as ComponentProps<typeof Ionicons>["name"]}
                 size={24}
                 className={cn(
-                    "text-gray",
+                    BAR_ITEM_INACTIVE,
                     { "text-brand-300": props.focused },
                 )}
             /> : <Avatar alt="Profile picture" className="w-7 h-7">
@@ -151,7 +151,7 @@ export function TabBarButton(props: {
 
         <Animated.Text
             className={cn(
-                "text-xs text-gray",
+                "text-xs", BAR_ITEM_INACTIVE,
                 { "text-brand-300": props.focused },
             )}
             style={[animatedTextStyle, styles.tabBarLabel]}
