@@ -11,7 +11,8 @@ built and installed straight from Xcode with a paid Apple developer account.
   on the content behind it) on screens that don't set an explicit style.
 - The floating bars (main tab bar, anime and manga entry switchers) use the iOS 26+ Liquid Glass
   material, through the shared `src/components/shared/glass-bar.tsx`. Other platforms keep the
-  solid bar.
+  solid bar. On the glass, unselected icons are brighter than the default gray so they stay
+  readable.
 - `package-lock.json` pins the dependency versions Tenji v0.4.0 was released with.
 
 ## Build and install

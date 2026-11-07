@@ -8,6 +8,9 @@ import { withUniwind } from "uniwind"
 // iOS 26+: floating bars use the system Liquid Glass material instead of a solid background
 export const USE_LIQUID_GLASS = Platform.OS === "ios" && !Platform.isTV && isLiquidGlassAvailable()
 
+// unselected items: the default gray is too dark to read on the dark glass
+export const BAR_ITEM_INACTIVE = USE_LIQUID_GLASS ? "text-white/70" : "text-gray"
+
 const StyledGlassView = withUniwind(GlassView)
 
 type GlassBarProps = {

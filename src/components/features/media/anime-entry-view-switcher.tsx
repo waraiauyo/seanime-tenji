@@ -1,5 +1,5 @@
 import { TabBarIcon } from "@/components/navigation/tab-bar-icon"
-import { GlassBar } from "@/components/shared/glass-bar"
+import { BAR_ITEM_INACTIVE, GlassBar } from "@/components/shared/glass-bar"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import * as React from "react"
@@ -138,11 +138,11 @@ function AnimeEntryViewButton({ label, icon, active, onPress }: AnimeEntryViewBu
                         <TabBarIcon
                             name={icon}
                             size={24}
-                            className={cn("text-gray", { "text-brand-300": active })}
+                            className={cn(BAR_ITEM_INACTIVE, { "text-brand-300": active })}
                         />
                     </Animated.View>
                     <Animated.Text
-                        className={cn("text-xs text-gray", { "text-brand-300": active })}
+                        className={cn("text-xs", BAR_ITEM_INACTIVE, { "text-brand-300": active })}
                         style={animatedTextStyle}
                     >
                         {label}
