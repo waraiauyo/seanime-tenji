@@ -637,7 +637,7 @@ export function MangaReaderScreen({ mediaId, provider, chapterId, chapterNumber 
     return (
         <View className="flex-1 bg-[#080808]">
             <StatusBar hidden={!controlsVisible} animated barStyle="light-content" />
-            <Stack.Screen options={{ autoHideHomeIndicator: true }} />
+            <Stack.Screen options={{ autoHideHomeIndicator: true, statusBarHidden: !controlsVisible, statusBarAnimation: "fade" }} />
 
             {showLoading ? (
                 <View className="flex-1 items-center justify-center gap-4">

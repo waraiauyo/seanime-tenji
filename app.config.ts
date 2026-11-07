@@ -36,6 +36,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             supportsTablet: true,
             bundleIdentifier: process.env.EXPO_IOS_BUNDLE_ID || "app.seanime.tenji",
             infoPlist: {
+                // status bar visibility is driven per screen (react-native-screens);
+                // the app-level UIApplication API is ignored on recent iPadOS
+                UIViewControllerBasedStatusBarAppearance: true,
                 NSLocalNetworkUsageDescription: "Seanime needs local network access to connect to your server on your home network.",
                 UIBackgroundModes: [
                     "audio",
