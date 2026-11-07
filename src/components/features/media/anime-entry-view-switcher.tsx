@@ -1,4 +1,5 @@
 import { TabBarIcon } from "@/components/navigation/tab-bar-icon"
+import { GlassBar } from "@/components/shared/glass-bar"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import * as React from "react"
@@ -58,12 +59,13 @@ export function AnimeEntryViewSwitcher({ currentView, onViewChange, isOffline, h
                 width: barWidth,
             }}
         >
-            <View
+            <GlassBar
                 className={cn(
-                    "flex-row justify-between overflow-hidden bg-background",
-                    Platform.isTV ? "rounded-2xl border border-white/10 px-4 py-3" : "rounded-full px-5 py-4",
+                    "flex-row justify-between",
+                    Platform.isTV ? "rounded-2xl border border-white/10 px-4 py-3" : "px-5 py-4",
                 )}
-                style={{ elevation: 10 }}
+                solidClassName={cn("overflow-hidden bg-background", !Platform.isTV && "rounded-full")}
+                solidStyle={{ elevation: 10 }}
             >
                 {visibleItems.map(item => (
                     <AnimeEntryViewButton
@@ -74,7 +76,7 @@ export function AnimeEntryViewSwitcher({ currentView, onViewChange, isOffline, h
                         onPress={() => onViewChange(item.view)}
                     />
                 ))}
-            </View>
+            </GlassBar>
         </View>
     )
 }

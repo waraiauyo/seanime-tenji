@@ -1,5 +1,6 @@
 import { Status } from "@/api/generated/types"
 import { TabBarIcon } from "@/components/navigation/tab-bar-icon"
+import { GlassBar } from "@/components/shared/glass-bar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { COLORS } from "@/constants/colors"
 import { cn } from "@/lib/utils"
@@ -7,7 +8,7 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import type { BottomTabBarProps, BottomTabNavigationOptions } from "expo-router/js-tabs"
 import * as React from "react"
 import { ComponentProps } from "react"
-import { Platform, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native"
+import { Platform, Pressable, StyleSheet, Text, useWindowDimensions } from "react-native"
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
@@ -35,53 +36,57 @@ export function TabBar({ state, descriptors, emitter, navigateToTab, tabs, user 
         ? (insets.bottom > 0 ? insets.bottom + 10 : 10)
         : 20
 
+    const barPosition = { bottom: bottomOffset, left: barLeft, width: barWidth }
+
+    const buttons = state.routes.map((route, index) => {
+            const { options } = descriptors[route.key]
+            const tab = tabs.find(tab => tab.name === route.name)
+            if (!tab?.show) return null
+            // const label =
+            //     options.tabBarLabel !== undefined
+            //         ? options.tabBarLabel as string
+            //         : options.title !== undefined
+            //             ? options.title
+            //             : route.name
+
+            const isFocused = state.index === index
+
+            const onPress = () => {
+                const event = emitter.emit({
+                    type: "tabPress",
+                    target: route.key,
+                    canPreventDefault: true,
+                })
+
+                if (!isFocused && !event.defaultPrevented) {
+                    navigateToTab(route.key)
+                }
+            }
+
+            const onLongPress = () => {
+                emitter.emit({
+                    type: "tabLongPress",
+                    target: route.key,
+                })
+            }
+
+            return (
+                <TabBarButton
+                    key={route.name}
+                    focused={isFocused}
+                    options={options}
+                    onPress={onPress}
+                    onLongPress={onLongPress}
+                    tab={tab}
+                    viewer={user}
+                />
+            )
+        })
+
     return (
-        <View style={[styles.tabBar, { bottom: bottomOffset, left: barLeft, width: barWidth }]}>
-            {state.routes.map((route, index) => {
-                const { options } = descriptors[route.key]
-                const tab = tabs.find(tab => tab.name === route.name)
-                if (!tab?.show) return null
-                // const label =
-                //     options.tabBarLabel !== undefined
-                //         ? options.tabBarLabel as string
-                //         : options.title !== undefined
-                //             ? options.title
-                //             : route.name
-
-                const isFocused = state.index === index
-
-                const onPress = () => {
-                    const event = emitter.emit({
-                        type: "tabPress",
-                        target: route.key,
-                        canPreventDefault: true,
-                    })
-
-                    if (!isFocused && !event.defaultPrevented) {
-                        navigateToTab(route.key)
-                    }
-                }
-
-                const onLongPress = () => {
-                    emitter.emit({
-                        type: "tabLongPress",
-                        target: route.key,
-                    })
-                }
-
-                return (
-                    <TabBarButton
-                        key={route.name}
-                        focused={isFocused}
-                        options={options}
-                        onPress={onPress}
-                        onLongPress={onLongPress}
-                        tab={tab}
-                        viewer={user}
-                    />
-                )
-            })}
-        </View>
+        <GlassBar style={[styles.tabBarLayout, barPosition]} solidStyle={styles.tabBarSolid}>
+            {buttons}
+        </GlassBar>
     )
 }
 
@@ -160,22 +165,24 @@ export function TabBarButton(props: {
 }
 
 const styles = StyleSheet.create({
-    tabBar: {
+    tabBarLayout: {
         position: "absolute",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        overflow: "hidden",
-        backgroundColor: COLORS.background,
         bottom: Platform.OS === "ios" ? 20 : 10,
         borderTopWidth: 0,
         borderRadius: 36,
         gap: 0,
+        paddingVertical: 15,
+        paddingHorizontal: 14,
+    },
+    tabBarSolid: {
+        overflow: "hidden",
+        backgroundColor: COLORS.background,
         shadowOpacity: 0.1,
         shadowOffset: { width: 0, height: 10 },
         shadowRadius: 10,
-        paddingVertical: 15,
-        paddingHorizontal: 14,
     },
     tabBarItem: {
         flex: 1,
