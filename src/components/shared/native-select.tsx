@@ -1,5 +1,6 @@
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Ionicons } from "@expo/vector-icons"
 import { MenuView } from "@react-native-menu/menu"
@@ -27,8 +28,8 @@ export function NativeSelect({
     options,
     selectedId,
     onSelect,
-    title = "Select an option",
-    placeholder = "Select...",
+    title = t("Select an option"),
+    placeholder = t("Select..."),
     className,
     disabled,
 }: NativeSelectProps) {

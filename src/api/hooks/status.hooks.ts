@@ -2,6 +2,7 @@ import { useServerMutation, useServerQuery } from "@/api/client/requests"
 import { DeleteLogs_Variables, GetAnnouncements_Variables, UpdateHomeItems_Variables } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { MemoryStatsResponse, Models_HomeItem, Status, Updater_Announcement } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -39,7 +40,7 @@ export function useDeleteLogs() {
         mutationKey: [API_ENDPOINTS.STATUS.DeleteLogs.key],
         onSuccess: async () => {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetLogFilenames.key] })
-            toast.success("Logs deleted")
+            toast.success(t("Logs deleted"))
         },
     })
 }
@@ -51,18 +52,18 @@ export function useGetLatestLogContent() {
         method: API_ENDPOINTS.STATUS.GetLatestLogContent.methods[0],
         mutationKey: [API_ENDPOINTS.STATUS.GetLatestLogContent.key],
         onSuccess: async data => {
-            if (!data) return toast.error("Couldn't fetch logs")
+            if (!data) return toast.error(t("Couldn't fetch logs"))
             try {
                 // await copyToClipboard(data)
-                toast.success("Copied to clipboard")
+                toast.success(t("Copied to clipboard"))
             }
             catch (err: unknown) {
                 if (__DEV__) {
                     console.error("Clipboard write error:", err)
                 }
 
-                const errorMessage = err instanceof Error ? err.message : "Unknown clipboard error"
-                toast.error("Failed to copy logs: " + errorMessage)
+                const errorMessage = err instanceof Error ? err.message : t("Unknown clipboard error")
+                toast.error(t("Failed to copy logs: {{error}}", { error: errorMessage }))
             }
         },
     })
@@ -97,7 +98,7 @@ export function useForceGC() {
         onSuccess: async () => {
             // Invalidate and refetch memory stats after GC
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetMemoryStats.key] })
-            toast.success("Garbage collection completed")
+            toast.success(t("Garbage collection completed"))
         },
     })
 }
@@ -119,7 +120,7 @@ export function useUpdateHomeItems() {
         mutationKey: [API_ENDPOINTS.STATUS.UpdateHomeItems.key],
         onSuccess: async () => {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetHomeItems.key] })
-            toast.success("Home screen updated")
+            toast.success(t("Home screen updated"))
         },
     })
 }

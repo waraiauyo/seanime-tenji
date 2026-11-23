@@ -3,6 +3,7 @@ import { useServerStatus } from "@/atoms/server.atoms"
 import { SeaImage } from "@/components/shared/sea-image"
 import { Button } from "@/components/ui/button"
 import { COLORS } from "@/constants/colors"
+import { getIntlLocale, t } from "@/lib/i18n"
 import { Ionicons } from "@expo/vector-icons"
 import { LinearGradient } from "expo-linear-gradient"
 import { router } from "expo-router"
@@ -21,7 +22,7 @@ const HEADER_BACKGROUND = COLORS.background
 const HEADER_SURFACE = COLORS.surface
 const HEADER_BACKDROP = COLORS.mediaHeaderBackdrop
 export const BANNER_HEIGHT = 296
-const START_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short" })
+const START_DATE_FORMATTER = new Intl.DateTimeFormat(getIntlLocale(), { year: "numeric", month: "short" })
 const HEADER_GRADIENT_TRANSPARENT = "rgba(17,17,17,0)"
 const HEADER_GRADIENT_SOFT = "rgba(17,17,17,0.4)"
 const HEADER_GRADIENT_MEDIUM = "rgba(17,17,17,0.55)"
@@ -218,17 +219,17 @@ type MediaEntryHeaderContentProps = {
 }
 
 const ANIME_LIST_STATUS_LABELS: Record<string, string> = {
-    "CURRENT": "Watching",
-    "PLANNING": "Planning",
-    "COMPLETED": "Completed",
-    "DROPPED": "Dropped",
-    "PAUSED": "Paused",
-    "REPEATING": "Repeating",
+    "CURRENT": t("Watching"),
+    "PLANNING": t("Planning"),
+    "COMPLETED": t("Completed"),
+    "DROPPED": t("Dropped"),
+    "PAUSED": t("Paused"),
+    "REPEATING": t("Repeating"),
 }
 
 const MANGA_LIST_STATUS_LABELS: Record<string, string> = {
     ...ANIME_LIST_STATUS_LABELS,
-    "CURRENT": "Reading",
+    "CURRENT": t("Reading"),
 }
 
 function MediaEntryHeaderContentInner({ entry, type, onTitlePress }: MediaEntryHeaderContentProps) {
@@ -299,8 +300,8 @@ function MediaEntryHeaderContentInner({ entry, type, onTitlePress }: MediaEntryH
                             <Ionicons name="calendar-outline" size={14} color="rgba(255,255,255,0.42)" />
                             <Text className="text-sm font-medium text-white/40">
                                 {formattedStartDate}
-                                {!!season ? ` · ${capitalize(season)}` : ""}
-                                {!!status ? ` · ${capitalize(status.replaceAll("_", " "))}` : ""}
+                                {!!season ? ` · ${t(capitalize(season))}` : ""}
+                                {!!status ? ` · ${t(capitalize(status.replaceAll("_", " ")))}` : ""}
                             </Text>
                         </View>
                     )}
@@ -313,7 +314,7 @@ function MediaEntryHeaderContentInner({ entry, type, onTitlePress }: MediaEntryH
                             {genres.map(genre => (
                                 <View key={genre} className="rounded-full px-0 py-1">
                                     <Text className="text-xs text-white/70">
-                                        {genre}
+                                        {t(genre)}
                                     </Text>
                                 </View>
                             ))}

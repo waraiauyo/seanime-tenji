@@ -15,6 +15,7 @@ import {
     useDeleteAnimeDownload,
     useDownloadedEpisodesForMedia,
 } from "@/lib/downloads"
+import { t, tc, tn } from "@/lib/i18n"
 import { usePlaybackCoordinator } from "@/lib/player"
 import type { MobilePlaybackSource } from "@/lib/player/types"
 import { Ionicons } from "@expo/vector-icons"
@@ -68,8 +69,8 @@ export function AnimeEntryDownloadedView({ entry }: AnimeEntryDownloadedViewProp
     if (allEpisodes.length === 0) {
         return (
             <LuffyError
-                title="No downloads yet"
-                description="Download episodes from the Library tab to watch them offline."
+                title={t("No downloads yet")}
+                description={t("Download episodes from the Library tab to watch them offline.")}
             />
         )
     }
@@ -78,20 +79,20 @@ export function AnimeEntryDownloadedView({ entry }: AnimeEntryDownloadedViewProp
         <View className="px-4 pt-4 gap-4">
             <View className="flex-row items-center justify-between px-1">
                 <Text className="text-sm text-white/40">
-                    {completedEpisodes.length} episode{completedEpisodes.length !== 1 ? "s" : ""} · {formatBytes(totalSize)}
+                    {tn("{{count}} episode", "{{count}} episodes", completedEpisodes.length)} · {formatBytes(totalSize)}
                 </Text>
                 {completedEpisodes.length > 0 && (
                     <Pressable
                         onPress={() => {
                             Alert.alert(
-                                "Delete all downloads",
-                                `Remove all ${completedEpisodes.length} downloaded episode${completedEpisodes.length !== 1
-                                    ? "s"
-                                    : ""} for this anime?`,
+                                t("Delete all downloads"),
+                                tn("Remove all {{count}} downloaded episode for this anime?",
+                                    "Remove all {{count}} downloaded episodes for this anime?",
+                                    completedEpisodes.length),
                                 [
-                                    { text: "Cancel", style: "cancel" },
+                                    { text: t("Cancel"), style: "cancel" },
                                     {
-                                        text: "Delete",
+                                        text: t("Delete"),
                                         style: "destructive",
                                         onPress: () => deleteAll(mediaId),
                                     },
@@ -99,7 +100,7 @@ export function AnimeEntryDownloadedView({ entry }: AnimeEntryDownloadedViewProp
                             )
                         }}
                     >
-                        <Text className="text-sm text-red-400">Delete All</Text>
+                        <Text className="text-sm text-red-400">{t("Delete All")}</Text>
                     </Pressable>
                 )}
             </View>
@@ -107,7 +108,7 @@ export function AnimeEntryDownloadedView({ entry }: AnimeEntryDownloadedViewProp
             {inProgressEpisodes.length > 0 && (
                 <Surface variant="brand" className="overflow-hidden">
                     <View className="px-4 pt-3 pb-1">
-                        <FormSectionLabel>Downloading ({inProgressEpisodes.length})</FormSectionLabel>
+                        <FormSectionLabel>{t("Downloading ({{count}})", { count: inProgressEpisodes.length })}</FormSectionLabel>
                     </View>
 
                     {inProgressPagination.hasMultiplePages && (
@@ -136,7 +137,7 @@ export function AnimeEntryDownloadedView({ entry }: AnimeEntryDownloadedViewProp
             {completedEpisodes.length > 0 && (
                 <View className="gap-3">
                     <View className="px-1">
-                        <Text className="text-xl font-bold text-foreground">Downloaded</Text>
+                        <Text className="text-xl font-bold text-foreground">{tc("episodes", "Downloaded")}</Text>
                     </View>
 
                     {completedPagination.hasMultiplePages && (
@@ -170,9 +171,9 @@ export function AnimeEntryDownloadedView({ entry }: AnimeEntryDownloadedViewProp
             {failedEpisodes.length > 0 && (
                 <View className="gap-3">
                     <View className="px-1">
-                        <Text className="text-xl font-bold text-foreground">Failed</Text>
+                        <Text className="text-xl font-bold text-foreground">{tc("downloads", "Failed")}</Text>
                         <Text className="text-sm text-white/40 mt-1">
-                            Remove failed downloads here, then retry from the Library tab.
+                            {t("Remove failed downloads here, then retry from the Library tab.")}
                         </Text>
                     </View>
 
@@ -219,8 +220,8 @@ function InProgressEpisodeRow({
     const pct = Math.max(0, Math.min(100, Math.round((episode.progress ?? 0) * 100)))
     const isDownloading = episode.status === "downloading"
     const progressLabel = isDownloading
-        ? (pct > 0 ? `${pct}% downloaded` : "Downloading")
-        : "Waiting in queue"
+        ? (pct > 0 ? t("{{percent}}% downloaded", { percent: pct }) : t("Downloading"))
+        : t("Waiting in queue")
 
     return (
         <View className="px-3 py-3 gap-2">
@@ -247,8 +248,8 @@ function InProgressEpisodeRow({
                 <View className="flex-1 mr-3">
                     <Text className="text-foreground font-bold text-sm" numberOfLines={1}>
                         {episode.type === "main"
-                            ? `Episode ${episode.episodeNumber}`
-                            : `${episode.type === "special" ? "Special" : "NC"} ${episode.episodeNumber}`}
+                            ? t("Episode {{number}}", { number: episode.episodeNumber })
+                            : `${episode.type === "special" ? t("Special") : "NC"} ${episode.episodeNumber}`}
                     </Text>
                     <Text className="text-white/70 text-sm mt-0.5" numberOfLines={1}>
                         {episode.episodeTitle || episode.displayTitle}
@@ -350,16 +351,16 @@ function DownloadedEpisodeListItem({
             episode.displayTitle,
             `${formatBytes(episode.fileSize)}`,
             [
-                { text: "Cancel", style: "cancel" },
-                { text: "Delete", style: "destructive", onPress: onDelete },
+                { text: t("Cancel"), style: "cancel" },
+                { text: t("Delete"), style: "destructive", onPress: onDelete },
             ],
         )
     }, [episode, onDelete])
 
     const handleDeletePress = React.useCallback(() => {
-        Alert.alert("Delete download?", "This episode will be removed from your device.", [
-            { text: "Cancel", style: "cancel" },
-            { text: "Delete", style: "destructive", onPress: onDelete },
+        Alert.alert(t("Delete download?"), t("This episode will be removed from your device."), [
+            { text: t("Cancel"), style: "cancel" },
+            { text: t("Delete"), style: "destructive", onPress: onDelete },
         ])
     }, [onDelete])
 
@@ -379,7 +380,7 @@ function DownloadedEpisodeListItem({
             watchedProgress={entry.listData?.progress ?? 0}
             hideMissingDescription
             descriptionOverride={isFailed ? null : undefined}
-            footnoteText={isCompleted ? formatBytes(episode.fileSize) : (episode.errorMessage || "Download failed")}
+            footnoteText={isCompleted ? formatBytes(episode.fileSize) : (episode.errorMessage || t("Download failed"))}
             footnoteClassName={isCompleted ? "text-white/35" : "text-red-400"}
             thumbnailOverlay={isFailed ? (
                 <View className="absolute inset-0 items-center justify-center bg-black/45">

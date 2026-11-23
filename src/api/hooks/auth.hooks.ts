@@ -3,6 +3,7 @@ import { Login_Variables } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Status } from "@/api/generated/types"
 import { useSetServerStatus } from "@/atoms/server.atoms"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -16,7 +17,7 @@ export function useLogin() {
         mutationKey: [API_ENDPOINTS.AUTH.Login.key],
         onSuccess: async data => {
             if (data) {
-                toast.success("Successfully authenticated")
+                toast.success(t("Successfully authenticated"))
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollection.key] })
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollectionTags.key] })
@@ -43,7 +44,7 @@ export function useLogout() {
         method: API_ENDPOINTS.AUTH.Logout.methods[0],
         mutationKey: [API_ENDPOINTS.AUTH.Logout.key],
         onSuccess: async () => {
-            toast.success("Successfully logged out")
+            toast.success(t("Successfully logged out"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollection.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollectionTags.key] })

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n"
 import { playerErrorAtom, playerLoadingMessageAtom } from "@/lib/player"
 import type { MobilePlaybackSource, PlayerState } from "@/lib/player"
 import { logger } from "@/lib/utils/logger"
@@ -141,7 +142,7 @@ export function useMpvPlayer() {
             ?? source.media?.coverImage?.medium
             ?? source.media?.bannerImage
 
-        const title = episodeLabel ?? mediaTitle ?? `Episode ${source.episodeNumber}`
+        const title = episodeLabel ?? mediaTitle ?? t("Episode {{number}}", { number: source.episodeNumber })
         const artist = episodeLabel ? mediaTitle : undefined
 
         if (!title && !artist && !artworkUri) return undefined

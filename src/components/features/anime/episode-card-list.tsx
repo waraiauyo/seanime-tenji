@@ -3,6 +3,7 @@ import { getEpisodePercentageComplete } from "@/api/hooks/continuity.hooks"
 import { useServerStatus } from "@/atoms/server.atoms"
 import { EpisodeCard } from "@/components/features/anime/episode-card"
 import { getEpisodeSpoilerState } from "@/lib/anime-spoilers"
+import { t } from "@/lib/i18n"
 import { getEpisodeCardRowHeight, getEpisodeCardWidth, getHorizontalCardRenderCount } from "@/lib/responsive-card-layout"
 import React from "react"
 import { ActivityIndicator, FlatList, ListRenderItemInfo, Platform, Text, useWindowDimensions, View } from "react-native"
@@ -84,7 +85,7 @@ export function EpisodeCardList(props: EpisodeCardListProps) {
                 cardWidth={cardWidth}
                 image={image}
                 imageBlurred={spoiler.hideThumbnail || blurAdultContent}
-                title={spoiler.hideTitle ? `Episode ${item.episodeNumber}` : item.episodeTitle}
+                title={spoiler.hideTitle ? t("Episode {{number}}", { number: item.episodeNumber }) : item.episodeTitle}
                 episodeNumber={item.episodeNumber}
                 totalEpisodes={item.baseAnime?.episodes}
                 length={item.episodeMetadata?.length}

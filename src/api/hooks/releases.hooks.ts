@@ -3,6 +3,7 @@ import { InstallLatestUpdate_Variables } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Status, Updater_Update } from "@/api/generated/types"
 import { useSetServerStatus } from "@/atoms/server.atoms"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 
 export function useGetLatestUpdate(enabled: boolean) {
@@ -22,7 +23,7 @@ export function useInstallLatestUpdate() {
         mutationKey: [API_ENDPOINTS.RELEASES.InstallLatestUpdate.key],
         onSuccess: async (data) => {
             setServerStatus(data ?? null) // Update server status
-            toast.info("Installing update...")
+            toast.info(t("Installing update..."))
         },
     })
 }

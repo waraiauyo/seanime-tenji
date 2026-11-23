@@ -1,5 +1,6 @@
 import { getStoredString, setStoredString } from "@/atoms/storage"
 import { isManualOfflineModeEnabled } from "@/lib/connection-state"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import Constants from "expo-constants"
 import * as React from "react"
@@ -58,21 +59,21 @@ export function AppReleaseUpdatePrompt() {
 
 export async function checkForAppReleaseUpdateManually(): Promise<void> {
     if (isManualOfflineModeEnabled()) {
-        toast.info("Disable offline mode to check app updates")
+        toast.info(t("Disable offline mode to check app updates"))
         return
     }
 
     try {
         const release = await findAvailableAppRelease()
         if (!release) {
-            toast.info("No app update found")
+            toast.info(t("No app update found"))
             return
         }
 
         promptAppReleaseUpdate(release)
     }
     catch {
-        toast.error("Failed to check app update")
+        toast.error(t("Failed to check app update"))
     }
 }
 
@@ -122,18 +123,18 @@ function promptAppReleaseUpdate(release: AppRelease) {
     const releaseName = release.name ?? release.tagName
 
     Alert.alert(
-        "App update available",
-        `${releaseName} is ready to download.`,
+        t("App update available"),
+        t("{{name}} is ready to download.", { name: releaseName }),
         [
             {
-                text: "Later",
+                text: t("Later"),
                 style: "cancel",
                 onPress: () => {
                     setStoredString(DISMISSED_APP_RELEASE_VERSION_KEY, release.tagName)
                 },
             },
             {
-                text: "Open",
+                text: t("Open"),
                 onPress: () => {
                     void Linking.openURL(release.htmlUrl)
                 },

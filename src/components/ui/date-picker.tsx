@@ -1,3 +1,4 @@
+import { getDateLocale, t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Ionicons } from "@expo/vector-icons"
 import DateTimePicker from "@react-native-community/datetimepicker"
@@ -18,8 +19,8 @@ const DatePicker = ({
     className,
     value,
     onChange,
-    placeholder = "Select date",
-    format: dateFormat = "MM/dd/yyyy",
+    placeholder = t("Select date"),
+    format: dateFormat = t("MM/dd/yyyy"),
     ...props
 }: DatePickerProps) => {
     const [show, setShow] = React.useState(false)
@@ -76,7 +77,7 @@ const DatePicker = ({
                 {...props}
             >
                 <Text className={cn("text-foreground", !value && "text-muted-foreground")}>
-                    {value ? format(value, dateFormat) : placeholder}
+                    {value ? format(value, dateFormat, { locale: getDateLocale() }) : placeholder}
                 </Text>
                 <View className="flex flex-row items-center">
                     {value && (
@@ -94,10 +95,10 @@ const DatePicker = ({
                 <View className="w-full">
                     <View className="flex flex-row justify-between items-center px-4 py-2 border-b border-border">
                         <Pressable onPress={handleCancel} className="p-2">
-                            <Text className="text-primary text-base">Cancel</Text>
+                            <Text className="text-primary text-base">{t("Cancel")}</Text>
                         </Pressable>
                         <Pressable onPress={handleConfirm} className="p-2">
-                            <Text className="text-primary text-base font-medium">Confirm</Text>
+                            <Text className="text-primary text-base font-medium">{t("Confirm")}</Text>
                         </Pressable>
                     </View>
                     <DateTimePicker

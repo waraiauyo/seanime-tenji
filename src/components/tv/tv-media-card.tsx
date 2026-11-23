@@ -9,6 +9,7 @@ import { useServerStatus } from "@/atoms/server.atoms"
 import { usePreferredFocus, useTVFocus } from "@/components/tv/tv-focus"
 import { TVScoreBadge } from "@/components/tv/tv-score-badge"
 import { TV, tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import { Ionicons } from "@/lib/icons/Ionicons"
 import { animeCardStats, mediaTitle } from "@/lib/media-metadata"
 import { Image } from "expo-image"
@@ -207,7 +208,7 @@ export const TVMediaCard = React.memo(function TVMediaCard({
                     numberOfLines={1}
                     style={{ marginTop: tvSize(2), fontSize: tvSize(18) }}
                 >
-                    {[media.seasonYear, media.format?.replaceAll("_", " ")].filter(Boolean).join(" · ")}
+                    {[media.seasonYear, media.format && t(media.format.replaceAll("_", " "))].filter(Boolean).join(" · ")}
                 </Text>
             </Animated.View>
         </Pressable>

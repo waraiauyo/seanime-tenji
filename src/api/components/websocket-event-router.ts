@@ -1,5 +1,6 @@
 import { subscribeWsMessage, type WebsocketMessage } from "@/api/components/websocket-hub"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
+import { t } from "@/lib/i18n"
 import { requestServerLocalSync } from "@/lib/offline"
 import { logger } from "@/lib/utils/logger"
 import { toast } from "@/lib/utils/toast"
@@ -227,7 +228,7 @@ export function useWebsocketEventRouter() {
                 case WEBSOCKET_EVENTS.ServerLoggedOutAnilist:
                     toast.warning(typeof message.payload === "string"
                         ? message.payload
-                        : "Your AniList session ended. Please log in again.")
+                        : t("Your AniList session ended. Please log in again."))
                     await invalidateQueryKeys(queryClient, anilistLogoutKeys)
                     return
                 case WEBSOCKET_EVENTS.RefreshedAnilistAnimeCollection:

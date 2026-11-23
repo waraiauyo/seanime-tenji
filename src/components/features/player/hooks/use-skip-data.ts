@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n"
 import type { PlayerChapter, PlayerStatus } from "@/lib/player"
 import type { MobilePlaybackSource } from "@/lib/player/types"
 import { toast } from "@/lib/utils/toast"
@@ -129,7 +130,7 @@ export function useSkipData({
                 if (lastAutoSkippedRef.current !== skipId) {
                     lastAutoSkippedRef.current = skipId
                     playerSeekTo(endTime)
-                    toast.info("Skipped opening intro")
+                    toast.info(t("Skipped opening intro"))
                 }
             }
         }
@@ -141,7 +142,7 @@ export function useSkipData({
                 if (lastAutoSkippedRef.current !== skipId) {
                     lastAutoSkippedRef.current = skipId
                     playerSeekTo(endTime)
-                    toast.info("Skipped ending outro")
+                    toast.info(t("Skipped ending outro"))
                 }
             }
         }

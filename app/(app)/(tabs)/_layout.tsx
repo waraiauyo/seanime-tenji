@@ -1,6 +1,7 @@
 import { useCurrentUser } from "@/atoms/server.atoms"
 import { AppTabConfig, TabBar } from "@/components/layout/tabs"
 import { TVNavBar } from "@/components/tv/tv-nav-bar"
+import { t } from "@/lib/i18n"
 import { Tabs } from "expo-router/js-tabs"
 import * as React from "react"
 import { Platform, View } from "react-native"
@@ -17,37 +18,37 @@ export default function TabLayout() {
         {
             show: true,
             name: "(library)",
-            displayName: "Anime",
+            displayName: t("Anime"),
             icon: "tv",
         },
         {
             show: true,
             name: "(manga)",
-            displayName: "Manga",
+            displayName: t("Manga"),
             icon: "book",
         },
         {
             show: true,
             name: "schedule",
-            displayName: "Schedule",
+            displayName: t("Schedule"),
             icon: "calendar",
         },
         {
             show: true,
             name: "discover",
-            displayName: "Discover",
+            displayName: t("Discover"),
             icon: "compass",
         },
         {
             show: true,
             name: "(profile)",
-            displayName: "Profile",
+            displayName: t("Profile"),
             icon: "cog-outline",
         },
         {
             show: false,
             name: "my-lists",
-            displayName: "My Lists",
+            displayName: t("My Lists"),
             icon: "albums",
         },
     ]

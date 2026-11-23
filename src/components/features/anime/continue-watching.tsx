@@ -5,6 +5,7 @@ import { useServerStatus } from "@/atoms/server.atoms"
 import { EpisodeCardList } from "@/components/features/anime/episode-card-list"
 import { ContinueWatchingItem } from "@/hooks/use-anime-library-collection"
 import { getContinueWatchingSpoilerActive } from "@/lib/anime-spoilers"
+import { t } from "@/lib/i18n"
 import { router } from "expo-router"
 import { useSetAtom } from "jotai"
 import * as React from "react"
@@ -61,7 +62,7 @@ export function ContinueWatching(props: ContinueWatchingProps) {
             className="space-y-4"
         >
             <EpisodeCardList
-                title="Continue watching"
+                title={t("Continue watching")}
                 episodes={episodes}
                 onEpisodePress={handleEpisodePress}
                 watchHistory={watchHistory}

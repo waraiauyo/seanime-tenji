@@ -4,6 +4,7 @@ import { TVFilterChoiceRow } from "@/components/tv/tv-filter-choice-row"
 import { TVButton } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
 import { TVTagFilter } from "@/components/tv/tv-tag-filter"
+import { t, tc } from "@/lib/i18n"
 import mediaTags from "@/lib/search/media-tags.json"
 import {
     SEARCH_FORMATS_ANIME,
@@ -59,8 +60,8 @@ export function TVSearchFilterDrawer({
         <TVDrawer
             open={open}
             onOpenChange={onOpenChange}
-            title="Search filters"
-            subtitle={active ? `${active} active` : "Anime catalog"}
+            title={t("Search filters")}
+            subtitle={active ? t("{{count}} active", { count: active }) : t("Anime catalog")}
             width={tvSize(900)}
         >
             <ScrollView
@@ -73,13 +74,13 @@ export function TVSearchFilterDrawer({
                 }}
             >
                 <TVFilterChoiceRow
-                    label="Sort by"
+                    label={t("Sort by")}
                     values={SEARCH_SORTING_ANIME}
                     selected={value => draft.sorting === value}
                     onPress={value => setDraft(current => ({ ...current, sorting: value as SearchParams["sorting"] }))}
                 />
                 <TVFilterChoiceRow
-                    label="Format"
+                    label={t("Format")}
                     values={SEARCH_FORMATS_ANIME}
                     allowAll
                     selected={value => (draft.format ?? "") === value}
@@ -89,7 +90,7 @@ export function TVSearchFilterDrawer({
                     }))}
                 />
                 <TVFilterChoiceRow
-                    label="Season"
+                    label={t("Season")}
                     values={[...SEARCH_SEASONS]}
                     allowAll
                     selected={value => (draft.season ?? "") === value}
@@ -99,28 +100,28 @@ export function TVSearchFilterDrawer({
                     }))}
                 />
                 <TVFilterChoiceRow
-                    label="Year"
+                    label={t("Year")}
                     values={SEARCH_YEARS.map(value => ({ value, label: value }))}
                     allowAll
                     selected={value => (draft.year ?? "") === value}
                     onPress={value => setDraft(current => ({ ...current, year: value || null }))}
                 />
                 <TVFilterChoiceRow
-                    label="Status"
+                    label={t("Status")}
                     values={SEARCH_STATUS}
                     selected={value => draft.status.includes(value as AL_MediaStatus)}
                     onPress={value => toggle("status", value)}
                 />
                 <TVFilterChoiceRow
-                    label="Minimum score"
+                    label={t("Minimum score")}
                     values={SEARCH_MIN_SCORES}
                     allowAll
                     selected={value => (draft.minScore ?? "") === value}
                     onPress={value => setDraft(current => ({ ...current, minScore: value || null }))}
                 />
                 <TVFilterChoiceRow
-                    label="Genres"
-                    values={SEARCH_MEDIA_GENRES.map(value => ({ value, label: value }))}
+                    label={t("Genres")}
+                    values={SEARCH_MEDIA_GENRES.map(value => ({ value, label: t(value) }))}
                     selected={value => draft.genre.includes(value)}
                     onPress={value => toggle("genre", value)}
                 />
@@ -135,10 +136,10 @@ export function TVSearchFilterDrawer({
                 />
 
                 <TVFilterChoiceRow
-                    label="Adult content"
+                    label={t("Adult content")}
                     values={[
-                        { value: "off", label: "Hidden" },
-                        { value: "on", label: "Shown" },
+                        { value: "off", label: tc("content", "Hidden") },
+                        { value: "on", label: tc("content", "Shown") },
                     ]}
                     selected={value => draft.isAdult === (value === "on")}
                     onPress={value => setDraft(current => {
@@ -158,7 +159,7 @@ export function TVSearchFilterDrawer({
                     style={{ flexDirection: "row", gap: tvSize(12) }}
                 >
                     <TVButton
-                        label="Reset"
+                        label={t("Reset")}
                         variant="secondary"
                         icon={<Ionicons name="refresh-outline" size={tvSize(20)} color="white" />}
                         onPress={() => setDraft({
@@ -168,7 +169,7 @@ export function TVSearchFilterDrawer({
                         })}
                     />
                     <TVButton
-                        label={active ? `Apply (${active})` : "Apply"}
+                        label={active ? t("Apply ({{count}})", { count: active }) : t("Apply")}
                         variant="primary"
                         icon={<Ionicons name="checkmark" size={tvSize(20)} color="white" />}
                         onPress={() => {

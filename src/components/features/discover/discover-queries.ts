@@ -1,6 +1,7 @@
 import { AL_BaseAnime, AL_ListRecentAnime_Page_AiringSchedules, AL_MediaSeason } from "@/api/generated/types"
 import { useAnilistListAnime, useAnilistListMissedSequels, useAnilistListRecentAiringAnime } from "@/api/hooks/anilist.hooks"
 import { useAnilistListManga } from "@/api/hooks/manga.hooks"
+import { t } from "@/lib/i18n"
 import React from "react"
 
 /**
@@ -141,10 +142,10 @@ export function useDiscoverTrendingManga(country: string, enabled: boolean = tru
 
 export function getCurrentSeasonLabel(): string {
     const { season, year } = getCurrentSeason()
-    return `${season.charAt(0)}${season.slice(1).toLowerCase()} ${year}`
+    return `${t(season.charAt(0) + season.slice(1).toLowerCase())} ${year}`
 }
 
 export function getPreviousSeasonLabel(): string {
     const { season, year } = getPreviousSeason()
-    return `${season.charAt(0)}${season.slice(1).toLowerCase()} ${year}`
+    return `${t(season.charAt(0) + season.slice(1).toLowerCase())} ${year}`
 }

@@ -6,8 +6,10 @@ import { SheetFooter, SheetFooterButton } from "@/components/shared/sheet-footer
 import { Surface } from "@/components/shared/surface"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { Text } from "@/components/ui/text"
+import { getDateLocale, t, tc } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
+import { format } from "date-fns"
 import { LinearGradient } from "expo-linear-gradient"
 import { router } from "expo-router"
 import * as React from "react"
@@ -17,24 +19,24 @@ import { EditAnilistEntry } from "./edit-anilist-entry"
 import { MediaEntryAudienceScore } from "./media-entry-score"
 
 const FORMAT_LABELS: Record<AL_MediaFormat, string> = {
-    TV: "TV",
-    TV_SHORT: "TV Short",
-    MOVIE: "Movie",
-    SPECIAL: "Special",
-    OVA: "OVA",
-    ONA: "ONA",
-    MUSIC: "Music",
-    MANGA: "Manga",
-    NOVEL: "Novel",
-    ONE_SHOT: "One Shot",
+    TV: t("TV"),
+    TV_SHORT: t("TV Short"),
+    MOVIE: t("Movie"),
+    SPECIAL: t("Special"),
+    OVA: t("OVA"),
+    ONA: t("ONA"),
+    MUSIC: t("Music"),
+    MANGA: t("Manga"),
+    NOVEL: t("Novel"),
+    ONE_SHOT: t("One Shot"),
 }
 
 const STATUS_LABELS: Record<AL_MediaStatus, string> = {
-    FINISHED: "Finished",
-    RELEASING: "Releasing",
-    NOT_YET_RELEASED: "Upcoming",
-    CANCELLED: "Cancelled",
-    HIATUS: "On Hiatus",
+    FINISHED: t("Finished"),
+    RELEASING: t("Releasing"),
+    NOT_YET_RELEASED: t("Upcoming"),
+    CANCELLED: t("Cancelled"),
+    HIATUS: t("On Hiatus"),
 }
 
 const STATUS_COLORS: Record<AL_MediaStatus, string> = {
@@ -47,12 +49,10 @@ const STATUS_COLORS: Record<AL_MediaStatus, string> = {
 
 function formatDate(date?: { year?: number; month?: number; day?: number }) {
     if (!date?.year) return null
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     if (date.month && date.day) {
-        return `${months[date.month - 1]} ${date.day}, ${date.year}`
+        return format(new Date(date.year, date.month - 1, date.day), t("MMM d, yyyy"), { locale: getDateLocale() })
     }
-    if (date.month) return `${months[date.month - 1]} ${date.year}`
+    if (date.month) return format(new Date(date.year, date.month - 1), t("MMM yyyy"), { locale: getDateLocale() })
     return String(date.year)
 }
 
@@ -151,7 +151,7 @@ export function MediaEntryQuickInfoSheet<T extends "anime" | "manga">({
                     <SheetFooterButton variant="primary" onPress={navigateToEntry}>
                         <View className="flex-row items-center gap-2">
                             <Ionicons name="open-outline" size={16} color="#fff" />
-                            <Text className="font-semibold text-sm text-primary-foreground">Open</Text>
+                            <Text className="font-semibold text-sm text-primary-foreground">{t("Open")}</Text>
                         </View>
                     </SheetFooterButton>
                     {(open && entry) && <EditAnilistEntry entry={entry} type={type} buttonClassName="h-13 rounded-2xl bg-white/5" />}
@@ -243,7 +243,7 @@ export function MediaEntryQuickInfoSheet<T extends "anime" | "manga">({
                             <View className="flex-row flex-wrap gap-1.5 mt-1.5">
                                 {genres.map(g => (
                                     <View key={g} className="rounded-full px-1">
-                                        <Text className="text-xs text-white/50 font-medium">{g}</Text>
+                                        <Text className="text-xs text-white/50 font-medium">{t(g)}</Text>
                                     </View>
                                 ))}
                             </View>
@@ -255,23 +255,23 @@ export function MediaEntryQuickInfoSheet<T extends "anime" | "manga">({
 
             <Animated.View entering={FadeInUp.delay(80).duration(300)}>
                 <Surface variant="muted" className="flex-row py-3 px-2 mb-4">
-                    <MetaPill label="Format" value={formatLabel} />
+                    <MetaPill label={t("Format")} value={formatLabel} />
                     <View className="w-px bg-white/10 self-stretch mx-1" />
                     <MetaPill
-                        label="Status"
+                        label={t("Status")}
                         value={statusLabel}
                         valueClass={statusColor}
                     />
                     <View className="w-px bg-white/10 self-stretch mx-1" />
                     {anime && (
                         <MetaPill
-                            label="Episodes"
+                            label={t("Episodes")}
                             value={anime.episodes ?? "-"}
                         />
                     )}
                     {manga && (
                         <MetaPill
-                            label="Chapters"
+                            label={t("Chapters")}
                             value={manga.chapters ?? "-"}
                         />
                     )}
@@ -279,7 +279,7 @@ export function MediaEntryQuickInfoSheet<T extends "anime" | "manga">({
                         <>
                             <View className="w-px bg-white/10 self-stretch mx-1" />
                             <MetaPill
-                                label="Score"
+                                label={t("Score")}
                                 // value={media.meanScore ? `${media.meanScore}%` : null}
                                 content={<MediaEntryAudienceScore score={displayMedia.meanScore} />}
                             />
@@ -305,12 +305,12 @@ export function MediaEntryQuickInfoSheet<T extends "anime" | "manga">({
                 <Animated.View entering={FadeInUp.delay(180).duration(300)}>
                     <Surface variant="card" className="mb-4 px-3 py-2">
                         {/* <FormSectionLabel className="mb-2">Dates</FormSectionLabel> */}
-                        <TitleRow label="Start" value={startDate} />
-                        <TitleRow label="End" value={endDate} />
+                        <TitleRow label={tc("date", "Start")} value={startDate} />
+                        <TitleRow label={tc("date", "End")} value={endDate} />
                         {anime?.season && (
                             <TitleRow
-                                label="Season"
-                                value={`${anime.season.charAt(0) + anime.season.slice(1).toLowerCase()} ${anime.seasonYear ?? ""}`}
+                                label={t("Season")}
+                                value={`${t(anime.season.charAt(0) + anime.season.slice(1).toLowerCase())} ${anime.seasonYear ?? ""}`}
                             />
                         )}
                     </Surface>

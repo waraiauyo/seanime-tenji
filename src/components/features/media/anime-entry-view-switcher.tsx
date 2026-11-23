@@ -1,5 +1,6 @@
 import { TabBarIcon } from "@/components/navigation/tab-bar-icon"
 import { BAR_ITEM_INACTIVE, GlassBar } from "@/components/shared/glass-bar"
+import { t, tc } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import * as React from "react"
@@ -20,12 +21,12 @@ const BAR_GAP = 16
 const BAR_LIMIT = 560
 
 const VIEW_ITEMS: Array<{ label: string, icon: React.ComponentProps<typeof Ionicons>["name"], view: AnimeEntryView }> = [
-    { label: "Library", icon: "library-outline", view: "library" },
-    { label: "On Server", icon: "library-outline", view: "server-local" },
-    { label: "Stream", icon: "play-circle-outline", view: "torrentstream" },
-    { label: "Online", icon: "globe-outline", view: "onlinestream" },
-    { label: "Info", icon: "information-circle-outline", view: "info" },
-    { label: "Downloads", icon: "download-outline", view: "downloaded" },
+    { label: tc("view", "Library"), icon: "library-outline", view: "library" },
+    { label: tc("view", "On Server"), icon: "library-outline", view: "server-local" },
+    { label: t("Stream"), icon: "play-circle-outline", view: "torrentstream" },
+    { label: t("Online"), icon: "globe-outline", view: "onlinestream" },
+    { label: t("Info"), icon: "information-circle-outline", view: "info" },
+    { label: tc("view", "Downloads"), icon: "download-outline", view: "downloaded" },
 ]
 
 const OFFLINE_DISABLED_VIEWS: Set<AnimeEntryView> = new Set(["library", "torrentstream", "onlinestream"])

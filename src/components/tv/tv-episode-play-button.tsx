@@ -1,5 +1,6 @@
 import { TVPillButton } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import * as React from "react"
 import { Pressable } from "react-native"
@@ -15,7 +16,7 @@ export const TVEpisodePlayButton = React.forwardRef<React.ElementRef<typeof Pres
         return (
             <TVPillButton
                 ref={ref}
-                label={`Play episode ${episode}`}
+                label={t("Play episode {{episode}}", { episode })}
                 disabled={disabled}
                 icon={focused => (
                     <Ionicons

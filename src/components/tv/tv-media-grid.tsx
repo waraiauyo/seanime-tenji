@@ -1,6 +1,7 @@
 import type { AL_BaseAnime } from "@/api/generated/types"
 import { TVMediaCard } from "@/components/tv/tv-media-card"
 import { TV, tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import { router } from "expo-router"
 import * as React from "react"
 import { FlatList, Text, useWindowDimensions, View } from "react-native"
@@ -98,17 +99,17 @@ export function TVMediaGrid({
                     }}
                 >
                     <Text className="font-bold text-white" style={{ fontSize: tvSize(28) }}>
-                        {emptyTitle ?? (query ? `No results for “${query}”` : "Nothing here yet")}
+                        {emptyTitle ?? (query ? t("No results for “{{query}}”", { query }) : t("Nothing here yet"))}
                     </Text>
                     <Text className="text-white/40" style={{ fontSize: tvSize(18) }}>
-                        {emptyText ?? "Try another title or change the filters."}
+                        {emptyText ?? t("Try another title or change the filters.")}
                     </Text>
                 </View>
             )}
             ListFooterComponent={loadingMore ? (
                 <View style={{ paddingVertical: tvSize(30), alignItems: "center" }}>
                     <Text className="font-medium text-white/40" style={{ fontSize: tvSize(18) }}>
-                        Loading more…
+                        {t("Loading more…")}
                     </Text>
                 </View>
             ) : undefined}

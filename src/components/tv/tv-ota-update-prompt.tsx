@@ -1,6 +1,7 @@
 import { TVDrawer } from "@/components/tv/tv-drawer"
 import { TVButton } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import {
     dismissOta,
     downloadOta,
@@ -42,7 +43,7 @@ export function TVOtaUpdatePrompt() {
         void downloadOta()
             .then(ready => {
                 if (!ready) {
-                    toast.info("Seanime is already up to date")
+                    toast.info(t("Seanime is already up to date"))
                     setInfo(null)
                     setStage("ready")
                     return
@@ -51,7 +52,7 @@ export function TVOtaUpdatePrompt() {
             })
             .catch(error => {
                 console.error(error)
-                toast.error(`Failed to download update: ${errorText(error)}`)
+                toast.error(t("Failed to download update: {{error}}", { error: errorText(error) }))
                 setStage("ready")
             })
     }, [busy, info])
@@ -62,23 +63,23 @@ export function TVOtaUpdatePrompt() {
         setStage("restarting")
         void restartOta().catch(error => {
             console.error(error)
-            toast.error(`Failed to restart Seanime: ${errorText(error)}`)
+            toast.error(t("Failed to restart Seanime: {{error}}", { error: errorText(error) }))
             setStage("restart")
         })
     }, [busy])
 
-    const version = info?.otaVersion ? `OTA ${info.otaVersion}` : "A new update"
+    const version = info?.otaVersion ? `OTA ${info.otaVersion}` : t("A new update")
     const progress = typeof downloadProgress === "number" && downloadProgress > 0
         ? ` ${Math.round(downloadProgress * 100)}%`
         : ""
     const title = stage === "restart" || stage === "restarting"
-        ? "Restart Seanime?"
-        : "Update available"
+        ? t("Restart Seanime?")
+        : t("Update available")
     const text = stage === "ready"
-        ? `${version} is ready to install.`
+        ? t("{{version}} is ready to install.", { version })
         : stage === "downloading"
-            ? `Downloading ${version}${progress}`
-            : `${version} has been downloaded and will load after restart.`
+            ? t("Downloading {{version}}{{progress}}", { version, progress })
+            : t("{{version}} has been downloaded and will load after restart.", { version })
 
     return (
         <TVDrawer
@@ -89,7 +90,7 @@ export function TVOtaUpdatePrompt() {
             onRequestClose={close}
             closeDisabled={busy}
             title={title}
-            subtitle="OTA update"
+            subtitle={t("OTA update")}
             width={tvSize(650)}
         >
             <View
@@ -107,7 +108,7 @@ export function TVOtaUpdatePrompt() {
                     <View style={{ flexDirection: "row", alignItems: "center", gap: tvSize(14) }}>
                         <ActivityIndicator size="small" color="white" />
                         <Text className="font-semibold text-white" style={{ fontSize: tvSize(20) }}>
-                            {stage === "downloading" ? "Downloading update…" : "Restarting…"}
+                            {stage === "downloading" ? t("Downloading update…") : t("Restarting…")}
                         </Text>
                     </View>
                 ) : (
@@ -117,13 +118,13 @@ export function TVOtaUpdatePrompt() {
                         style={{ flexDirection: "row", gap: tvSize(12) }}
                     >
                         <TVButton
-                            label="Later"
+                            label={t("Later")}
                             variant="secondary"
                             preferred
                             onPress={close}
                         />
                         <TVButton
-                            label={stage === "restart" ? "Restart" : "Install"}
+                            label={stage === "restart" ? t("Restart") : t("Install")}
                             variant="primary"
                             onPress={stage === "restart" ? restart : install}
                         />

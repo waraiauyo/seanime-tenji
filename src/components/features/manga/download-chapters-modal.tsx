@@ -2,6 +2,7 @@ import { HibikeManga_ChapterDetails, Manga_Entry } from "@/api/generated/types"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
 import { type MangaDownloadStatus, useDownloadedMangaChapters, useStartMangaChapterDownload } from "@/lib/downloads"
+import { t, tc } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Ionicons } from "@expo/vector-icons"
 import React, { useCallback, useMemo, useState } from "react"
@@ -135,7 +136,7 @@ export function DownloadMangaChaptersModal({
         <SeaBottomSheet
             open={open}
             onOpenChange={onOpenChange}
-            title="Download Chapters"
+            title={t("Download Chapters")}
             snapPoints={["70%", "92%"]}
             footer={
                 <View className="flex-row items-center gap-3">
@@ -145,7 +146,7 @@ export function DownloadMangaChaptersModal({
                         onPress={allSelected ? deselectAll : selectAll}
                     >
                         <Text className="text-sm font-medium text-secondary-foreground">
-                            {allSelected ? "Deselect All" : "Select All"}
+                            {allSelected ? tc("chapters", "Deselect All") : tc("chapters", "Select All")}
                         </Text>
                     </Button>
                     <Button
@@ -157,7 +158,7 @@ export function DownloadMangaChaptersModal({
                         <View className="flex-row items-center gap-2">
                             <Ionicons name="download" size={16} color="black" />
                             <Text className="text-sm font-semibold text-primary-foreground">
-                                Download{selectedIds.size > 0 ? ` (${selectedIds.size})` : ""}
+                                {selectedIds.size > 0 ? t("Download ({{count}})", { count: selectedIds.size }) : t("Download")}
                             </Text>
                         </View>
                     </Button>
@@ -170,25 +171,25 @@ export function DownloadMangaChaptersModal({
                         onPress={selectUnread}
                         className="rounded-lg px-3 py-1.5 bg-white/5 border border-white/10"
                     >
-                        <Text className="text-xs text-white/70">Select Unread</Text>
+                        <Text className="text-xs text-white/70">{t("Select Unread")}</Text>
                     </Pressable>
                     <Pressable
                         onPress={selectAll}
                         className="rounded-lg px-3 py-1.5 bg-white/5 border border-white/10"
                     >
-                        <Text className="text-xs text-white/70">Select All</Text>
+                        <Text className="text-xs text-white/70">{tc("chapters", "Select All")}</Text>
                     </Pressable>
                     <Pressable
                         onPress={() => setShowRead(prev => !prev)}
                         className="rounded-lg px-3 py-1.5 bg-white/5 border border-white/10"
                     >
-                        <Text className="text-xs text-white/70">{showRead ? "Hide Read" : "Show Read"}</Text>
+                        <Text className="text-xs text-white/70">{showRead ? t("Hide Read") : t("Show Read")}</Text>
                     </Pressable>
                     <Pressable
                         onPress={deselectAll}
                         className="rounded-lg px-3 py-1.5 bg-white/5 border border-white/10"
                     >
-                        <Text className="text-xs text-white/70">Clear</Text>
+                        <Text className="text-xs text-white/70">{t("Clear")}</Text>
                     </Pressable>
                 </View>
             </ScrollView>
@@ -197,7 +198,7 @@ export function DownloadMangaChaptersModal({
                 <View className="py-16 items-center gap-3">
                     <Ionicons name="cloud-offline-outline" size={40} color="rgba(255,255,255,0.2)" />
                     <Text className="text-white/40 text-sm">
-                        No chapters available for download
+                        {t("No chapters available for download")}
                     </Text>
                 </View>
             ) : (
@@ -291,7 +292,7 @@ export function DownloadMangaChaptersModal({
 
                                     <View className="flex-1 ml-3 justify-center">
                                         <Text className="text-sm font-medium text-white/90" numberOfLines={1}>
-                                            {chapter.title || `Chapter ${chapter.chapter}`}
+                                            {chapter.title || t("Chapter {{number}}", { number: chapter.chapter })}
                                         </Text>
                                         {!!chapter.scanlator && (
                                             <Text className="text-xs text-white/30 mt-0.5" numberOfLines={1}>
@@ -300,22 +301,22 @@ export function DownloadMangaChaptersModal({
                                         )}
                                         {isDownloaded && (
                                             <Text className="text-xs text-green-400/70 mt-0.5">
-                                                Downloaded
+                                                {t("Downloaded")}
                                             </Text>
                                         )}
                                         {isDownloading && (
                                             <Text className="text-xs text-brand-300/80 mt-0.5">
-                                                Downloading
+                                                {t("Downloading")}
                                             </Text>
                                         )}
                                         {isPending && (
                                             <Text className="text-xs text-white/40 mt-0.5">
-                                                Queued
+                                                {t("Queued")}
                                             </Text>
                                         )}
                                         {isFailed && (
                                             <Text className="text-xs text-red-400/80 mt-0.5">
-                                                Failed
+                                                {t("Failed")}
                                             </Text>
                                         )}
                                     </View>

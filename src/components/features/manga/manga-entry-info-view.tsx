@@ -6,6 +6,7 @@ import { CenteredSpinner } from "@/components/shared/centered-spinner"
 import { LuffyError } from "@/components/shared/luffy-error"
 import { SeaImage } from "@/components/shared/sea-image"
 import { Surface } from "@/components/shared/surface"
+import { t, tc } from "@/lib/i18n"
 import { buildMediaEntryHref } from "@/lib/media-entry-route"
 import { getHorizontalMediaCardRowHeight, getHorizontalMediaCardWidth } from "@/lib/responsive-card-layout"
 import { cn } from "@/lib/utils"
@@ -73,8 +74,8 @@ export function MangaEntryInfoView({ mediaId, fallbackDescription }: MangaEntryI
     if (!description && characters.length === 0 && animeRelations.length === 0 && recommendations.length === 0) {
         return (
             <LuffyError
-                title="No info available"
-                description="Could not load extended details or characters for this title right now."
+                title={t("No info available")}
+                description={t("Could not load extended details or characters for this title right now.")}
             />
         )
     }
@@ -83,7 +84,7 @@ export function MangaEntryInfoView({ mediaId, fallbackDescription }: MangaEntryI
         <View className="gap-6 pt-2">
             {!!description && (
                 <View className="px-4">
-                    <Text className="text-xl font-bold text-foreground mb-3">Description</Text>
+                    <Text className="text-xl font-bold text-foreground mb-3">{t("Description")}</Text>
                     <Surface className="p-4">
                         <Text className="text-sm leading-6 text-white/70">
                             {description}
@@ -94,7 +95,7 @@ export function MangaEntryInfoView({ mediaId, fallbackDescription }: MangaEntryI
 
             {characters.length > 0 && (
                 <View className="px-4">
-                    <Text className="text-xl font-bold text-foreground mb-3">Characters</Text>
+                    <Text className="text-xl font-bold text-foreground mb-3">{t("Characters")}</Text>
                     <Surface className="overflow-hidden">
                         {characters.map((edge, index) => (
                             <View
@@ -118,7 +119,7 @@ export function MangaEntryInfoView({ mediaId, fallbackDescription }: MangaEntryI
 
                                 <View className="flex-1 gap-0.5">
                                     <Text className="text-sm font-semibold text-white" numberOfLines={1}>
-                                        {edge.node?.name?.full || edge.name || "Unknown"}
+                                        {edge.node?.name?.full || edge.name || tc("character", "Unknown")}
                                     </Text>
                                     {!!edge.node?.name?.native && edge.node.name.native !== edge.node?.name?.full && (
                                         <Text className="text-xs text-white/40" numberOfLines={1}>
@@ -127,7 +128,7 @@ export function MangaEntryInfoView({ mediaId, fallbackDescription }: MangaEntryI
                                     )}
                                     {!!edge.role && (
                                         <Text className="text-xs font-medium text-white/35 uppercase tracking-wide">
-                                            {edge.role.replace(/_/g, " ")}
+                                            {t(edge.role.replace(/_/g, " "))}
                                         </Text>
                                     )}
                                 </View>
@@ -139,7 +140,7 @@ export function MangaEntryInfoView({ mediaId, fallbackDescription }: MangaEntryI
 
             {animeRelations.length > 0 && (
                 <View>
-                    <Text className="text-xl font-bold text-foreground mb-3 px-4">Anime Adaptation</Text>
+                    <Text className="text-xl font-bold text-foreground mb-3 px-4">{t("Anime Adaptation")}</Text>
                     <View style={{ height: cardRowHeight }}>
                         <FlatList
                             data={animeRelations}
@@ -150,8 +151,8 @@ export function MangaEntryInfoView({ mediaId, fallbackDescription }: MangaEntryI
                             contentContainerStyle={{ gap: SPACING, paddingHorizontal: CARD_PADDING_H }}
                             decelerationRate="normal"
                             renderItem={({ item }) => {
-                                const label = formatRelationType(item.relationType ?? "")
-                                const suffix = item.node?.format === "MOVIE" ? " (Movie)" : ""
+                                const label = t(formatRelationType(item.relationType ?? ""))
+                                const suffix = item.node?.format === "MOVIE" ? ` (${t("Movie")})` : ""
                                 return (
                                     <View style={{ position: "relative", width: cardWidth }}>
                                         <MediaEntryCard
@@ -185,7 +186,7 @@ export function MangaEntryInfoView({ mediaId, fallbackDescription }: MangaEntryI
             {recommendations.length > 0 && (
                 <HorizontalMediaCardList
                     type="manga"
-                    title="Recommendations"
+                    title={t("Recommendations")}
                     media={recommendations as unknown as AL_BaseManga[]}
                     showAudienceScore
                     onMediaPress={(media) => router.replace(buildMediaEntryHref(media, "manga"))}

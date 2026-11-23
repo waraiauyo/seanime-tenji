@@ -9,6 +9,7 @@ import {
     TVToolbar,
     tvSize,
 } from "@/components/tv"
+import { t } from "@/lib/i18n"
 import {
     getActiveFiltersCount,
     isSearchActive,
@@ -76,7 +77,7 @@ export function TVSearchScreen() {
                 header={(
                     <TVToolbar>
                         <TVButton
-                            label="Back"
+                            label={t("Back")}
                             variant="ghost"
                             size="compact"
                             icon={<Ionicons name="arrow-back" size={tvSize(20)} color="white" />}
@@ -88,7 +89,7 @@ export function TVSearchScreen() {
                                 value={input}
                                 onChangeText={setInput}
                                 onSubmitEditing={submit}
-                                placeholder="Search anime"
+                                placeholder={t("Search anime")}
                                 placeholderTextColor="rgba(255,255,255,0.35)"
                                 autoCorrect={false}
                                 autoCapitalize="none"
@@ -104,14 +105,14 @@ export function TVSearchScreen() {
                             />
                         </View>
                         <TVButton
-                            label="Search"
+                            label={t("Search")}
                             variant="primary"
                             size="compact"
                             icon={<Ionicons name="search" size={tvSize(20)} color="white" />}
                             onPress={submit}
                         />
                         <TVButton
-                            label={activeFilters ? `Filters (${activeFilters})` : "Filters"}
+                            label={activeFilters ? t("Filters ({{count}})", { count: activeFilters }) : t("Filters")}
                             variant="secondary"
                             size="compact"
                             icon={<Ionicons name="options-outline" size={tvSize(20)} color="white" />}
@@ -131,11 +132,11 @@ export function TVSearchScreen() {
                     </View>
                 ) : undefined}
                 emptyTitle={shouldQuery
-                    ? (params.title ? `No results for “${params.title}”` : "No titles match these filters")
-                    : "Search the AniList catalog"}
+                    ? (params.title ? t("No results for “{{query}}”", { query: params.title }) : t("No titles match these filters"))
+                    : t("Search the AniList catalog")}
                 emptyText={shouldQuery
-                    ? "Try another title or change the filters."
-                    : "Use the search box or filters above."}
+                    ? t("Try another title or change the filters.")
+                    : t("Use the search box or filters above.")}
             />
 
             <TVSearchFilterDrawer

@@ -1,6 +1,7 @@
 import type { Anime_Episode } from "@/api/generated/types"
 import { TV, tvSize } from "@/components/tv/tv-scale"
 import { TVSectionHeader } from "@/components/tv/tv-section-header"
+import { t } from "@/lib/i18n"
 import * as React from "react"
 import { FlatList, TVFocusGuideView, View } from "react-native"
 import { TVEpisodeCard } from "./tv-episode-card"
@@ -26,7 +27,7 @@ export const TVEpisodeShelf = React.memo(function TVEpisodeShelf({
             <TVEpisodeCard
                 image={item.episodeMetadata?.image}
                 duration={item.episodeMetadata?.length}
-                title={item.episodeTitle || `Episode ${item.episodeNumber}`}
+                title={item.episodeTitle || t("Episode {{number}}", { number: item.episodeNumber })}
                 subtitle={item.displayTitle}
                 preferred={first && index === 0}
                 recyclingKey={item.localFile?.path || `tv-episode-${item.episodeNumber}-${index}`}

@@ -5,6 +5,7 @@ import type {
     Anime_Entry,
     Manga_Entry,
 } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 
 export type ListForm = {
     status: AL_MediaListStatus
@@ -15,12 +16,12 @@ export type ListForm = {
 }
 
 export const LIST_STATUS: Array<{ value: AL_MediaListStatus; label: string }> = [
-    { value: "CURRENT", label: "Watching" },
-    { value: "PLANNING", label: "Planning" },
-    { value: "PAUSED", label: "Paused" },
-    { value: "COMPLETED", label: "Completed" },
-    { value: "DROPPED", label: "Dropped" },
-    { value: "REPEATING", label: "Rewatching" },
+    { value: "CURRENT", label: t("Watching") },
+    { value: "PLANNING", label: t("Planning") },
+    { value: "PAUSED", label: t("Paused") },
+    { value: "COMPLETED", label: t("Completed") },
+    { value: "DROPPED", label: t("Dropped") },
+    { value: "REPEATING", label: t("Rewatching") },
 ]
 
 export function parseListDate(value?: string) {

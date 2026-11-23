@@ -2,6 +2,7 @@ import type { HibikeManga_SearchResult } from "@/api/generated/types"
 import { useGetMangaMapping, useMangaManualMapping, useMangaManualSearch, useRemoveMangaMapping } from "@/api/hooks/manga.hooks"
 import { SheetFooter, SheetFooterButton } from "@/components/shared/sheet-footer"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Ionicons } from "@expo/vector-icons"
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
@@ -59,7 +60,7 @@ export function MangaManualMatchModal({
 
     return (
         <SeaBottomSheet
-            title="Manual Match"
+            title={t("Manual Match")}
             open={open}
             onOpenChange={onOpenChange}
             index={1}
@@ -70,7 +71,7 @@ export function MangaManualMatchModal({
                         variant="cancel"
                         onPress={() => onOpenChange(false)}
                     >
-                        <Text className="font-medium text-foreground/70">Close</Text>
+                        <Text className="font-medium text-foreground/70">{t("Close")}</Text>
                     </SheetFooterButton>
                     {currentMapping?.mangaId && (
                         <SheetFooterButton
@@ -81,7 +82,7 @@ export function MangaManualMatchModal({
                             {isRemoving ? (
                                 <ActivityIndicator size="small" color="#ef4444" />
                             ) : (
-                                <Text className="font-medium text-red-400">Remove mapping</Text>
+                                <Text className="font-medium text-red-400">{t("Remove mapping")}</Text>
                             )}
                         </SheetFooterButton>
                     )}
@@ -97,7 +98,7 @@ export function MangaManualMatchModal({
                             onChangeText={setQuery}
                             onSubmitEditing={handleSearch}
                             returnKeyType="search"
-                            placeholder="Search title..."
+                            placeholder={t("Search title...")}
                             placeholderTextColor="rgba(255,255,255,0.3)"
                             className="ml-2 flex-1 text-sm text-white"
                             autoCapitalize="none"
@@ -116,7 +117,7 @@ export function MangaManualMatchModal({
                         {isSearching ? (
                             <ActivityIndicator size="small" color="white" />
                         ) : (
-                            <Text className="text-sm font-medium text-primary-foreground">Search</Text>
+                            <Text className="text-sm font-medium text-primary-foreground">{t("Search")}</Text>
                         )}
                     </Pressable>
                 </View>
@@ -124,14 +125,14 @@ export function MangaManualMatchModal({
                 {currentMapping?.mangaId && (
                     <View className="bg-brand-300/10 border border-brand-300/20 rounded-xl px-3 py-2">
                         <Text className="text-xs text-brand-300">
-                            Currently mapped to: {currentMapping.mangaId}
+                            {t("Currently mapped to: {{id}}", { id: currentMapping.mangaId })}
                         </Text>
                     </View>
                 )}
 
                 {searchResults && searchResults.length === 0 && (
                     <View className="py-8 items-center">
-                        <Text className="text-white/40 text-sm">No results found</Text>
+                        <Text className="text-white/40 text-sm">{t("No results found")}</Text>
                     </View>
                 )}
 

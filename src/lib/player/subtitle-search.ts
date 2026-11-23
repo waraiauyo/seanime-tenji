@@ -1,3 +1,5 @@
+import { t, tc } from "@/lib/i18n"
+
 export type WyzieSubtitleResult = {
     url: string
     display: string
@@ -65,47 +67,47 @@ export function getLanguageDisplayName(code: string): string {
 }
 
 export const SUBTITLE_LANGUAGE_OPTIONS: { label: string; value: string }[] = [
-    { label: "All", value: "all" },
-    { label: "English", value: "en" },
-    { label: "Spanish", value: "es" },
-    { label: "French", value: "fr" },
-    { label: "German", value: "de" },
-    { label: "Italian", value: "it" },
-    { label: "Portuguese", value: "pt" },
-    { label: "Portuguese (BR)", value: "pb" },
-    { label: "Japanese", value: "ja" },
-    { label: "Korean", value: "ko" },
-    { label: "Chinese", value: "zh" },
-    { label: "Russian", value: "ru" },
-    { label: "Arabic", value: "ar" },
-    { label: "Turkish", value: "tr" },
-    { label: "Indonesian", value: "id" },
-    { label: "Vietnamese", value: "vi" },
-    { label: "Thai", value: "th" },
-    { label: "Hindi", value: "hi" },
-    { label: "Polish", value: "pl" },
-    { label: "Dutch", value: "nl" },
-    { label: "Romanian", value: "ro" },
-    { label: "Swedish", value: "sv" },
-    { label: "Czech", value: "cs" },
-    { label: "Hungarian", value: "hu" },
-    { label: "Greek", value: "el" },
-    { label: "Danish", value: "da" },
-    { label: "Finnish", value: "fi" },
-    { label: "Norwegian", value: "no" },
-    { label: "Ukrainian", value: "uk" },
-    { label: "Bulgarian", value: "bg" },
-    { label: "Croatian", value: "hr" },
-    { label: "Serbian", value: "sr" },
-    { label: "Slovak", value: "sk" },
-    { label: "Slovenian", value: "sl" },
-    { label: "Hebrew", value: "he" },
-    { label: "Persian", value: "fa" },
-    { label: "Malay", value: "ms" },
+    { label: tc("languages", "All"), value: "all" },
+    { label: t("English"), value: "en" },
+    { label: t("Spanish"), value: "es" },
+    { label: t("French"), value: "fr" },
+    { label: t("German"), value: "de" },
+    { label: t("Italian"), value: "it" },
+    { label: t("Portuguese"), value: "pt" },
+    { label: t("Portuguese (BR)"), value: "pb" },
+    { label: t("Japanese"), value: "ja" },
+    { label: t("Korean"), value: "ko" },
+    { label: t("Chinese"), value: "zh" },
+    { label: t("Russian"), value: "ru" },
+    { label: t("Arabic"), value: "ar" },
+    { label: t("Turkish"), value: "tr" },
+    { label: t("Indonesian"), value: "id" },
+    { label: t("Vietnamese"), value: "vi" },
+    { label: t("Thai"), value: "th" },
+    { label: t("Hindi"), value: "hi" },
+    { label: t("Polish"), value: "pl" },
+    { label: t("Dutch"), value: "nl" },
+    { label: t("Romanian"), value: "ro" },
+    { label: t("Swedish"), value: "sv" },
+    { label: t("Czech"), value: "cs" },
+    { label: t("Hungarian"), value: "hu" },
+    { label: t("Greek"), value: "el" },
+    { label: t("Danish"), value: "da" },
+    { label: t("Finnish"), value: "fi" },
+    { label: t("Norwegian"), value: "no" },
+    { label: t("Ukrainian"), value: "uk" },
+    { label: t("Bulgarian"), value: "bg" },
+    { label: t("Croatian"), value: "hr" },
+    { label: t("Serbian"), value: "sr" },
+    { label: t("Slovak"), value: "sk" },
+    { label: t("Slovenian"), value: "sl" },
+    { label: t("Hebrew"), value: "he" },
+    { label: t("Persian"), value: "fa" },
+    { label: t("Malay"), value: "ms" },
 ]
 
 export const SUBTITLE_FORMAT_OPTIONS: { label: string; value: string }[] = [
-    { label: "All", value: "all" },
+    { label: tc("formats", "All"), value: "all" },
     { label: "SRT", value: "srt" },
     { label: "ASS", value: "ass" },
     { label: "SSA", value: "ssa" },
@@ -151,7 +153,7 @@ export async function searchSubtitles(params: SubtitleSearchParams): Promise<Wyz
 
     const trimmedKey = key.trim()
     if (!trimmedKey) {
-        throw new Error("Wyzie API key required")
+        throw new Error(t("Wyzie API key required"))
     }
 
     const query = new URLSearchParams({
@@ -176,9 +178,9 @@ export async function searchSubtitles(params: SubtitleSearchParams): Promise<Wyz
     const res = await fetch(`https://sub.wyzie.io/search?${query.toString()}`)
     if (!res.ok) {
         if (res.status === 401) {
-            throw new Error("Wyzie API key is missing or invalid")
+            throw new Error(t("Wyzie API key is missing or invalid"))
         }
-        throw new Error(`Subtitle search failed: ${res.status}`)
+        throw new Error(t("Subtitle search failed: {{status}}", { status: res.status }))
     }
 
     const data: unknown[] = await res.json()

@@ -2,6 +2,7 @@ import { subscribeWsMessage } from "@/api/components/websocket-hub"
 import { useScanLocalFiles } from "@/api/hooks/scan.hooks"
 import { useCurrentUser } from "@/atoms/server.atoms"
 import { ExternalPlayerPickerSheet } from "@/components/features/player/external-player-picker-sheet"
+import { languagePreferenceLabel, showLanguagePicker } from "@/components/features/profile/language-setting"
 import { ProfileMenuItem, ProfileMenuSection, ProfileMenuToggle, RowDivider } from "@/components/features/profile/profile-menu"
 import { SafeView } from "@/components/layout/layout-view"
 import { Badge } from "@/components/ui/badge"
@@ -20,6 +21,7 @@ import {
     useIsLocalServer,
     useMangaDownloadDiskUsage,
 } from "@/lib/downloads"
+import { getLanguagePreference, t, tc } from "@/lib/i18n"
 import { useIsServerConnected, useManualOfflineMode, useServerConnectionState } from "@/lib/offline"
 import { checkForOtaUpdateManually, getOtaVersionInfo } from "@/lib/ota/updates"
 import { type ActiveStreamSession, activeStreamSessionAtom } from "@/lib/player"
@@ -104,6 +106,7 @@ function MobileProfileScreen() {
     const [isCheckingAppReleaseUpdate, setIsCheckingAppReleaseUpdate] = React.useState(false)
     const [isCheckingOtaUpdate, setIsCheckingOtaUpdate] = React.useState(false)
     const otaVersionInfo = React.useMemo(() => getOtaVersionInfo(), [])
+    const [languagePreference, setLanguagePreferenceState] = React.useState(getLanguagePreference)
 
     const [externalPlayerLabel, setExternalPlayerLabel] = React.useState(() =>
         playerLabel(getPlayerPreferences().externalPlayerTemplate),
@@ -111,12 +114,12 @@ function MobileProfileScreen() {
 
     const handleChangeServerUrlPress = React.useCallback(() => {
         Alert.alert(
-            "Change server URL?",
+            t("Change server URL?"),
             "",
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Continue",
+                    text: t("Continue"),
                     onPress: () => router.push("/(out)/set-server-url" as never),
                 },
             ],
@@ -145,14 +148,14 @@ function MobileProfileScreen() {
                 ])
 
                 if (!memoryCleared && !diskCleared) {
-                    toast.info("Image cache was already empty")
+                    toast.info(t("Image cache was already empty"))
                     return
                 }
 
-                toast.success("Image cache cleared")
+                toast.success(t("Image cache cleared"))
             }
             catch {
-                toast.error("Failed to clear image cache")
+                toast.error(t("Failed to clear image cache"))
             }
             finally {
                 setIsClearingImageCache(false)
@@ -166,12 +169,12 @@ function MobileProfileScreen() {
         }
 
         Alert.alert(
-            "Clear image cache?",
-            "This removes cached posters, banners, and avatars. Images will download again the next time they are shown.",
+            t("Clear image cache?"),
+            t("This removes cached posters, banners, and avatars. Images will download again the next time they are shown."),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Clear",
+                    text: t("Clear"),
                     style: "destructive",
                     onPress: clearImageCache,
                 },
@@ -205,10 +208,10 @@ function MobileProfileScreen() {
 
     const viewer = user?.viewer
     const connectionLabel = connectionState === "connected"
-        ? "Connected to server"
+        ? t("Connected to server")
         : connectionState === "connecting"
-            ? "Checking server"
-            : "Offline"
+            ? t("Checking server")
+            : t("Offline")
     const connectionColorClassName = connectionState === "connected"
         ? "bg-green-400"
         : connectionState === "connecting"
@@ -239,7 +242,7 @@ function MobileProfileScreen() {
                     )}
 
                     <Text className="text-xl font-bold text-foreground">
-                        {viewer?.name || "User"}
+                        {viewer?.name || t("User")}
                     </Text>
 
 
@@ -258,18 +261,18 @@ function MobileProfileScreen() {
                     <ProfileMenuSection title="AniList">
                         <ProfileMenuItem
                             icon="list-outline"
-                            label="My Lists"
-                            detail="Browse your anime & manga lists"
+                            label={t("My Lists")}
+                            detail={t("Browse your anime & manga lists")}
                             onPress={() => router.push("/(app)/(tabs)/(profile)/my-lists" as never)}
                         />
                     </ProfileMenuSection>
 
                     {(activeStream || isServerConnected) ? (
-                        <ProfileMenuSection title="Streaming">
+                        <ProfileMenuSection title={t("Streaming")}>
                             {activeStream ? (
                                 <ProfileMenuItem
                                     icon={activeStream.streamMode === "debrid" ? "cloud-outline" : "radio-outline"}
-                                    label="Playback Session"
+                                    label={t("Playback Session")}
                                     detail={streamLabel(activeStream)}
                                     accessory={<ActiveStreamBadge status={activeStream.status} />}
                                     onPress={() => router.push("/(app)/(tabs)/(profile)/active-stream" as never)}
@@ -279,18 +282,18 @@ function MobileProfileScreen() {
                             {isServerConnected ? (
                                 <ProfileMenuItem
                                     icon="funnel-outline"
-                                    label="Auto-Select Profile"
-                                    detail="Multi-sub and multi-audio preferences"
+                                    label={t("Auto-Select Profile")}
+                                    detail={t("Multi-sub and multi-audio preferences")}
                                     onPress={() => router.push("/(app)/(tabs)/(profile)/auto-select-profile" as never)}
                                 />
                             ) : null}
                         </ProfileMenuSection>
                     ) : null}
 
-                    <ProfileMenuSection title="Downloads">
+                    <ProfileMenuSection title={t("Downloads")}>
                         <ProfileMenuItem
                             icon="tv-outline"
-                            label="Anime Downloads"
+                            label={t("Anime Downloads")}
                             detail={downloadLabel({
                                 active: activeAnimeDownloads.length,
                                 failed: failedAnimeDownloads.length,
@@ -306,7 +309,7 @@ function MobileProfileScreen() {
                         <RowDivider />
                         <ProfileMenuItem
                             icon="book-outline"
-                            label="Manga Downloads"
+                            label={t("Manga Downloads")}
                             detail={downloadLabel({
                                 active: activeMangaDownloads.length,
                                 failed: failedMangaDownloads.length,
@@ -322,32 +325,32 @@ function MobileProfileScreen() {
                         <RowDivider />
                         <ProfileMenuItem
                             icon="options-outline"
-                            label="Download Settings"
-                            detail="Wi-Fi, background, and queue preferences"
+                            label={t("Download Settings")}
+                            detail={t("Wi-Fi, background, and queue preferences")}
                             onPress={() => router.push("/(app)/(tabs)/(profile)/download-settings" as never)}
                         />
                     </ProfileMenuSection>
 
                     {(isServerConnected && isLocalServer) && (
-                        <ProfileMenuSection title="Server Library">
+                        <ProfileMenuSection title={t("Server Library")}>
                             <ProfileMenuItem
                                 icon="cloud-download-outline"
-                                label="Server Download Queue"
-                                detail="Monitor active downloads running on the server"
+                                label={t("Server Download Queue")}
+                                detail={t("Monitor active downloads running on the server")}
                                 onPress={() => router.push("/(app)/(tabs)/(profile)/server-downloads" as never)}
                             />
                             <RowDivider />
                             <ProfileMenuItem
                                 icon="alert-circle-outline"
-                                label="Resolve Unmatched"
-                                detail="Manually match unmatched files/folders to anime entries"
+                                label={t("Resolve Unmatched")}
+                                detail={t("Manually match unmatched files/folders to anime entries")}
                                 onPress={() => router.push("/(app)/(tabs)/(profile)/unmatched" as never)}
                             />
                             <RowDivider />
                             <ProfileMenuItem
                                 icon={isScanning ? "refresh" : "search-circle-outline"}
-                                label={isScanning ? (scanStatus || "Scanning library...") : "Rescan Library"}
-                                detail={isScanning ? `Progress: ${scanProgress ?? 0}%` : "Scan files in your host library"}
+                                label={isScanning ? (scanStatus || t("Scanning library...")) : t("Rescan Library")}
+                                detail={isScanning ? t("Progress: {{progress}}%", { progress: scanProgress ?? 0 }) : t("Scan files in your host library")}
                                 accessory={isScanning ? <ActivityIndicator size="small" color="rgba(255,255,255,0.45)" /> : undefined}
                                 onPress={handleRescan}
                                 hideChevron={isScanning}
@@ -355,27 +358,35 @@ function MobileProfileScreen() {
                         </ProfileMenuSection>
                     )}
 
-                    <ProfileMenuSection title="App">
+                    <ProfileMenuSection title={t("App")}>
+                        <ProfileMenuItem
+                            icon="language-outline"
+                            label={t("Language")}
+                            detail={languagePreferenceLabel(languagePreference)}
+                            onPress={() => showLanguagePicker(setLanguagePreferenceState)}
+                            hideChevron
+                        />
+                        <RowDivider />
                         <ProfileMenuToggle
                             icon="cloud-offline-outline"
-                            label="Offline Mode"
-                            detail="Force offline behavior even when connected"
+                            label={t("Offline Mode")}
+                            detail={t("Force offline behavior even when connected")}
                             value={manualOffline}
                             onToggle={setManualOffline}
                         />
                         <RowDivider />
                         <ProfileMenuItem
                             icon="images-outline"
-                            label="Clear Image Cache"
-                            detail="Purge cached posters, banners, and avatars"
+                            label={t("Clear Image Cache")}
+                            detail={t("Purge cached posters, banners, and avatars")}
                             onPress={handleClearImageCachePress}
                             hideChevron
                         />
                         <RowDivider />
                         <ProfileMenuItem
                             icon="document-text-outline"
-                            label="Logs"
-                            detail="Crash records and temporary diagnostics"
+                            label={t("Logs")}
+                            detail={t("Crash records and temporary diagnostics")}
                             onPress={() => router.push("/(app)/(tabs)/(profile)/logs" as never)}
                         />
                         <RowDivider />
@@ -388,8 +399,8 @@ function MobileProfileScreen() {
                         <RowDivider />
                         <ProfileMenuItem
                             icon="reload-circle-outline"
-                            label="Check New Release"
-                            detail={isCheckingAppReleaseUpdate ? "Checking releases" : undefined}
+                            label={t("Check New Release")}
+                            detail={isCheckingAppReleaseUpdate ? t("Checking releases") : undefined}
                             accessory={isCheckingAppReleaseUpdate ? <ActivityIndicator size="small" color="rgba(255,255,255,0.45)" /> : undefined}
                             onPress={handleCheckForAppReleaseUpdatePress}
                             hideChevron
@@ -404,8 +415,8 @@ function MobileProfileScreen() {
                         <RowDivider />
                         <ProfileMenuItem
                             icon="code-download-outline"
-                            label="Check OTA Update"
-                            detail={isCheckingOtaUpdate ? "Checking update server" : undefined}
+                            label={t("Check OTA Update")}
+                            detail={isCheckingOtaUpdate ? t("Checking update server") : undefined}
                             accessory={isCheckingOtaUpdate ? <ActivityIndicator size="small" color="rgba(255,255,255,0.45)" /> : undefined}
                             onPress={handleCheckForOtaUpdatePress}
                             hideChevron
@@ -413,16 +424,16 @@ function MobileProfileScreen() {
                         <RowDivider />
                         <ProfileMenuItem
                             icon="server-outline"
-                            label="Change Server URL"
+                            label={t("Change Server URL")}
                             onPress={handleChangeServerUrlPress}
                             hideChevron
                         />
                     </ProfileMenuSection>
 
-                    <ProfileMenuSection title="Player">
+                    <ProfileMenuSection title={t("Player")}>
                         <ProfileMenuItem
                             icon="play-circle-outline"
-                            label="External Player"
+                            label={t("External Player")}
                             detail={externalPlayerLabel}
                             onPress={() => setPlayerPickerOpen(true)}
                         />
@@ -443,7 +454,7 @@ function MobileProfileScreen() {
 }
 
 function ActiveStreamBadge({ status }: { status: ActiveStreamSession["status"] }) {
-    const label = status === "playing" ? "Live" : "Loading"
+    const label = status === "playing" ? tc("stream", "Live") : t("Loading")
 
     return (
         <Badge variant="secondary" className="items-center justify-center rounded-full bg-green-400/15 px-2 py-0.5">

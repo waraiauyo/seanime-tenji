@@ -5,6 +5,7 @@ import { ProfileSubpageHeader } from "@/components/features/profile/profile-menu
 import { SeaImage } from "@/components/shared/sea-image"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { Ionicons } from "@expo/vector-icons"
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
@@ -56,12 +57,12 @@ export default function UnmatchedScreen() {
         if (!group.localFiles || group.localFiles.length === 0) return
 
         Alert.alert(
-            "Match files?",
-            `Are you sure you want to match this folder to "${animeTitle}"?`,
+            t("Match files?"),
+            t("Are you sure you want to match this folder to \"{{title}}\"?", { title: animeTitle }),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Match",
+                    text: t("Match"),
                     onPress: () => {
                         setSelectedGroup(null)
                         setSearchQuery("")
@@ -85,11 +86,11 @@ export default function UnmatchedScreen() {
     if (!isConnected) {
         return (
             <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
-                <ProfileSubpageHeader title="Resolve Unmatched" />
+                <ProfileSubpageHeader title={t("Resolve Unmatched")} />
                 <View className="flex-1 items-center justify-center px-6 gap-3">
                     <Ionicons name="wifi-outline" size={48} color="rgba(255,255,255,0.25)" />
-                    <Text className="text-white text-base font-semibold text-center">Server Offline</Text>
-                    <Text className="text-white/40 text-sm text-center">Please connect to the Seanime server to resolve unmatched files.</Text>
+                    <Text className="text-white text-base font-semibold text-center">{t("Server Offline")}</Text>
+                    <Text className="text-white/40 text-sm text-center">{t("Please connect to the Seanime server to resolve unmatched files.")}</Text>
                 </View>
             </View>
         )
@@ -98,8 +99,8 @@ export default function UnmatchedScreen() {
     return (
         <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
             <ProfileSubpageHeader
-                title="Resolve Unmatched"
-                detail="Manually match unmatched files/folders to anime entries."
+                title={t("Resolve Unmatched")}
+                detail={t("Manually match unmatched files/folders to anime entries.")}
             />
 
             {isLoadingCollection || isMatching ? (
@@ -109,8 +110,8 @@ export default function UnmatchedScreen() {
             ) : unmatchedGroups.length === 0 ? (
                 <View className="flex-1 items-center justify-center px-6 gap-3">
                     <Ionicons name="checkmark-circle-outline" size={48} color="rgba(74,222,128,0.4)" />
-                    <Text className="text-white text-base font-semibold text-center">All Files Matched</Text>
-                    <Text className="text-white/40 text-sm text-center">No unmatched files or directories found on your server.</Text>
+                    <Text className="text-white text-base font-semibold text-center">{t("All Files Matched")}</Text>
+                    <Text className="text-white/40 text-sm text-center">{t("No unmatched files or directories found on your server.")}</Text>
                 </View>
             ) : (
                 <ScrollView
@@ -139,7 +140,7 @@ export default function UnmatchedScreen() {
                                             {group.dir}
                                         </Text>
                                         <Text className="text-[10px] text-white/60 font-semibold mt-1">
-                                            {group.localFiles?.length || 0} unmatched files
+                                            {t("{{count}} unmatched files", { count: group.localFiles?.length || 0 })}
                                         </Text>
                                     </View>
                                 </View>
@@ -147,13 +148,13 @@ export default function UnmatchedScreen() {
                                 {group.suggestions && group.suggestions.length > 0 && (
                                     <View className="mt-1">
                                         <Text className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-2">
-                                            Suggestions
+                                            {t("Suggestions")}
                                         </Text>
                                         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-2">
                                             {group.suggestions.map((anime) => (
                                                 <Pressable
                                                     key={anime.id}
-                                                    onPress={() => handleMatch(group, anime.id, anime.title?.userPreferred || "Anime")}
+                                                    onPress={() => handleMatch(group, anime.id, anime.title?.userPreferred || t("Anime"))}
                                                     className="flex-row items-center bg-indigo-500/10 border border-indigo-500/20 active:bg-indigo-500/20 px-3 py-2 rounded-xl gap-2 mr-2"
                                                 >
                                                     <SeaImage
@@ -174,7 +175,7 @@ export default function UnmatchedScreen() {
                                     className="flex-row items-center justify-center bg-white/5 active:bg-white/10 border border-white/5 py-2.5 rounded-xl gap-2 mt-1"
                                 >
                                     <Ionicons name="search-outline" size={14} color="rgba(255,255,255,0.7)" />
-                                    <Text className="text-white text-xs font-semibold">Search Manually</Text>
+                                    <Text className="text-white text-xs font-semibold">{t("Search Manually")}</Text>
                                 </Pressable>
                             </View>
                         )
@@ -183,7 +184,7 @@ export default function UnmatchedScreen() {
             )}
 
             <SeaBottomSheet
-                title="Match Folder"
+                title={t("Match Folder")}
                 open={selectedGroup !== null}
                 onOpenChange={(open) => {
                     if (!open) {
@@ -197,7 +198,7 @@ export default function UnmatchedScreen() {
                     <View className="gap-4">
                         <View className="gap-1.5">
                             <Text className="text-xs text-white/40 leading-relaxed">
-                                Search AniList to manually match the folder:
+                                {t("Search AniList to manually match the folder:")}
                             </Text>
                             <Text className="text-sm font-semibold text-white" numberOfLines={1}>
                                 {selectedGroup.dir}
@@ -208,7 +209,7 @@ export default function UnmatchedScreen() {
                             <BottomSheetTextInput
                                 value={searchQuery}
                                 onChangeText={setSearchQuery}
-                                placeholder="Search AniList..."
+                                placeholder={t("Search AniList...")}
                                 placeholderTextColor="rgba(255,255,255,0.35)"
                                 className="flex-1 py-0 text-foreground"
                                 returnKeyType="search"
@@ -223,14 +224,14 @@ export default function UnmatchedScreen() {
                             </View>
                         ) : searchQuery.length > 0 && (!searchResults?.Page?.media || searchResults.Page.media.length === 0) ? (
                             <View className="py-12 items-center">
-                                <Text className="text-white/40 text-sm">No results found</Text>
+                                <Text className="text-white/40 text-sm">{t("No results found")}</Text>
                             </View>
                         ) : (
                             <ScrollView className="max-h-[300px]" showsVerticalScrollIndicator={false}>
                                 {searchResults?.Page?.media?.map((anime) => (
                                     <Pressable
                                         key={anime.id}
-                                        onPress={() => handleMatch(selectedGroup, anime.id, anime.title?.userPreferred || "Anime")}
+                                        onPress={() => handleMatch(selectedGroup, anime.id, anime.title?.userPreferred || t("Anime"))}
                                         className="flex-row items-center p-3 rounded-2xl border border-white/5 bg-white/[0.02] mb-2 active:bg-white/5 gap-3"
                                     >
                                         <SeaImage source={{ uri: anime.coverImage?.large }} style={{ width: 32, height: 40, borderRadius: 6 }} />
@@ -239,7 +240,7 @@ export default function UnmatchedScreen() {
                                                 {anime.title?.userPreferred || anime.title?.romaji || anime.title?.english}
                                             </Text>
                                             <Text className="text-white/40 text-xs mt-1" numberOfLines={1}>
-                                                {anime.seasonYear ? `${anime.seasonYear} · ` : ""}{anime.format || ""}
+                                                {anime.seasonYear ? `${anime.seasonYear} · ` : ""}{anime.format ? t(anime.format) : ""}
                                             </Text>
                                         </View>
                                         <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.3)" />

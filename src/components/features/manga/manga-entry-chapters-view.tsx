@@ -9,6 +9,7 @@ import { Surface } from "@/components/shared/surface"
 import { FormSectionLabel } from "@/components/ui/form-field"
 import { useHandleMangaChapters } from "@/hooks/use-manga-chapters"
 import { useCompletedMangaChapters, useIsMangaChapterDownloaded, useMangaChapterDownloadInfo } from "@/lib/downloads/use-manga-downloads"
+import { t, tc, tn } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { useRouter } from "expo-router"
@@ -131,8 +132,8 @@ export function MangaEntryChaptersView({
     if (providerOptions.length === 0) {
         return (
             <LuffyError
-                title="No providers"
-                description="No manga provider extensions are installed. Install one from the extension manager on your Seanime server."
+                title={t("No providers")}
+                description={t("No manga provider extensions are installed. Install one from the extension manager on your Seanime server.")}
             />
         )
     }
@@ -142,13 +143,13 @@ export function MangaEntryChaptersView({
             <View className="px-4 mb-5">
                 <Surface variant="muted" className="p-3.5 gap-4">
                     <View className="gap-2">
-                        <FormSectionLabel>Source</FormSectionLabel>
+                        <FormSectionLabel>{t("Source")}</FormSectionLabel>
                         <NativeSelect
                             options={providerOptions.map(o => ({ id: o.value, label: o.label }))}
                             selectedId={selectedProvider ?? ""}
                             onSelect={(id) => setSelectedProvider({ mId: mediaId, provider: id })}
-                            title="Select Source"
-                            placeholder="Select provider"
+                            title={t("Select Source")}
+                            placeholder={t("Select provider")}
                         />
                     </View>
 
@@ -156,26 +157,26 @@ export function MangaEntryChaptersView({
                         <View className="flex-row gap-3">
                             {scanlatorOptions.length > 0 && (
                                 <View className="flex-1 gap-2">
-                                    <FormSectionLabel>Scanlator</FormSectionLabel>
+                                    <FormSectionLabel>{t("Scanlator")}</FormSectionLabel>
                                     <NativeSelect
-                                        options={[{ id: "", label: "All" }, ...scanlatorOptions.map(o => ({ id: o.value, label: o.label }))]}
+                                        options={[{ id: "", label: tc("scanlators", "All") }, ...scanlatorOptions.map(o => ({ id: o.value, label: o.label }))]}
                                         selectedId={selectedFilters.scanlators[0] ?? ""}
                                         onSelect={(id) => setSelectedScanlator({ mId: mediaId, scanlators: id ? [id] : [] })}
-                                        title="Select Scanlator"
-                                        placeholder="All"
+                                        title={t("Select Scanlator")}
+                                        placeholder={tc("scanlators", "All")}
                                     />
                                 </View>
                             )}
 
                             {languageOptions.length > 0 && (
                                 <View className="flex-1 gap-2">
-                                    <FormSectionLabel>Language</FormSectionLabel>
+                                    <FormSectionLabel>{t("Language")}</FormSectionLabel>
                                     <NativeSelect
-                                        options={[{ id: "", label: "All" }, ...languageOptions.map(o => ({ id: o.value, label: o.label }))]}
+                                        options={[{ id: "", label: tc("languages", "All") }, ...languageOptions.map(o => ({ id: o.value, label: o.label }))]}
                                         selectedId={selectedFilters.language ?? ""}
                                         onSelect={(id) => setSelectedLanguage({ mId: mediaId, language: id })}
-                                        title="Select Language"
-                                        placeholder="All"
+                                        title={t("Select Language")}
+                                        placeholder={tc("languages", "All")}
                                     />
                                 </View>
                             )}
@@ -184,8 +185,8 @@ export function MangaEntryChaptersView({
 
                     <View className="items-center gap-4">
                         <LabeledSwitch
-                            label="Unread only"
-                            helper="Show only chapters that you haven't read"
+                            label={t("Unread only")}
+                            helper={t("Show only chapters that you haven't read")}
                             checked={unreadOnly}
                             onToggle={() => setUnreadOnly(current => !current)}
                         />
@@ -218,8 +219,8 @@ export function MangaEntryChaptersView({
                 <View className="flex-row items-center justify-between px-4 mb-3">
                     <Text className="text-sm font-medium text-foreground/70">
                         {unreadOnly
-                            ? `${unreadChapters.length} unread chapter${unreadChapters.length !== 1 ? "s" : ""}`
-                            : `${chapters.length} chapter${chapters.length !== 1 ? "s" : ""}`}
+                            ? tn("{{count}} unread chapter", "{{count}} unread chapters", unreadChapters.length)
+                            : tn("{{count}} chapter", "{{count}} chapters", chapters.length)}
                     </Text>
                     {downloadedCount > 0 && (
                         <View className="flex-row items-center gap-1.5 rounded-full border border-green-400/15 bg-green-400/10 px-2.5 py-1">
@@ -243,27 +244,27 @@ export function MangaEntryChaptersView({
             ) : chapterContainerError ? (
                 <View className="px-4">
                     <LuffyError
-                        title="Could not load chapters"
-                        description="Failed to fetch chapters from this provider. Try a different source or check your connection."
+                        title={t("Could not load chapters")}
+                        description={t("Failed to fetch chapters from this provider. Try a different source or check your connection.")}
                     />
                 </View>
             ) : chapters.length === 0 ? (
                 <View className="px-4">
                     <LuffyError
-                        title="No chapters"
-                        description="No chapters found from this provider."
+                        title={t("No chapters")}
+                        description={t("No chapters found from this provider.")}
                     />
                 </View>
             ) : visibleChapters.length === 0 ? (
                 <View className="px-4">
                     <LuffyError
-                        title="All caught up"
-                        description="No unread chapters match the current filters. Turn off Unread only to browse the full list."
+                        title={t("All caught up")}
+                        description={t("No unread chapters match the current filters. Turn off Unread only to browse the full list.")}
                     />
                 </View>
             ) : (
                 <View className="px-4">
-                    <Text className="text-xl font-bold text-foreground mb-4">Chapters</Text>
+                    <Text className="text-xl font-bold text-foreground mb-4">{t("Chapters")}</Text>
                     <Surface className="overflow-hidden">
                         {pagedChapters.map((item, index) => (
                             <ChapterListItem
@@ -397,7 +398,7 @@ function ChapterListItem({
                     )}
                     numberOfLines={2}
                 >
-                    {chapter.title || `Chapter ${chapter.chapter}`}
+                    {chapter.title || t("Chapter {{number}}", { number: chapter.chapter })}
                 </Text>
                 {(showScanlator && !!chapter.scanlator) && (
                     <Text className="text-xs text-muted-foreground" numberOfLines={1}>

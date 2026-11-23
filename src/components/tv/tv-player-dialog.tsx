@@ -1,6 +1,7 @@
 import { TVButton } from "@/components/tv/tv-focus"
 import { requestTVFocus } from "@/components/tv/tv-native"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import * as React from "react"
 import { Pressable, Text, TVFocusGuideView, View } from "react-native"
 
@@ -103,7 +104,7 @@ export function TVPlayerDialog({
                 >
                     <TVButton
                         ref={cancelRef}
-                        label="Cancel"
+                        label={t("Cancel")}
                         preferred
                         onPress={onCancel}
                     />

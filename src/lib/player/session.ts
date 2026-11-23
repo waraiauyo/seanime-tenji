@@ -13,6 +13,7 @@ import type {
 } from "@/api/generated/types"
 import { usePlaybackCancelManualTracking } from "@/api/hooks/playback_manager.hooks"
 import { useServerUrl } from "@/atoms/server.atoms"
+import { t, tc } from "@/lib/i18n"
 import { logger } from "@/lib/utils/logger"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "expo-router"
@@ -281,11 +282,11 @@ function getActiveStreamSessionFromPending(
     const title = pending.media?.title?.userPreferred
         || pending.media?.title?.romaji
         || pending.media?.title?.english
-        || `Anime #${pending.mediaId}`
+        || t("Anime #{{id}}", { id: pending.mediaId })
     const episodeTitle = pending.episode?.episodeTitle || pending.episode?.displayTitle
     const subtitle = episodeTitle
-        ? `Episode ${pending.episodeNumber} · ${episodeTitle}`
-        : `Episode ${pending.episodeNumber}`
+        ? t("Episode {{number}} · {{title}}", { number: pending.episodeNumber, title: episodeTitle })
+        : t("Episode {{number}}", { number: pending.episodeNumber })
     const now = Date.now()
 
     return {
@@ -305,14 +306,14 @@ function getFallbackActiveStreamCopy(streamMode: StreamSessionMode,
 ): Pick<ActiveStreamSession, "title" | "subtitle"> {
     if (streamMode === "debrid") {
         return {
-            title: "Debrid streaming",
-            subtitle: update.torrentName && update.torrentName !== "-" ? update.torrentName : "Ongoing",
+            title: t("Debrid streaming"),
+            subtitle: update.torrentName && update.torrentName !== "-" ? update.torrentName : t("Ongoing"),
         }
     }
 
     return {
-        title: "Torrent streaming",
-        subtitle: "Ongoing",
+        title: t("Torrent streaming"),
+        subtitle: t("Ongoing"),
     }
 }
 
@@ -370,7 +371,7 @@ function updateActiveStreamSessionFromExternalPlayerPayload(
 ): ActiveStreamSession {
     const update: ActiveStreamSessionUpdate = {
         status: "playing",
-        message: "Streaming",
+        message: tc("status", "Streaming"),
     }
     const base = (pending
         ? updateActiveStreamSession(current, pending, streamMode, update)
@@ -383,7 +384,7 @@ function updateActiveStreamSessionFromExternalPlayerPayload(
         ? payload.mediaTitle
         : base?.title ?? getFallbackActiveStreamCopy(streamMode, update).title
     const subtitle = episodeNumber !== null
-        ? `Episode ${episodeNumber}`
+        ? t("Episode {{number}}", { number: episodeNumber })
         : base?.subtitle ?? getFallbackActiveStreamCopy(streamMode, update).subtitle
 
     return {
@@ -402,20 +403,20 @@ function updateActiveStreamSessionFromExternalPlayerPayload(
 export function getTorrentStreamLoadingLabel(state: TorrentStreamLoadingState | null, torrentName?: string | null): string {
     switch (state) {
         case "SEARCHING_TORRENTS":
-            return "Searching torrents..."
+            return t("Searching torrents...")
         case "CHECKING_TORRENT":
-            return torrentName ? `Checking torrent ${torrentName}` : "Checking torrent..."
+            return torrentName ? t("Checking torrent {{name}}", { name: torrentName }) : t("Checking torrent...")
         case "ADDING_TORRENT":
-            return torrentName ? `Adding torrent ${torrentName}` : "Adding torrent..."
+            return torrentName ? t("Adding torrent {{name}}", { name: torrentName }) : t("Adding torrent...")
         case "SELECTING_FILE":
-            return "Selecting file..."
+            return t("Selecting file...")
         case "STARTING_SERVER":
-            return "Starting stream server..."
+            return t("Starting stream server...")
         case "SENDING_STREAM_TO_MEDIA_PLAYER":
-            return "Sending stream to player..."
+            return t("Sending stream to player...")
         case "LOADING":
         default:
-            return "Preparing stream..."
+            return t("Preparing stream...")
     }
 }
 
@@ -564,7 +565,7 @@ export function usePlayerEventListener() {
                             setTorrentLoadingState("SENDING_STREAM_TO_MEDIA_PLAYER")
                             setActiveStreamSession(current => updateActiveStreamSession(current, pendingInfoRef.current, "torrent", {
                                 status: "ready",
-                                message: "Sending stream to player...",
+                                message: t("Sending stream to player..."),
                             }))
                             return
 
@@ -576,7 +577,7 @@ export function usePlayerEventListener() {
                             setTorrentLoadingTorrentName(null)
                             setActiveStreamSession(current => updateActiveStreamSession(current, pendingInfoRef.current, "torrent", {
                                 status: "playing",
-                                message: "Streaming",
+                                message: tc("status", "Streaming"),
                             }))
                             return
 
@@ -586,7 +587,7 @@ export function usePlayerEventListener() {
                             setTorrentStatus((payload.data as Torrentstream_TorrentStatus | undefined) ?? null)
                             setActiveStreamSession(current => updateActiveStreamSession(current, pendingInfoRef.current, "torrent", {
                                 status: "playing",
-                                message: "Streaming",
+                                message: tc("status", "Streaming"),
                             }))
                             return
 

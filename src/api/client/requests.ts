@@ -4,6 +4,7 @@ import { getServerAuthHeaders } from "@/api/client/server-auth"
 import { getServerBaseUrl } from "@/api/client/server-url"
 import { getStoredServerAuthToken, useServerAuthToken, useServerUrl, useSetServerAuthToken } from "@/atoms/server.atoms"
 import { isGlobalConnected, isManualOfflineModeEnabled, markServerReachable, markServerUnreachable } from "@/lib/connection-state"
+import { t, tn } from "@/lib/i18n"
 import { logger } from "@/lib/utils/logger"
 import { toast } from "@/lib/utils/toast"
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "@tanstack/react-query"
@@ -54,7 +55,7 @@ function normalizeSeaError(error: unknown): SeaError {
         return createSeaError(error.error)
     }
 
-    return createSeaError("Unknown error occurred")
+    return createSeaError(t("Unknown error occurred"))
 }
 
 function isConnectivityFailure(error: unknown, seaError: SeaError): boolean {
@@ -135,7 +136,7 @@ export async function buildSeaQuery<T, D = unknown>(
             }
             catch {
                 if (!response.ok) {
-                    throw createSeaError(`Request failed with status ${response.status}`, response.status)
+                    throw createSeaError(t("Request failed with status {{status}}", { status: response.status }), response.status)
                 }
 
                 return text as T
@@ -144,14 +145,14 @@ export async function buildSeaQuery<T, D = unknown>(
 
         if (!text) {
             if (!response.ok) {
-                throw createSeaError(`Request failed with status ${response.status}`, response.status)
+                throw createSeaError(t("Request failed with status {{status}}", { status: response.status }), response.status)
             }
             return undefined as T
         }
 
         if (!response.ok) {
             // Handle error by returning a rejected promise with the error message
-            throw createSeaError(responseData?.error || "Unknown error occurred", response.status)
+            throw createSeaError(responseData?.error || t("Unknown error occurred"), response.status)
         }
 
         return responseData?.data as T
@@ -162,7 +163,7 @@ export async function buildSeaQuery<T, D = unknown>(
         if (wasAborted) throw error
 
         const seaError = timedOut
-            ? createSeaError(`Request timed out after ${Math.round(timeoutMs / 1000)} seconds`)
+            ? createSeaError(tn("Request timed out after {{count}} second", "Request timed out after {{count}} seconds", Math.round(timeoutMs / 1000)))
             : normalizeSeaError(error)
         const connectivityFailure = isConnectivityFailure(error, seaError)
 
@@ -299,25 +300,25 @@ export function useServerQuery<R, V = any>(
 //----------------------------------------------------------------------------------------------------------------------
 
 function _handleSeaError(data: any): string {
-    if (typeof data === "string") return "Server Error: " + data
+    if (typeof data === "string") return t("Server Error: {{error}}", { error: data })
 
     const err = data?.error as string
 
-    if (!err) return "Unknown error"
+    if (!err) return t("Unknown error")
 
     if (err.includes("Too many requests"))
-        return "AniList: Too many requests, please wait a moment and try again."
+        return t("AniList: Too many requests, please wait a moment and try again.")
 
     try {
         const graphqlErr = JSON.parse(err) as any
         log.warning("AniList error", graphqlErr)
         if (graphqlErr.graphqlErrors && graphqlErr.graphqlErrors.length > 0 && !!graphqlErr.graphqlErrors[0]?.message) {
-            return "AniList error: " + graphqlErr.graphqlErrors[0]?.message
+            return t("AniList error: {{error}}", { error: graphqlErr.graphqlErrors[0]?.message })
         }
-        return "AniList error"
+        return t("AniList error")
     }
     catch (e) {
-        return "Error: " + err
+        return t("Error: {{error}}", { error: err })
     }
 }
 

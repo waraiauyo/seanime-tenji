@@ -30,6 +30,7 @@ import {
     useLocalMangaChapterPages,
     useMangaChapterDownloadInfo,
 } from "@/lib/downloads/use-manga-downloads"
+import { t, tc } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
@@ -377,22 +378,22 @@ export function MangaReaderScreen({ mediaId, provider, chapterId, chapterNumber 
 
             if (key === "readingMode") {
                 label = value === MANGA_READING_MODE.LONG_STRIP
-                    ? "Long Strip"
+                    ? t("Long Strip")
                     : value === MANGA_READING_MODE.DOUBLE_PAGE
-                        ? "Double Page"
-                        : "Single Page"
+                        ? t("Double Page")
+                        : t("Single Page")
             } else if (key === "readingDirection") {
-                label = value === MANGA_READING_DIRECTION.RTL ? "Right to Left" : "Left to Right"
+                label = value === MANGA_READING_DIRECTION.RTL ? t("Right to Left") : t("Left to Right")
             } else if (key === "pageGap") {
-                label = value ? "Page Gaps On" : "Page Gaps Off"
+                label = value ? t("Page Gaps On") : t("Page Gaps Off")
             } else if (key === "pageGapAmount") {
-                label = `Gap ${String(value)}px`
+                label = t("Gap {{value}}px", { value: String(value) })
             } else if (key === "pageGapShadow") {
-                label = value ? "Gap Shadow On" : "Gap Shadow Off"
+                label = value ? t("Gap Shadow On") : t("Gap Shadow Off")
             } else if (key === "showProgressBar") {
-                label = value ? "Progress Bar On" : "Progress Bar Off"
+                label = value ? t("Progress Bar On") : t("Progress Bar Off")
             } else if (key === "doublePageOffset") {
-                label = `Offset ${String(value)}`
+                label = t("Offset {{value}}", { value: String(value) })
             }
 
             if (label) setFlashText(label)
@@ -630,8 +631,8 @@ export function MangaReaderScreen({ mediaId, provider, chapterId, chapterNumber 
     // android waits for warmup so restore does not jump after first render
     const showPreparingSavedPosition = !showUnavailableState && !showLoading && pages.length > 0 && isAndroidLongStrip && !androidLongStripInitialWarmupComplete
     const showEmpty = !showUnavailableState && !showLoading && pages.length === 0
-    const chapterTitle = currentChapter.title || `Chapter ${currentChapter.chapterNumber}`
-    const mangaTitle = entry?.media?.title?.userPreferred || entry?.media?.title?.english || entry?.media?.title?.romaji || `Manga #${mediaId}`
+    const chapterTitle = currentChapter.title || t("Chapter {{number}}", { number: currentChapter.chapterNumber })
+    const mangaTitle = entry?.media?.title?.userPreferred || entry?.media?.title?.english || entry?.media?.title?.romaji || t("Manga #{{id}}", { id: mediaId })
     const isUsingLocalPages = localPages.length > 0
 
     return (
@@ -643,28 +644,28 @@ export function MangaReaderScreen({ mediaId, provider, chapterId, chapterNumber 
                 <View className="flex-1 items-center justify-center gap-4">
                     <ActivityIndicator size="small" color="rgba(255,255,255,0.8)" />
                     <Text className="text-sm text-white/40">
-                        Loading chapter pages...
+                        {t("Loading chapter pages...")}
                     </Text>
                 </View>
             ) : showPreparingSavedPosition ? (
                 <View className="flex-1 items-center justify-center gap-4 px-6">
                     <ActivityIndicator size="small" color="rgba(255,255,255,0.8)" />
-                    <Text className="text-center text-sm text-white/40">Preparing pages...</Text>
+                    <Text className="text-center text-sm text-white/40">{t("Preparing pages...")}</Text>
                 </View>
             ) : showUnavailableState ? (
                 <ReaderStateCard
-                    title="Chapter unavailable offline"
-                    description="This chapter is not downloaded on your device yet. Open a downloaded chapter or reconnect to your Seanime server."
-                    actionLabel="Back"
+                    title={t("Chapter unavailable offline")}
+                    description={t("This chapter is not downloaded on your device yet. Open a downloaded chapter or reconnect to your Seanime server.")}
+                    actionLabel={t("Back")}
                     onPress={() => router.back()}
                 />
             ) : showEmpty ? (
                 <ReaderStateCard
-                    title={pageContainerError ? "Could not load chapter" : "No pages found"}
+                    title={pageContainerError ? t("Could not load chapter") : t("No pages found")}
                     description={pageContainerError
-                        ? "The chapter could not be loaded from the selected source. Try another chapter or reopen the entry screen."
-                        : "This chapter did not return any readable pages."}
-                    actionLabel="Back"
+                        ? t("The chapter could not be loaded from the selected source. Try another chapter or reopen the entry screen.")
+                        : t("This chapter did not return any readable pages.")}
+                    actionLabel={t("Back")}
                     onPress={() => router.back()}
                 />
             ) : (
@@ -882,7 +883,7 @@ export function MangaReaderScreen({ mediaId, provider, chapterId, chapterNumber 
                                         <Text
                                             className={cn("text-xs font-medium", previousChapter ? "text-white/40" : "text-white/35")}
                                         >
-                                            Prev
+                                            {t("Prev")}
                                         </Text>
                                     </Pressable>
 
@@ -899,7 +900,7 @@ export function MangaReaderScreen({ mediaId, provider, chapterId, chapterNumber 
                                         className="flex-row items-center gap-1.5 py-2 pl-4"
                                     >
                                         <Text className="text-xs font-medium text-white/40">
-                                            {nextChapter ? "Next" : "Done"}
+                                            {nextChapter ? tc("chapter", "Next") : t("Done")}
                                         </Text>
                                         <Ionicons
                                             name="chevron-forward"

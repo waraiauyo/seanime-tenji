@@ -14,6 +14,7 @@ import { OfflineBanner } from "@/components/shared/offline-banner"
 import { TVLibraryScreen } from "@/components/tv/tv-library-screen"
 import { ContinueWatchingItem, useAnimeLibraryCollection } from "@/hooks/use-anime-library-collection"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected, useServerLocalAnimeRecords } from "@/lib/offline"
 import { filterEntriesByTitle } from "@/lib/utils/filtering"
 import { useIsFocused } from "expo-router"
@@ -91,11 +92,11 @@ function MobileLibraryScreen() {
         )
 
         return [
-            { key: "current", title: "Currently watching", media: buildMedia("CURRENT"), sectionIndex: 0 },
-            { key: "paused", title: "Paused", media: buildMedia("PAUSED"), sectionIndex: 1 },
-            { key: "planning", title: "Planning", media: buildMedia("PLANNING"), sectionIndex: 2 },
-            { key: "completed", title: "Completed", media: buildMedia("COMPLETED"), sectionIndex: 3 },
-            { key: "dropped", title: "Dropped", media: buildMedia("DROPPED"), sectionIndex: 4 },
+            { key: "current", title: t("Currently watching"), media: buildMedia("CURRENT"), sectionIndex: 0 },
+            { key: "paused", title: t("Paused"), media: buildMedia("PAUSED"), sectionIndex: 1 },
+            { key: "planning", title: t("Planning"), media: buildMedia("PLANNING"), sectionIndex: 2 },
+            { key: "completed", title: t("Completed"), media: buildMedia("COMPLETED"), sectionIndex: 3 },
+            { key: "dropped", title: t("Dropped"), media: buildMedia("DROPPED"), sectionIndex: 4 },
         ].filter(section => section.media.length > 0)
     }, [libraryCollectionList])
 
@@ -217,8 +218,8 @@ function MobileLibraryScreen() {
                             )}
                             ListEmptyComponent={isConnected && continueWatchingList.length === 0 ? (
                                 <LuffyError
-                                    title="Your anime library is empty"
-                                    description="Add anime to your collection or use the Discover tab to find something to watch."
+                                    title={t("Your anime library is empty")}
+                                    description={t("Add anime to your collection or use the Discover tab to find something to watch.")}
                                 />
                             ) : undefined}
                             contentInsetAdjustmentBehavior="never"
@@ -242,7 +243,7 @@ function MobileLibraryScreen() {
                         <LibrarySearchHeader
                             value={searchQuery}
                             onChangeText={setSearchQuery}
-                            placeholder="Search anime..."
+                            placeholder={t("Search anime...")}
                             scrollY={scrollY}
                             hasHero={hasHero}
                         />

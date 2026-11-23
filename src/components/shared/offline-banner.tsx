@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n"
 import { useServerConnectionState } from "@/lib/offline"
 import { Ionicons } from "@expo/vector-icons"
 import React from "react"
@@ -18,7 +19,7 @@ export function OfflineBanner() {
             <View className="flex-row items-center justify-center gap-2 px-4 py-1.5">
                 <Ionicons name="cloud-offline-outline" size={13} color="rgba(255,255,255,0.7)" />
                 <Text className="text-xs font-medium text-white/70">
-                    Offline
+                    {t("Offline")}
                 </Text>
             </View>
         </Animated.View>

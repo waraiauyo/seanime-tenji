@@ -5,6 +5,7 @@ import type {
     Anime_EntryListData,
     Anime_NakamaEntryLibraryData,
 } from "@/api/generated/types"
+import { getIntlLocale, t } from "@/lib/i18n"
 
 type BaseMedia = AL_BaseAnime | AL_BaseManga
 
@@ -12,7 +13,7 @@ export function mediaTitle(media?: BaseMedia) {
     return media?.title?.userPreferred
         ?? media?.title?.english
         ?? media?.title?.romaji
-        ?? "Untitled"
+        ?? t("Untitled")
 }
 
 export function altTitle(media?: BaseMedia) {
@@ -92,12 +93,12 @@ export function scoreBg(score: number) {
 }
 
 const ANIME_STATUS: Record<string, string> = {
-    CURRENT: "Watching",
-    PLANNING: "Planning",
-    COMPLETED: "Completed",
-    DROPPED: "Dropped",
-    PAUSED: "Paused",
-    REPEATING: "Rewatching",
+    CURRENT: t("Watching"),
+    PLANNING: t("Planning"),
+    COMPLETED: t("Completed"),
+    DROPPED: t("Dropped"),
+    PAUSED: t("Paused"),
+    REPEATING: t("Rewatching"),
 }
 
 export function listStatus(status?: string) {
@@ -109,7 +110,7 @@ export function startLabel(media?: BaseMedia) {
     if (!start?.year) return undefined
 
     const date = new Date(start.year, (start.month ?? 1) - 1)
-    return new Intl.DateTimeFormat("en-US", {
+    return new Intl.DateTimeFormat(getIntlLocale(), {
         year: "numeric",
         month: "short",
     }).format(date)

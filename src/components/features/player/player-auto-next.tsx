@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { t } from "@/lib/i18n"
 import React from "react"
 import { Platform, Text, useWindowDimensions, View } from "react-native"
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
@@ -44,20 +45,20 @@ export function AutoNextCard({
             <View className="w-full gap-2.5 rounded-2xl border border-white/10 bg-black/90 px-4 py-3.5">
                 <View className="gap-1">
                     <Text className="text-xs font-bold uppercase tracking-wide text-white/50">
-                        Up next
+                        {t("Up next")}
                     </Text>
                     <Text className="text-sm font-bold text-white" numberOfLines={1}>
                         {nextEpisodeLabel}
                     </Text>
                     <Text className="text-xs text-white/40" numberOfLines={1}>
-                        Playing automatically in {countdown}s
+                        {t("Playing automatically in {{countdown}}s", { countdown })}
                     </Text>
                 </View>
 
                 <View className="w-full flex-row gap-2">
                     <Button variant="outline" className="min-w-0 flex-1" onPress={onCancel}>
                         <Text className="text-sm font-semibold text-foreground" numberOfLines={1}>
-                            Cancel
+                            {t("Cancel")}
                         </Text>
                     </Button>
 
@@ -67,7 +68,7 @@ export function AutoNextCard({
                         hasTVPreferredFocus={Platform.isTV}
                     >
                         <Text className="text-sm font-bold" numberOfLines={1}>
-                            Play now
+                            {t("Play now")}
                         </Text>
                     </Button>
                 </View>
@@ -110,7 +111,7 @@ export function NextEpisodeConfirmCard({
 
                 <View className="flex-row gap-3">
                     <Button variant="outline" className="flex-1" onPress={onCancel}>
-                        <Text className="text-sm font-semibold text-foreground">Cancel</Text>
+                        <Text className="text-sm font-semibold text-foreground">{t("Cancel")}</Text>
                     </Button>
 
                     <Button
@@ -118,7 +119,7 @@ export function NextEpisodeConfirmCard({
                         onPress={onConfirm}
                         hasTVPreferredFocus={Platform.isTV}
                     >
-                        <Text className="text-sm font-bold">Play now</Text>
+                        <Text className="text-sm font-bold">{t("Play now")}</Text>
                     </Button>
                 </View>
             </View>

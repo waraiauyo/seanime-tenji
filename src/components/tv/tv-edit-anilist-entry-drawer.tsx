@@ -13,6 +13,7 @@ import { TVDrawer } from "@/components/tv/tv-drawer"
 import { TVButton, TVPillButton } from "@/components/tv/tv-focus"
 import { TVInput } from "@/components/tv/tv-input"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { Ionicons } from "@expo/vector-icons"
 import * as React from "react"
@@ -50,7 +51,7 @@ const TVStepper = React.memo(function TVStepper({
                 style={{ flexDirection: "row", alignItems: "center", gap: tvSize(10) }}
             >
                 <TVButton
-                    label="Decrease"
+                    label={t("Decrease")}
                     size="compact"
                     variant="secondary"
                     disabled={value <= 0}
@@ -74,7 +75,7 @@ const TVStepper = React.memo(function TVStepper({
                     </Text>
                 </View>
                 <TVButton
-                    label="Increase"
+                    label={t("Increase")}
                     size="compact"
                     variant="secondary"
                     disabled={value >= max}
@@ -168,8 +169,8 @@ export function TVEditAnilistEntryDrawer({
         <TVDrawer
             open={open}
             onOpenChange={onOpenChange}
-            title={entry.media?.title?.userPreferred ?? "Anime list entry"}
-            subtitle={entry.listData ? "Edit AniList entry" : "Add to AniList"}
+            title={entry.media?.title?.userPreferred ?? t("Anime list entry")}
+            subtitle={entry.listData ? t("Edit AniList entry") : t("Add to AniList")}
             width={tvSize(820)}
         >
             <ScrollView
@@ -183,7 +184,7 @@ export function TVEditAnilistEntryDrawer({
             >
                 <View style={{ gap: tvSize(10) }}>
                     <Text className="font-semibold text-white/55" style={{ fontSize: tvSize(17) }}>
-                        Status
+                        {t("Status")}
                     </Text>
                     <TVFocusGuideView trapFocusLeft trapFocusRight>
                         <FlatList
@@ -210,39 +211,39 @@ export function TVEditAnilistEntryDrawer({
                 {!notReleased ? (
                     <>
                         <TVStepper
-                            label="Score"
+                            label={t("Score")}
                             value={Number.parseFloat(form.score) || 0}
                             max={10}
                             step={0.5}
                             onChange={value => setValue("score", value ? String(value) : "")}
                         />
                         <TVStepper
-                            label="Episodes"
+                            label={t("Episodes")}
                             value={Number.parseInt(form.progress, 10) || 0}
                             max={maxProgress}
                             onChange={value => setValue("progress", value ? String(value) : "")}
                         />
                         <View style={{ gap: tvSize(12) }}>
                             <Text className="font-semibold text-white/55" style={{ fontSize: tvSize(17) }}>
-                                Dates
+                                {t("Dates")}
                             </Text>
                             <View style={{ flexDirection: "row", gap: tvSize(14) }}>
                                 <View style={{ flex: 1, gap: tvSize(7) }}>
-                                    <Text className="text-white/40" style={{ fontSize: tvSize(15) }}>Start date</Text>
+                                    <Text className="text-white/40" style={{ fontSize: tvSize(15) }}>{t("Start date")}</Text>
                                     <TVInput
                                         value={start}
                                         onChangeText={value => setDate("startedAt", value, setStart)}
-                                        placeholder="YYYY-MM-DD"
+                                        placeholder={t("YYYY-MM-DD")}
                                         autoCorrect={false}
                                         autoCapitalize="none"
                                     />
                                 </View>
                                 <View style={{ flex: 1, gap: tvSize(7) }}>
-                                    <Text className="text-white/40" style={{ fontSize: tvSize(15) }}>Completion date</Text>
+                                    <Text className="text-white/40" style={{ fontSize: tvSize(15) }}>{t("Completion date")}</Text>
                                     <TVInput
                                         value={end}
                                         onChangeText={value => setDate("completedAt", value, setEnd)}
-                                        placeholder="YYYY-MM-DD"
+                                        placeholder={t("YYYY-MM-DD")}
                                         autoCorrect={false}
                                         autoCapitalize="none"
                                     />
@@ -250,7 +251,7 @@ export function TVEditAnilistEntryDrawer({
                             </View>
                             {!validDates ? (
                                 <Text className="font-medium text-red-300/80" style={{ fontSize: tvSize(15) }}>
-                                    Use YYYY-MM-DD for dates.
+                                    {t("Use YYYY-MM-DD for dates.")}
                                 </Text>
                             ) : null}
                         </View>
@@ -262,7 +263,7 @@ export function TVEditAnilistEntryDrawer({
                 {confirmRemove ? (
                     <View style={{ gap: tvSize(12) }}>
                         <Text className="font-semibold text-white" style={{ fontSize: tvSize(19) }}>
-                            Remove this anime from your AniList?
+                            {t("Remove this anime from your AniList?")}
                         </Text>
                         <TVFocusGuideView
                             trapFocusLeft
@@ -271,12 +272,12 @@ export function TVEditAnilistEntryDrawer({
                         >
                             <TVButton
                                 ref={keepRef}
-                                label="Keep entry"
+                                label={t("Keep entry")}
                                 preferred
                                 onPress={() => setConfirmRemove(false)}
                             />
                             <TVButton
-                                label={removing ? "Removing..." : "Remove"}
+                                label={removing ? t("Removing...") : t("Remove")}
                                 variant="danger"
                                 disabled={busy}
                                 onPress={() => remove({ mediaId: entry.mediaId, type: "anime" })}
@@ -291,12 +292,12 @@ export function TVEditAnilistEntryDrawer({
                     >
                         <TVButton
                             label={saving
-                                ? "Saving..."
+                                ? t("Saving...")
                                 : !isConnected
-                                    ? (entry.listData ? "Queue changes" : "Queue add")
+                                    ? (entry.listData ? t("Queue changes") : t("Queue add"))
                                     : entry.listData
-                                        ? "Save changes"
-                                        : "Add to list"}
+                                        ? t("Save changes")
+                                        : t("Add to list")}
                             variant="primary"
                             disabled={busy || !validDates}
                             icon={<Ionicons name="checkmark" size={tvSize(20)} color="white" />}
@@ -305,7 +306,7 @@ export function TVEditAnilistEntryDrawer({
                         {entry.listData && isConnected ? (
                             <TVButton
                                 ref={removeRef}
-                                label="Remove from list"
+                                label={t("Remove from list")}
                                 variant="danger"
                                 disabled={busy}
                                 icon={<Ionicons name="trash-outline" size={tvSize(20)} color="white" />}

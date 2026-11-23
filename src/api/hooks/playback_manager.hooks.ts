@@ -3,6 +3,7 @@ import { PlaybackPlayVideo_Variables, PlaybackStartManualTracking_Variables } fr
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Anime_LocalFile } from "@/api/generated/types"
 import { useServerStatus } from "@/atoms/server.atoms"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -43,7 +44,7 @@ export function usePlaybackCancelCurrentPlaylist(...keys: any) {
         method: API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackCancelCurrentPlaylist.methods[0],
         mutationKey: [API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackCancelCurrentPlaylist.key, ...keys],
         onSuccess: async () => {
-            toast.info("Cancelling playlist")
+            toast.info(t("Cancelling playlist"))
         },
     })
 }
@@ -54,7 +55,7 @@ export function usePlaybackPlaylistNext(...keys: any) {
         method: API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackPlaylistNext.methods[0],
         mutationKey: [API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackPlaylistNext.key, ...keys],
         onSuccess: async () => {
-            toast.info("Loading next file")
+            toast.info(t("Loading next file"))
         },
     })
 }
@@ -76,7 +77,7 @@ export function usePlaybackPlayRandomVideo() {
         method: API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackPlayRandomVideo.methods[0],
         mutationKey: [API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackPlayRandomVideo.key],
         onSuccess: async () => {
-            toast.success("Playing random episode")
+            toast.success(t("Playing random episode"))
         },
     })
 }
@@ -117,7 +118,7 @@ export function usePlaybackAutoPlayNextEpisode() {
         method: API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackAutoPlayNextEpisode.methods[0],
         mutationKey: [API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackAutoPlayNextEpisode.key],
         onSuccess: async () => {
-            toast.info("Loading next episode")
+            toast.info(t("Loading next episode"))
         },
     })
 }

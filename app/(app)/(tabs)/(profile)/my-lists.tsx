@@ -18,6 +18,7 @@ import { InlineSelect } from "@/components/shared/inline-select"
 import { LibrarySearchBar } from "@/components/shared/library-search-bar"
 import { TVMyListsScreen } from "@/components/tv/tv-my-lists-screen"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { getMediaGridLayout } from "@/lib/responsive-card-layout"
 import { cn } from "@/lib/utils"
@@ -70,17 +71,17 @@ const STATUS_ORDER: AL_MediaListStatus[] = [
 function statusLabel(status: AL_MediaListStatus, type: "anime" | "manga"): string {
     switch (status) {
         case "CURRENT":
-            return type === "anime" ? "Watching" : "Reading"
+            return type === "anime" ? t("Watching") : t("Reading")
         case "REPEATING":
-            return type === "anime" ? "Rewatching" : "Rereading"
+            return type === "anime" ? t("Rewatching") : t("Rereading")
         case "PLANNING":
-            return "Planning"
+            return t("Planning")
         case "PAUSED":
-            return "Paused"
+            return t("Paused")
         case "COMPLETED":
-            return "Completed"
+            return t("Completed")
         case "DROPPED":
-            return "Dropped"
+            return t("Dropped")
         default:
             return status
     }
@@ -94,7 +95,7 @@ function buildListOptions(
     lists: (AL_AnimeCollection_MediaListCollection_Lists | AL_MangaCollection_MediaListCollection_Lists)[] | undefined,
     type: "anime" | "manga",
 ): ListOption[] {
-    const options: ListOption[] = [{ value: "ALL", label: "All lists" }]
+    const options: ListOption[] = [{ value: "ALL", label: t("All lists") }]
     if (!lists) return options
 
     // standard status-based lists
@@ -217,17 +218,17 @@ function TypeToggle({
 }) {
     return (
         <View className="flex-row gap-0.5 rounded-3xl">
-            {(["anime", "manga"] as const).map(t => (
+            {(["anime", "manga"] as const).map(mediaType => (
                 <Pressable
-                    key={t}
-                    onPress={() => onChange(t)}
+                    key={mediaType}
+                    onPress={() => onChange(mediaType)}
                     className={cn(
                         "rounded-xl px-5 py-2 active:opacity-70",
-                        type === t ? "bg-white/15" : "bg-transparent",
+                        type === mediaType ? "bg-white/15" : "bg-transparent",
                     )}
                 >
-                    <Text className={cn("text-sm font-medium text-white/40", type === t && "font-bold text-white")}>
-                        {t === "anime" ? "Anime" : "Manga"}
+                    <Text className={cn("text-sm font-medium text-white/40", type === mediaType && "font-bold text-white")}>
+                        {mediaType === "anime" ? t("Anime") : t("Manga")}
                     </Text>
                 </Pressable>
             ))}
@@ -240,7 +241,7 @@ function EmptyState({ hasFilters }: { hasFilters: boolean }) {
         <Animated.View entering={FadeIn.duration(200)} className="items-center justify-center pt-24 gap-3">
             <Ionicons name="albums-outline" size={40} color="rgba(255,255,255,0.12)" />
             <Text className="text-center text-sm text-white/30">
-                {hasFilters ? "No entries match your filters" : "No entries in this list"}
+                {hasFilters ? t("No entries match your filters") : t("No entries in this list")}
             </Text>
         </Animated.View>
     )
@@ -409,7 +410,7 @@ export default function MyListsScreen() {
                         <LibrarySearchBar
                             value={titleInput}
                             onChangeText={handleTitleChange}
-                            placeholder={type === "anime" ? "Search anime\u2026" : "Search manga\u2026"}
+                            placeholder={type === "anime" ? t("Search anime\u2026") : t("Search manga\u2026")}
                         />
                     </View>
                 </View>

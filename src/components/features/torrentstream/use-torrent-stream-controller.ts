@@ -21,6 +21,7 @@ import {
 import { useServerStatus } from "@/atoms/server.atoms"
 import { torrentSearchAcrossProvidersAtom, torrentSearchExtraProviderIdsAtom } from "@/atoms/torrent-search.atoms"
 import { getDefaultPlaybackSource } from "@/lib/default-playback-source"
+import { t } from "@/lib/i18n"
 import {
     activeStreamSessionAtom,
     debridStreamStateAtom,
@@ -439,7 +440,7 @@ export function useTorrentStreamController({ entry, mode = "stream" }: UseTorren
         setActiveStreamSession(toActiveStreamSession(mode,
             entry,
             episode,
-            mode === "debrid" ? "Selecting best torrent..." : "Preparing stream..."))
+            mode === "debrid" ? t("Selecting best torrent...") : t("Preparing stream...")))
         setStreamSessionMode(mode)
         setIsPreparing(true)
         if (mode === "debrid") {
@@ -447,7 +448,7 @@ export function useTorrentStreamController({ entry, mode = "stream" }: UseTorren
             setDebridStreamState({
                 status: "started",
                 torrentName: "-",
-                message: "Selecting best torrent...",
+                message: t("Selecting best torrent..."),
             })
 
             startDebridStream(
@@ -544,8 +545,8 @@ export function useTorrentStreamController({ entry, mode = "stream" }: UseTorren
             entry,
             params.episode,
             mode === "debrid"
-                ? (params.fileId ? "Preparing selected file..." : "Analyzing selected torrent...")
-                : "Preparing stream...",
+                ? (params.fileId ? t("Preparing selected file...") : t("Analyzing selected torrent..."))
+                : t("Preparing stream..."),
             params.torrent.name,
         ))
         setStreamSessionMode(mode)
@@ -555,7 +556,7 @@ export function useTorrentStreamController({ entry, mode = "stream" }: UseTorren
             setDebridStreamState({
                 status: "started",
                 torrentName: params.torrent.name,
-                message: params.fileId ? "Preparing selected file..." : "Analyzing selected torrent...",
+                message: params.fileId ? t("Preparing selected file...") : t("Analyzing selected torrent..."),
             })
 
             startDebridStream(
@@ -990,7 +991,7 @@ function toActiveStreamSession(
     const title = entry.media?.title?.userPreferred
         || entry.media?.title?.romaji
         || entry.media?.title?.english
-        || `Anime #${entry.mediaId}`
+        || t("Anime #{{id}}", { id: entry.mediaId })
     const episodeTitle = episode.episodeTitle || episode.displayTitle
     const now = Date.now()
 
@@ -999,7 +1000,7 @@ function toActiveStreamSession(
         mediaId: entry.mediaId,
         episodeNumber: episode.episodeNumber,
         title,
-        subtitle: episodeTitle ? `Episode ${episode.episodeNumber} · ${episodeTitle}` : `Episode ${episode.episodeNumber}`,
+        subtitle: episodeTitle ? t("Episode {{number}} · {{title}}", { number: episode.episodeNumber, title: episodeTitle }) : t("Episode {{number}}", { number: episode.episodeNumber }),
         status: "preparing" as const,
         message,
         torrentName,

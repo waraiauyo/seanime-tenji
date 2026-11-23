@@ -2,6 +2,7 @@ import { TVButton } from "@/components/tv/tv-focus"
 import { requestTVFocus } from "@/components/tv/tv-native"
 import { tvSize } from "@/components/tv/tv-scale"
 import { IMAGES } from "@/constants/images"
+import { t } from "@/lib/i18n"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { Image } from "expo-image"
 import * as React from "react"
@@ -106,7 +107,7 @@ function TVInput({
                 focusable
                 hasTVPreferredFocus={preferred}
                 accessibilityRole="button"
-                accessibilityLabel={`Edit ${label}`}
+                accessibilityLabel={t("Edit {{label}}", { label })}
             >
                 <Animated.View
                     style={{
@@ -180,9 +181,9 @@ export function TVServerSetup({
     const field = passwordRequired ? (
         <TVInput
             key="password"
-            label="Server password"
+            label={t("Server password")}
             value={password}
-            placeholder="Enter server password"
+            placeholder={t("Enter server password")}
             secure
             preferred
             onChangeText={onPasswordChange}
@@ -191,7 +192,7 @@ export function TVServerSetup({
     ) : (
         <TVInput
             key="server"
-            label="Server URL"
+            label={t("Server URL")}
             value={serverUrl}
             placeholder="http://192.168.1.1:43211"
             keyboardType="url"
@@ -241,7 +242,7 @@ export function TVServerSetup({
                             className="font-black text-white"
                             style={{ fontSize: tvSize(38) }}
                         >
-                            {passwordRequired ? "Password required" : "Connect your server"}
+                            {passwordRequired ? t("Password required") : t("Connect your server")}
                         </Text>
                         <Text
                             className="text-white/45"
@@ -249,14 +250,14 @@ export function TVServerSetup({
                         >
                             {passwordRequired
                                 ? serverUrl
-                                : "Enter the address of your Seanime server."}
+                                : t("Enter the address of your Seanime server.")}
                         </Text>
                     </View>
 
                     <View style={{ gap: tvSize(18) }}>
                         {field}
                         <TVButton
-                            label={submitting ? "Connecting…" : "Connect"}
+                            label={submitting ? t("Connecting…") : t("Connect")}
                             variant="primary"
                             size="compact"
                             icon={<Ionicons name="arrow-forward" size={tvSize(20)} color="white" />}
@@ -270,7 +271,7 @@ export function TVServerSetup({
                         style={{ fontSize: tvSize(16) }}
                     >
                         {passwordRequired
-                            ? "Press Back to change the server address"
+                            ? t("Press Back to change the server address")
                             : ""}
                     </Text>
                 </View>

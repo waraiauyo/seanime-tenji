@@ -3,6 +3,7 @@ import { __media_listPageContentAtom } from "@/atoms/media-list"
 import { MediaEntryCard } from "@/components/features/media/media-entry-card"
 import { Button } from "@/components/ui/button"
 import { Text } from "@/components/ui/text"
+import { t } from "@/lib/i18n"
 import { Ionicons } from "@/lib/icons/Ionicons"
 import { buildMediaEntryHref, getMediaEntryKind } from "@/lib/media-entry-route"
 import { getHorizontalCardRenderCount, getHorizontalMediaCardRowHeight, getHorizontalMediaCardWidth } from "@/lib/responsive-card-layout"
@@ -82,7 +83,7 @@ export function HorizontalMediaCardList<T extends "anime" | "manga">(props: Hori
                         }}
                     >
                         <Text className="text-xl">
-                            See all ({media.length})
+                            {t("See all ({{count}})", { count: media.length })}
                         </Text>
                     </Button>
                 </View>

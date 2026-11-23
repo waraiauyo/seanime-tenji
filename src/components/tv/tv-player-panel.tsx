@@ -13,6 +13,7 @@ import type { PlayerPanel } from "@/components/features/player/types"
 import { TVDrawer } from "@/components/tv/tv-drawer"
 import { TVButton, useTVFocus } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
+import { formatDecimal, t, tc } from "@/lib/i18n"
 import type { PlayerPreferences } from "@/lib/player/player-preferences"
 import type { PlayerState, PlayerTrack } from "@/lib/player/types"
 import type { MpvVideoOutput } from "expo-mpv-player"
@@ -58,25 +59,25 @@ type Props = {
 }
 
 const TITLES: Partial<Record<PlayerPanel, string>> = {
-    main: "Player settings",
-    episodes: "Episodes",
-    "audio-subtitles": "Audio & subtitles",
-    speed: "Playback speed",
-    "seek-buttons": "D-pad seek",
-    "video-sources": "Video source",
-    "video-output": "Video renderer",
-    "subtitle-delay": "Subtitle delay",
-    "audio-delay": "Audio delay",
-    "subtitle-size": "Subtitle size",
-    "audio-tracks": "Audio tracks",
-    "subtitle-tracks": "Subtitle tracks",
+    main: t("Player settings"),
+    episodes: t("Episodes"),
+    "audio-subtitles": t("Audio & subtitles"),
+    speed: t("Playback speed"),
+    "seek-buttons": t("D-pad seek"),
+    "video-sources": t("Video source"),
+    "video-output": t("Video renderer"),
+    "subtitle-delay": t("Subtitle delay"),
+    "audio-delay": t("Audio delay"),
+    "subtitle-size": t("Subtitle size"),
+    "audio-tracks": t("Audio tracks"),
+    "subtitle-tracks": t("Subtitle tracks"),
 }
 
 const ICON = tvSize(21)
 
 export function TVPlayerPanel(props: Props) {
     const back = getBackPanel(props.panel)
-    const title = TITLES[props.panel] ?? "Player settings"
+    const title = TITLES[props.panel] ?? t("Player settings")
 
     return (
         <TVDrawer
@@ -94,14 +95,14 @@ export function TVPlayerPanel(props: Props) {
                 props.onClose()
             }}
             title={title}
-            subtitle="Now playing"
+            subtitle={t("Now playing")}
             width={tvSize(720)}
             focusKey={props.panel}
         >
             {back !== null ? (
                 <View style={{ paddingHorizontal: tvSize(30), paddingTop: tvSize(2) }}>
                     <TVButton
-                        label="Back"
+                        label={t("Back")}
                         icon={<ChevronLeft size={ICON} color="#ffffff" />}
                         size="compact"
                         hasTVPreferredFocus
@@ -126,7 +127,7 @@ function PanelContent(props: Props & { preferred: boolean }) {
             return <ChoiceList
                 values={SPEED_OPTIONS}
                 active={(speed) => Math.abs(speed - props.state.speed) < 0.01}
-                label={(speed) => speed === 1 ? "Normal" : `${speed}x`}
+                label={(speed) => speed === 1 ? tc("speed", "Normal") : `${speed}x`}
                 onPress={(speed) => {
                     props.onSetSpeed(speed)
                     props.onClose()
@@ -143,7 +144,7 @@ function PanelContent(props: Props & { preferred: boolean }) {
                     props.onClose()
                 }}
                 preferred={props.preferred}
-                text="Left and right use this amount while the controls are open or hidden."
+                text={t("Left and right use this amount while the controls are open or hidden.")}
             />
         case "video-output":
             return <VideoOutput {...props} />
@@ -199,7 +200,7 @@ function PanelContent(props: Props & { preferred: boolean }) {
             return (
                 <View style={{ padding: tvSize(30) }}>
                     <Text className="text-white/50" style={{ fontSize: tvSize(20) }}>
-                        This option is not available on TV.
+                        {t("This option is not available on TV.")}
                     </Text>
                 </View>
             )
@@ -209,38 +210,38 @@ function PanelContent(props: Props & { preferred: boolean }) {
 function Main(props: Props & { preferred: boolean }) {
     const rows = [
         {
-            label: "Playback speed",
-            detail: props.state.speed === 1 ? "Normal" : `${props.state.speed}x`,
+            label: t("Playback speed"),
+            detail: props.state.speed === 1 ? tc("speed", "Normal") : `${props.state.speed}x`,
             icon: <Gauge size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("speed"),
         },
         {
-            label: "Seek",
+            label: t("Seek"),
             detail: formatSecondsLabel(props.prefs.buttonSeekSec),
             icon: <RotateCw size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("seek-buttons"),
         },
         {
-            label: "Audio & subtitles",
-            detail: "Tracks, delay and subtitle size",
+            label: t("Audio & subtitles"),
+            detail: t("Tracks, delay and subtitle size"),
             icon: <Captions size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("audio-subtitles"),
         },
         {
-            label: "Auto next episode",
-            detail: props.prefs.autoNextEpisode ? "On" : "Off",
+            label: t("Auto next episode"),
+            detail: props.prefs.autoNextEpisode ? t("On") : t("Off"),
             icon: <SkipForward size={ICON} color="#ffffff" />,
             press: props.onToggleAutoNext,
         },
         {
-            label: "Auto skip OP / ED",
-            detail: props.prefs.autoSkipOpEd ? "On" : "Off",
+            label: t("Auto skip OP / ED"),
+            detail: props.prefs.autoSkipOpEd ? t("On") : t("Off"),
             icon: <SkipForward size={ICON} color="#ffffff" />,
             press: props.onToggleAutoSkipOpEd,
         },
         {
-            label: "Playback stats",
-            detail: props.prefs.showStats ? "On" : "Off",
+            label: t("Playback stats"),
+            detail: props.prefs.showStats ? t("On") : t("Off"),
             icon: <Activity size={ICON} color="#ffffff" />,
             press: () => props.updatePrefs({ showStats: !props.prefs.showStats }),
         },
@@ -248,7 +249,7 @@ function Main(props: Props & { preferred: boolean }) {
 
     if ((props.videoSources?.length ?? 0) > 1 && props.videoSource) {
         rows.push({
-            label: "Video source",
+            label: t("Video source"),
             detail: [props.videoSource.server, props.videoSource.quality].filter(Boolean).join(" · "),
             icon: <Clapperboard size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("video-sources"),
@@ -256,8 +257,8 @@ function Main(props: Props & { preferred: boolean }) {
     }
 
     rows.push({
-        label: "Video renderer",
-        detail: props.prefs.androidVideoOutput === "gpu-next" ? "Modern" : "Compatibility",
+        label: t("Video renderer"),
+        detail: props.prefs.androidVideoOutput === "gpu-next" ? t("Modern") : t("Compatibility"),
         icon: <Cpu size={ICON} color="#ffffff" />,
         press: () => props.onNavigate("video-output"),
     })
@@ -270,31 +271,31 @@ function TracksHome(props: Props & { preferred: boolean }) {
     const subtitle = props.state.subtitleTracks.find(track => track.selected)
     const rows = [
         {
-            label: "Audio track",
-            detail: trackName(audio, "No audio tracks"),
+            label: t("Audio track"),
+            detail: trackName(audio, t("No audio tracks")),
             icon: <Mic2 size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("audio-tracks"),
         },
         {
-            label: "Subtitle track",
-            detail: trackName(subtitle, "Off"),
+            label: t("Subtitle track"),
+            detail: trackName(subtitle, tc("subtitles", "Off")),
             icon: <Captions size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("subtitle-tracks"),
         },
         {
-            label: "Subtitle delay",
+            label: t("Subtitle delay"),
             detail: delayLabel(props.state.subtitleDelay),
             icon: <Timer size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("subtitle-delay"),
         },
         {
-            label: "Audio delay",
+            label: t("Audio delay"),
             detail: delayLabel(props.state.audioDelay),
             icon: <Timer size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("audio-delay"),
         },
         {
-            label: "Subtitle size",
+            label: t("Subtitle size"),
             detail: `${props.prefs.subtitleFontSize}`,
             icon: <Type size={ICON} color="#ffffff" />,
             press: () => props.onNavigate("subtitle-size"),
@@ -444,7 +445,7 @@ function Episodes(props: Props & { preferred: boolean }) {
     const episodes = props.episodes ?? []
 
     if (episodes.length === 0) {
-        return <Empty text="No episodes available" />
+        return <Empty text={t("No episodes available")} />
     }
 
     return (
@@ -460,9 +461,9 @@ function Episodes(props: Props & { preferred: boolean }) {
                 const current = item.episodeNumber === props.currentEpisodeNumber
                 return (
                     <TVPanelRow
-                        label={item.displayTitle || `Episode ${item.episodeNumber}`}
+                        label={item.displayTitle || t("Episode {{number}}", { number: item.episodeNumber })}
                         detail={[
-                            current ? "Now playing" : "",
+                            current ? t("Now playing") : "",
                             item.episodeTitle ?? "",
                         ].filter(Boolean).join(" · ")}
                         icon={current
@@ -538,10 +539,10 @@ function TrackList({
     preferred: boolean
 }) {
     const rows = allowOff
-        ? [{ id: -1, type: "subtitle" as const, title: "Off", selected: !tracks.some(track => track.selected) }, ...tracks]
+        ? [{ id: -1, type: "subtitle" as const, title: tc("subtitles", "Off"), selected: !tracks.some(track => track.selected) }, ...tracks]
         : tracks
 
-    if (rows.length === 0) return <Empty text="No tracks available" />
+    if (rows.length === 0) return <Empty text={t("No tracks available")} />
 
     return (
         <ScrollView
@@ -556,7 +557,7 @@ function TrackList({
                 {rows.map((track, index) => (
                     <TVPanelRow
                         key={track.id}
-                        label={track.title || track.language || `Track ${track.id}`}
+                        label={track.title || track.language || t("Track {{id}}", { id: track.id })}
                         detail={track.title && track.language ? track.language : undefined}
                         icon={track.selected ? <Check size={ICON} color={BRAND_ACCENT} /> : undefined}
                         active={track.selected}
@@ -595,10 +596,10 @@ function Delay({
                     className="font-black text-white"
                     style={{ fontSize: tvSize(48), fontVariant: ["tabular-nums"] }}
                 >
-                    {value > 0 ? "+" : ""}{value.toFixed(1)}s
+                    {value > 0 ? "+" : ""}{t("{{value}}s", { value: formatDecimal(value, 1) })}
                 </Text>
                 <Text className="text-white/45" style={{ fontSize: tvSize(18) }}>
-                    {value === 0 ? `No ${label.toLowerCase()} delay` : value > 0 ? "Delayed" : "Earlier"}
+                    {value === 0 ? (label === "Subtitle" ? t("No subtitle delay") : t("No audio delay")) : value > 0 ? t("Delayed") : t("Earlier")}
                 </Text>
             </View>
             <TVFocusGuideView
@@ -607,17 +608,17 @@ function Delay({
                 style={{ flexDirection: "row", justifyContent: "center", gap: tvSize(12) }}
             >
                 <TVButton
-                    label={`Earlier ${step.toFixed(1)}s`}
+                    label={t("Earlier {{value}}s", { value: formatDecimal(step, 1) })}
                     onPress={() => onChange(-step)}
                 />
                 <TVButton
-                    label="Reset"
+                    label={t("Reset")}
                     variant={value === 0 ? "ghost" : "danger"}
                     disabled={value === 0}
                     onPress={onReset}
                 />
                 <TVButton
-                    label={`Later ${step.toFixed(1)}s`}
+                    label={t("Later {{value}}s", { value: formatDecimal(step, 1) })}
                     onPress={() => onChange(step)}
                 />
             </TVFocusGuideView>
@@ -629,13 +630,13 @@ function VideoOutput(props: Props & { preferred: boolean }) {
     const rows: Array<{ value: MpvVideoOutput; label: string; detail: string }> = [
         {
             value: "gpu-next",
-            label: "Modern",
-            detail: "Recommended for current Android TV devices.",
+            label: t("Modern"),
+            detail: t("Recommended for current Android TV devices."),
         },
         {
             value: "gpu",
-            label: "Compatibility",
-            detail: "Use if the modern renderer has visual problems.",
+            label: t("Compatibility"),
+            detail: t("Use if the modern renderer has visual problems."),
         },
     ]
 
@@ -673,7 +674,7 @@ function VideoOutput(props: Props & { preferred: boolean }) {
 
 function VideoSources(props: Props & { preferred: boolean }) {
     const sources = props.videoSources ?? []
-    if (sources.length === 0) return <Empty text="No other video sources available" />
+    if (sources.length === 0) return <Empty text={t("No other video sources available")} />
 
     return (
         <ScrollView
@@ -692,7 +693,7 @@ function VideoSources(props: Props & { preferred: boolean }) {
                     return (
                         <TVPanelRow
                             key={`${source.url}-${source.server}-${source.quality}`}
-                            label={source.server || `Source ${index + 1}`}
+                            label={source.server || t("Source {{number}}", { number: index + 1 })}
                             detail={detail}
                             icon={active
                                 ? <Check size={ICON} color={BRAND_ACCENT} />
@@ -726,6 +727,6 @@ function trackName(track: PlayerTrack | undefined, fallback: string) {
 }
 
 function delayLabel(value: number) {
-    if (value === 0) return "Off"
-    return `${value > 0 ? "+" : ""}${value.toFixed(1)}s`
+    if (value === 0) return tc("delay", "Off")
+    return `${value > 0 ? "+" : ""}${t("{{value}}s", { value: formatDecimal(value, 1) })}`
 }

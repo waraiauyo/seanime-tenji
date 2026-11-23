@@ -1,4 +1,5 @@
 import { useServerUrl } from "@/atoms/server.atoms"
+import { tn } from "@/lib/i18n"
 import { drainMutationQueue, getPendingMutationCount } from "@/lib/offline/mutation-queue"
 import { logger } from "@/lib/utils/logger"
 import { toast } from "@/lib/utils/toast"
@@ -36,12 +37,12 @@ export function useOfflineSyncService() {
         drainMutationQueue(serverUrl)
             .then(async (result) => {
                 if (result.processed > 0) {
-                    toast.success(`Synced ${result.processed} offline changes`)
+                    toast.success(tn("Synced {{count}} offline change", "Synced {{count}} offline changes", result.processed))
 
                     await queryClient.invalidateQueries()
                 }
                 if (result.skippedConflicts > 0) {
-                    toast.info(`${result.skippedConflicts} offline changes skipped because upstream changed`)
+                    toast.info(tn("{{count}} offline change skipped because upstream changed", "{{count}} offline changes skipped because upstream changed", result.skippedConflicts))
                     await queryClient.invalidateQueries()
                 }
                 if (result.remaining > 0) {

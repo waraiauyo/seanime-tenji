@@ -1,6 +1,7 @@
 import { useServerMutation, useServerQuery } from "@/api/client/requests"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Local_QueueState, Local_TrackedMediaItem } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 import {
@@ -31,7 +32,7 @@ export function useLocalAddTrackedMedia() {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.LOCAL.LocalGetSyncQueueState.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.LOCAL.LocalGetIsMediaTracked.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.LOCAL.LocalGetLocalStorageSize] })
-            toast.success("Added media for offline syncing")
+            toast.success(t("Added media for offline syncing"))
         },
     })
 }
@@ -47,7 +48,7 @@ export function useLocalRemoveTrackedMedia() {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.LOCAL.LocalGetSyncQueueState.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.LOCAL.LocalGetIsMediaTracked.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.LOCAL.LocalGetLocalStorageSize] })
-            toast.success("Removed offline data")
+            toast.success(t("Removed offline data"))
         },
     })
 }
@@ -58,7 +59,7 @@ export function useLocalSyncData() {
         method: API_ENDPOINTS.LOCAL.LocalSyncData.methods[0],
         mutationKey: [API_ENDPOINTS.LOCAL.LocalSyncData.key],
         onSuccess: async () => {
-            toast.info("Syncing local data...")
+            toast.info(t("Syncing local data..."))
         },
     })
 }
@@ -101,7 +102,7 @@ export function useLocalSyncAnilistData() {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntry.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetMissingEpisodes] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.LOCAL.LocalGetLocalStorageSize] })
-            toast.success("Updated Anilist data")
+            toast.success(t("Updated Anilist data"))
         },
     })
 }
@@ -147,7 +148,7 @@ export function useLocalSyncSimulatedDataToAnilist() {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetAnimeCollection.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollection.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollectionTags.key] })
-            toast.success("Updated Anilist data")
+            toast.success(t("Updated Anilist data"))
         },
     })
 }
@@ -161,9 +162,9 @@ export function useSetOfflineMode() {
         onSuccess: async (data) => {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetStatus.key] })
             if (data) {
-                toast.success("Offline mode enabled")
+                toast.success(t("Offline mode enabled"))
             } else {
-                toast.success("Offline mode disabled")
+                toast.success(t("Offline mode disabled"))
             }
         },
     })

@@ -10,6 +10,7 @@ import { LuffyError } from "@/components/shared/luffy-error"
 import { OfflineBanner } from "@/components/shared/offline-banner"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
 import { getSequentialContinueWatchingSpoilerActive } from "@/lib/anime-spoilers"
+import { t } from "@/lib/i18n"
 import * as React from "react"
 import { ActivityIndicator, RefreshControlProps, SectionList, Text, useWindowDimensions, View } from "react-native"
 import Animated, { SharedValue, useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated"
@@ -93,10 +94,10 @@ export function AnimeEntryLibraryView({
         const nextSections: Array<Omit<EpisodeSection, "totalCount"> & { totalCount: number }> = []
 
         if (mainEpisodes.length > 0) {
-            nextSections.push({ key: "episodes", title: "Episodes", data: mainEpisodes, totalCount: mainEpisodes.length })
+            nextSections.push({ key: "episodes", title: t("Episodes"), data: mainEpisodes, totalCount: mainEpisodes.length })
         }
         if (specialEpisodes.length > 0) {
-            nextSections.push({ key: "specials", title: "Specials", data: specialEpisodes, totalCount: specialEpisodes.length })
+            nextSections.push({ key: "specials", title: t("Specials"), data: specialEpisodes, totalCount: specialEpisodes.length })
         }
         if (ncEpisodes.length > 0) {
             nextSections.push({ key: "nc", title: "NC", data: ncEpisodes, totalCount: ncEpisodes.length })
@@ -204,7 +205,7 @@ export function AnimeEntryLibraryView({
                 {showDeferredContent && unwatchedMainEpisodes.length > 0 && (
                     <View className="mb-1">
                         <EpisodeCardList
-                            title="Continue Watching"
+                            title={t("Continue Watching")}
                             episodes={unwatchedMainEpisodes}
                             onEpisodePress={onEpisodePress}
                             mediaId={mediaId}
@@ -237,7 +238,7 @@ export function AnimeEntryLibraryView({
                 ListEmptyComponent={hasEpisodes ? undefined : (
                     <View className="">
                         <LuffyError
-                            title="No local files scanned"
+                            title={t("No local files scanned")}
                             description=""
                         />
                     </View>

@@ -3,6 +3,7 @@ import { requestTVFocus, tvKeyAction } from "@/components/tv/tv-native"
 import { formatTime, isSkippableChapter } from "@/components/features/player/helpers"
 import { useTVFocus } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import type { PlayerChapter, PlayerState } from "@/lib/player"
 import type { MobilePlaybackSource } from "@/lib/player/types"
 import Captions from "lucide-react-native/icons/captions"
@@ -130,7 +131,7 @@ function TVPlayerExit({
             }}
             onBlur={focus.blur}
             accessibilityRole="button"
-            accessibilityLabel="Leave player"
+            accessibilityLabel={t("Leave player")}
             style={{
                 position: "absolute",
                 top: tvSize(52),
@@ -300,7 +301,7 @@ export function TVPlayerControls({
                         ref={hiddenRef}
                         hasTVPreferredFocus
                         onPress={onShowControls}
-                        accessibilityLabel="Show player controls"
+                        accessibilityLabel={t("Show player controls")}
                         style={{
                             position: "absolute",
                             left: 0,
@@ -372,10 +373,10 @@ export function TVPlayerControls({
 
     const title = source?.media?.title?.userPreferred
         ?? source?.media?.title?.english
-        ?? "Now playing"
+        ?? t("Now playing")
     const episode = source?.episode
         ? source.episode.displayTitle
-        : `Episode ${source?.episodeNumber ?? ""}`.trim()
+        : t("Episode {{number}}", { number: source?.episodeNumber ?? "" }).trim()
     const chapter = getChapter(chapters, displayTime)
 
     function run(action: () => void) {
@@ -471,12 +472,12 @@ export function TVPlayerControls({
                             }}
                             onBlur={() => setBarFocused(false)}
                             accessibilityRole="adjustable"
-                            accessibilityLabel="Playback timeline"
+                            accessibilityLabel={t("Playback timeline")}
                             accessibilityValue={{
                                 min: 0,
                                 max: Math.max(0, Math.round(state.duration)),
                                 now: Math.max(0, Math.round(displayTime)),
-                                text: `${formatTime(displayTime)} of ${formatTime(state.duration)}`,
+                                text: t("{{current}} of {{total}}", { current: formatTime(displayTime), total: formatTime(state.duration) }),
                             }}
                             style={{
                                 height: tvSize(38),
@@ -581,14 +582,14 @@ export function TVPlayerControls({
                 >
                     <View style={{ flexDirection: "row", alignItems: "center", gap: tvSize(12) }}>
                         <TVPlayerControl
-                            label={`${seekSec}s`}
+                            label={t("{{value}}s", { value: seekSec })}
                             icon={(color) => <RotateCcw size={tvSize(23)} color={color} />}
                             onPress={() => run(() => onSeekRelative(-seekSec))}
                             onFocus={onControlFocus}
                         />
                         <TVPlayerControl
                             ref={bindPlay}
-                            label={state.paused ? "Play" : "Pause"}
+                            label={state.paused ? t("Play") : t("Pause")}
                             icon={(color) => state.paused
                                 ? <Play size={tvSize(27)} color={color} fill={color} />
                                 : <Pause size={tvSize(27)} color={color} fill={color} />}
@@ -598,13 +599,13 @@ export function TVPlayerControls({
                             onFocus={onControlFocus}
                         />
                         <TVPlayerControl
-                            label={`${seekSec}s`}
+                            label={t("{{value}}s", { value: seekSec })}
                             icon={(color) => <RotateCw size={tvSize(23)} color={color} />}
                             onPress={() => run(() => onSeekRelative(seekSec))}
                             onFocus={onControlFocus}
                         />
                         <TVPlayerControl
-                            label="Next"
+                            label={t("Next")}
                             icon={(color) => <SkipForward size={tvSize(23)} color={color} />}
                             disabled={!canPlayNext}
                             onPress={() => run(onPlayNext)}
@@ -624,7 +625,7 @@ export function TVPlayerControls({
                         {canShowEpisodes ? (
                             <TVPlayerControl
                                 ref={episodesRef}
-                                label="Episodes"
+                                label={t("Episodes")}
                                 icon={(color) => <List size={tvSize(22)} color={color} />}
                                 onPress={() => {
                                     returnRef.current = "episodes"
@@ -635,7 +636,7 @@ export function TVPlayerControls({
                         ) : null}
                         <TVPlayerControl
                             ref={tracksRef}
-                            label="Audio & subtitles"
+                            label={t("Audio & subtitles")}
                             wide
                             icon={(color) => <Captions size={tvSize(22)} color={color} />}
                             onPress={() => {
@@ -646,7 +647,7 @@ export function TVPlayerControls({
                         />
                         <TVPlayerControl
                             ref={settingsRef}
-                            label="Settings"
+                            label={t("Settings")}
                             icon={(color) => <Settings size={tvSize(22)} color={color} />}
                             onPress={() => {
                                 returnRef.current = "settings"

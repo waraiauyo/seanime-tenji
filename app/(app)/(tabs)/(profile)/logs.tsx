@@ -1,5 +1,6 @@
 import { ProfileMenuItem, ProfileMenuSection, ProfileMenuToggle, ProfileSubpageHeader, RowDivider } from "@/components/features/profile/profile-menu"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
+import { t, tn } from "@/lib/i18n"
 import {
     clearOfflineLogs,
     copyOfflineLogTextToClipboard,
@@ -29,19 +30,19 @@ function readLogSummary(): LogSummary {
 }
 
 function formatSummary(summary: LogSummary) {
-    if (summary.entries === 0) return "No local logs saved"
+    if (summary.entries === 0) return t("No local logs saved")
 
-    const entryLabel = summary.entries === 1 ? "1 entry" : `${summary.entries} entries`
+    const entryLabel = tn("1 entry", "{{count}} entries", summary.entries)
     const crashLabel = summary.crashes === 0
         ? null
-        : summary.crashes === 1 ? "1 crash" : `${summary.crashes} crashes`
+        : tn("1 crash", "{{count}} crashes", summary.crashes)
 
     return crashLabel ? `${entryLabel} · ${crashLabel}` : entryLabel
 }
 
 function formatCrashSummary(crashes: number) {
-    if (crashes === 0) return "No crash records saved"
-    return crashes === 1 ? "1 crash record" : `${crashes} crash records`
+    if (crashes === 0) return t("No crash records saved")
+    return tn("1 crash record", "{{count}} crash records", crashes)
 }
 
 export default function LogsScreen() {
@@ -60,7 +61,7 @@ export default function LogsScreen() {
     const handleToggleLogging = React.useCallback((enabled: boolean) => {
         setOfflineLoggingEnabled(enabled)
         refreshSummary()
-        toast.info(enabled ? "Logging enabled" : "Logging disabled")
+        toast.info(enabled ? t("Logging enabled") : t("Logging disabled"))
     }, [refreshSummary])
 
     const copyText = React.useCallback((kind: "crash" | "logs") => {
@@ -71,21 +72,21 @@ export default function LogsScreen() {
             try {
                 const text = kind === "crash" ? await getOfflineCrashText() : await getOfflineLogText()
                 if (!text.trim()) {
-                    toast.info(kind === "crash" ? "No crash records yet" : "No diagnostic logs yet")
+                    toast.info(kind === "crash" ? t("No crash records yet") : t("No diagnostic logs yet"))
                     return
                 }
 
                 const copied = copyOfflineLogTextToClipboard(text)
                 if (copied) {
-                    toast.success(kind === "crash" ? "Crash report copied" : "Logs copied")
+                    toast.success(kind === "crash" ? t("Crash report copied") : t("Logs copied"))
                     return
                 }
 
                 await Share.share({ message: text })
-                toast.success(kind === "crash" ? "Crash report ready to share" : "Logs ready to share")
+                toast.success(kind === "crash" ? t("Crash report ready to share") : t("Logs ready to share"))
             }
             catch {
-                toast.error(kind === "crash" ? "Failed to copy crash report" : "Failed to copy logs")
+                toast.error(kind === "crash" ? t("Failed to copy crash report") : t("Failed to copy logs"))
             }
             finally {
                 setCopyingKind(null)
@@ -96,17 +97,17 @@ export default function LogsScreen() {
 
     const handleClearLogs = React.useCallback(() => {
         Alert.alert(
-            "Clear local logs?",
-            "Crash records and diagnostic logs stored on this device will be removed.",
+            t("Clear local logs?"),
+            t("Crash records and diagnostic logs stored on this device will be removed."),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Clear",
+                    text: t("Clear"),
                     style: "destructive",
                     onPress: () => {
                         clearOfflineLogs()
                         refreshSummary()
-                        toast.success("Logs cleared")
+                        toast.success(t("Logs cleared"))
                     },
                 },
             ],
@@ -116,8 +117,8 @@ export default function LogsScreen() {
     return (
         <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
             <ProfileSubpageHeader
-                title="Logs"
-                detail="Crash records and temporary diagnostics."
+                title={t("Logs")}
+                detail={t("Crash records and temporary diagnostics.")}
             />
 
             <ScrollView
@@ -127,20 +128,20 @@ export default function LogsScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 <View className="mx-4 mt-4 gap-4">
-                    <ProfileMenuSection title="Capture">
+                    <ProfileMenuSection title={t("Capture")}>
                         <ProfileMenuToggle
                             icon="document-text-outline"
-                            label="Enable Logging"
-                            detail="Temporarily save app logs on this device"
+                            label={t("Enable Logging")}
+                            detail={t("Temporarily save app logs on this device")}
                             value={loggingEnabled}
                             onToggle={handleToggleLogging}
                         />
                     </ProfileMenuSection>
 
-                    <ProfileMenuSection title="Local Logs">
+                    <ProfileMenuSection title={t("Local Logs")}>
                         <ProfileMenuItem
                             icon="warning-outline"
-                            label={copyingKind === "crash" ? "Preparing Crash Report" : "Copy Crash Report"}
+                            label={copyingKind === "crash" ? t("Preparing Crash Report") : t("Copy Crash Report")}
                             detail={formatCrashSummary(summary.crashes)}
                             onPress={() => copyText("crash")}
                             hideChevron
@@ -148,7 +149,7 @@ export default function LogsScreen() {
                         <RowDivider />
                         <ProfileMenuItem
                             icon="copy-outline"
-                            label={copyingKind === "logs" ? "Preparing Logs" : "Copy Diagnostic Logs"}
+                            label={copyingKind === "logs" ? t("Preparing Logs") : t("Copy Diagnostic Logs")}
                             detail={formatSummary(summary)}
                             onPress={() => copyText("logs")}
                             hideChevron
@@ -156,15 +157,15 @@ export default function LogsScreen() {
                         <RowDivider />
                         <ProfileMenuItem
                             icon="trash-outline"
-                            label="Clear Logs"
-                            detail="Remove logs stored on this device"
+                            label={t("Clear Logs")}
+                            detail={t("Remove logs stored on this device")}
                             onPress={handleClearLogs}
                             hideChevron
                         />
                     </ProfileMenuSection>
 
                     <Text className="px-1 text-xs leading-5 text-white/35">
-                        Crash records are saved automatically. Continuous app logging is off unless enabled here.
+                        {t("Crash records are saved automatically. Continuous app logging is off unless enabled here.")}
                     </Text>
                 </View>
             </ScrollView>

@@ -29,6 +29,7 @@ import {
     type ManagedNativeDownloadOptions,
     startManagedNativeDownload,
 } from "@/lib/downloads/native-download"
+import { formatDecimal, t } from "@/lib/i18n"
 import { saveAnimeDownloadEntrySnapshot } from "@/lib/offline/download-entry-snapshot-store"
 import { logger } from "@/lib/utils/logger"
 import { Directory, File, Paths } from "expo-file-system"
@@ -714,11 +715,12 @@ export async function clearAllAnimeDownloads(): Promise<void> {
 ////////////////////////// Helpers
 
 export function formatBytes(bytes: number): string {
-    if (bytes === 0) return "0 B"
+    if (bytes === 0) return t("0 B")
     const k = 1024
-    const sizes = ["B", "KB", "MB", "GB"]
+    const sizes = [t("B"), t("KB"), t("MB"), t("GB")]
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+    const value = parseFloat((bytes / Math.pow(k, i)).toFixed(1))
+    return `${formatDecimal(value, Number.isInteger(value) ? 0 : 1)} ${sizes[i]}`
 }
 
 export function isLocalServer(serverUrlStr: string): boolean {

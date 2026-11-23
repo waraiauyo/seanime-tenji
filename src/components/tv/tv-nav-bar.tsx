@@ -1,6 +1,7 @@
 import { useTVFocus } from "@/components/tv/tv-focus"
 import { TV, tvSize } from "@/components/tv/tv-scale"
 import { IMAGES } from "@/constants/images"
+import { t } from "@/lib/i18n"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { Image } from "expo-image"
 import { router, useSegments } from "expo-router"
@@ -10,28 +11,28 @@ import { ActivityIndicator, Animated, Pressable, Text, TVFocusGuideView, View } 
 const ITEMS = [
     {
         key: "anime",
-        label: "Anime",
+        label: t("Anime"),
         icon: "tv-outline" as const,
         activeIcon: "tv" as const,
         href: "/(app)/(tabs)/(library)" as const,
     },
     {
         key: "discover",
-        label: "Discover",
+        label: t("Discover"),
         icon: "compass-outline" as const,
         activeIcon: "compass" as const,
         href: "/(app)/(tabs)/discover" as const,
     },
     {
         key: "lists",
-        label: "My Lists",
+        label: t("My Lists"),
         icon: "albums-outline" as const,
         activeIcon: "albums" as const,
         href: "/(app)/(tabs)/my-lists" as const,
     },
     {
         key: "settings",
-        label: "Settings",
+        label: t("Settings"),
         icon: "settings-outline" as const,
         activeIcon: "settings" as const,
         href: "/(app)/(tabs)/(profile)" as const,

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n"
 import { TV, tvSize } from "./tv-scale"
 import { TVPillButton } from "./tv-focus"
 import { TVSectionHeader } from "./tv-section-header"
@@ -61,7 +62,7 @@ export function TVEpisodeGrid<T>({
                                 const endEp = Math.min((i + 1) * pageSize, episodes.length)
                                 return (
                                     <TVPillButton
-                                        label={`EP ${startEp} - ${endEp}`}
+                                        label={t("EP {{start}} - {{end}}", { start: startEp, end: endEp })}
                                         active={currentPage === i}
                                         onPress={() => setCurrentPage(i)}
                                     />

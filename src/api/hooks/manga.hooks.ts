@@ -27,6 +27,7 @@ import {
     Manga_PageContainer,
     Nullish,
 } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import { createListDataConflictGuard, useOfflineMangaProgressUpdate } from "@/lib/offline"
 import { toast } from "@/lib/utils/toast"
 import type { MutationFunctionContext } from "@tanstack/query-core"
@@ -145,7 +146,7 @@ export function useUpdateMangaProgress(id: Nullish<string | number>) {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntry.key, String(id)] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaCollection.key] })
-            toast.success("Progress updated successfully")
+            toast.success(t("Progress updated successfully"))
         },
     })
 
@@ -232,7 +233,7 @@ export function useMangaManualMapping() {
         method: API_ENDPOINTS.MANGA.MangaManualMapping.methods[0],
         mutationKey: [API_ENDPOINTS.MANGA.MangaManualMapping.key],
         onSuccess: async () => {
-            toast.success("Mapping added")
+            toast.success(t("Mapping added"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryChapters.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryPages.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaMapping.key] })
@@ -258,7 +259,7 @@ export function useRemoveMangaMapping() {
         method: API_ENDPOINTS.MANGA.RemoveMangaMapping.methods[0],
         mutationKey: [API_ENDPOINTS.MANGA.RemoveMangaMapping.key],
         onSuccess: async () => {
-            toast.info("Mapping removed")
+            toast.info(t("Mapping removed"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryChapters.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryPages.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaMapping.key] })
@@ -294,7 +295,7 @@ export function useRefetchMangaChapterContainers() {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaLatestChapterNumbersMap.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryChapters.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryPages.key] })
-            toast.success("Sources refreshed")
+            toast.success(t("Sources refreshed"))
         },
     })
 }

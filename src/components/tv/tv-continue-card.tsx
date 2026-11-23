@@ -1,6 +1,7 @@
 import { useServerStatus } from "@/atoms/server.atoms"
 import type { ContinueWatchingItem } from "@/hooks/use-anime-library-collection"
 import { getContinueWatchingSpoilerActive, getEpisodeSpoilerState } from "@/lib/anime-spoilers"
+import { t } from "@/lib/i18n"
 import * as React from "react"
 import { TVEpisodeCard } from "./tv-episode-card"
 import { Pressable } from "react-native"
@@ -31,7 +32,7 @@ export const TVContinueCard = React.memo(
             const title = media?.title?.userPreferred
                 ?? media?.title?.english
                 ?? media?.title?.romaji
-                ?? "Untitled"
+                ?? t("Untitled")
             const image = episode.episodeMetadata?.image
                 ?? media?.bannerImage
                 ?? media?.coverImage?.extraLarge
@@ -45,8 +46,8 @@ export const TVContinueCard = React.memo(
                     badge={episode.displayTitle}
                     title={title}
                     subtitle={spoiler.hideTitle
-                        ? `Episode ${episode.episodeNumber}`
-                        : episode.episodeTitle || `Episode ${episode.episodeNumber}`}
+                        ? t("Episode {{number}}", { number: episode.episodeNumber })
+                        : episode.episodeTitle || t("Episode {{number}}", { number: episode.episodeNumber })}
                     onPress={onPress}
                     preferred={preferred}
                     progressPercent={progressPercent}

@@ -5,6 +5,7 @@ import { useServerAuthToken, useServerStatus, useServerUrl, useSetServerStatus, 
 import { Button } from "@/components/ui/button"
 import { Text } from "@/components/ui/text"
 import { IMAGES } from "@/constants/images"
+import { t } from "@/lib/i18n"
 import { useManualOfflineMode } from "@/lib/offline"
 import { isServerVersionSupported, MIN_SERVER_VERSION } from "@/lib/server-version"
 import { router, usePathname } from "expo-router"
@@ -89,12 +90,12 @@ export function ServerDataWrapper({ children }: { children: React.ReactNode }) {
 
     const handleChangeUrlPress = React.useCallback(() => {
         Alert.alert(
-            "Change server URL?",
-            "The setup screen has no back action. You will need to complete server setup before returning to the app.",
+            t("Change server URL?"),
+            t("The setup screen has no back action. You will need to complete server setup before returning to the app."),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Continue",
+                    text: t("Continue"),
                     onPress: () => {
                         setServerUrl(null)
                         router.push("/(out)/set-server-url")
@@ -124,9 +125,8 @@ export function ServerDataWrapper({ children }: { children: React.ReactNode }) {
         return <View className="bg-background flex-1 justify-center items-center gap-6 px-8">
             <Image source={IMAGES.logo2} style={{ width: 128, height: 128 }} resizeMode="contain" />
             <View className="items-center gap-1.5">
-                <Text className="text-white text-base font-semibold">Connection is taking longer than expected</Text>
-                <Text className="text-white/45 text-sm text-center">The server might be offline. You can switch to offline mode or update the server
-                                                                    URL.</Text>
+                <Text className="text-white text-base font-semibold">{t("Connection is taking longer than expected")}</Text>
+                <Text className="text-white/45 text-sm text-center">{t("The server might be offline. You can switch to offline mode or update the server URL.")}</Text>
             </View>
             <View className="gap-3 w-full items-center">
                 <Button
@@ -134,14 +134,14 @@ export function ServerDataWrapper({ children }: { children: React.ReactNode }) {
                     className="w-full max-w-xs z-[50] shadow shadow-foreground/5 rounded-full"
                     onPress={() => setManualOffline(true)}
                 >
-                    <Text>Switch to offline mode</Text>
+                    <Text>{t("Switch to offline mode")}</Text>
                 </Button>
                 <Button
                     variant="secondary"
                     className="w-full max-w-xs z-[50] shadow shadow-foreground/5 rounded-full"
                     onPress={handleChangeUrlPress}
                 >
-                    <Text>Change URL</Text>
+                    <Text>{t("Change URL")}</Text>
                 </Button>
             </View>
         </View>
@@ -155,7 +155,7 @@ export function ServerDataWrapper({ children }: { children: React.ReactNode }) {
                 className="z-[50] shadow shadow-foreground/5 rounded-full"
                 onPress={handleChangeUrlPress}
             >
-                <Text>Change URL</Text>
+                <Text>{t("Change URL")}</Text>
             </Button>
         </View>
     }
@@ -163,7 +163,7 @@ export function ServerDataWrapper({ children }: { children: React.ReactNode }) {
     if (requiresServerAuth && (!serverAuthToken || authVerification.isLoading || isInvalidServerAuth)) {
         return <View className="bg-background flex-1 justify-center items-center gap-4">
             <Image source={IMAGES.logo2} style={{ width: 128, height: 128 }} resizeMode="contain" />
-            <Text className="text-sm text-white/50">Authenticating server connection...</Text>
+            <Text className="text-sm text-white/50">{t("Authenticating server connection...")}</Text>
         </View>
     }
 
@@ -171,10 +171,11 @@ export function ServerDataWrapper({ children }: { children: React.ReactNode }) {
         return <View className="bg-background flex-1 items-center justify-center gap-5 px-8">
             <Image source={IMAGES.logo2} style={{ width: 104, height: 104 }} resizeMode="contain" />
             <View className="items-center gap-2">
-                <Text className="text-center text-xl font-bold text-white">Server update required</Text>
+                <Text className="text-center text-xl font-bold text-white">{t("Server update required")}</Text>
                 <Text className="text-center text-sm leading-5 text-white/55">
-                    This version of Seanime Tenji requires a Seanime server with the version {MIN_SERVER_VERSION} or newer. This Seanime server is
-                    running {_serverStatus.version || "an unknown version"}.
+                    {_serverStatus.version
+                        ? t("This version of Seanime Tenji requires a Seanime server with the version {{minVersion}} or newer. This Seanime server is running {{version}}.", { minVersion: MIN_SERVER_VERSION, version: _serverStatus.version })
+                        : t("This version of Seanime Tenji requires a Seanime server with the version {{minVersion}} or newer. This Seanime server is running an unknown version.", { minVersion: MIN_SERVER_VERSION })}
                 </Text>
             </View>
             <Button
@@ -182,7 +183,7 @@ export function ServerDataWrapper({ children }: { children: React.ReactNode }) {
                 className="rounded-full px-6"
                 onPress={handleChangeUrlPress}
             >
-                <Text>Change URL</Text>
+                <Text>{t("Change URL")}</Text>
             </Button>
         </View>
     }

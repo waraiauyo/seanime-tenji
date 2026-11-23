@@ -1,4 +1,5 @@
 import { SeaImage } from "@/components/shared/sea-image"
+import { t } from "@/lib/i18n"
 import { getEpisodeCardWidth } from "@/lib/responsive-card-layout"
 import * as React from "react"
 import { Animated, Platform, Pressable, Text, useWindowDimensions, View } from "react-native"
@@ -103,7 +104,7 @@ export const EpisodeCard = React.memo(function EpisodeCard(props: EpisodeCardPro
                             className={small ? "text-xs text-foreground" : "text-foreground"}
                             numberOfLines={1}
                         >
-                            Episode {episodeNumber}
+                            {t("Episode {{number}}", { number: episodeNumber })}
                             {totalEpisodes && (
                                 <Text className="text-muted-foreground">
                                     /{totalEpisodes}
@@ -119,7 +120,7 @@ export const EpisodeCard = React.memo(function EpisodeCard(props: EpisodeCardPro
 
                     {length && <Text
                         className={small ? "text-xs text-muted-foreground shrink-0" : "text-muted-foreground shrink-0"}
-                    >{length}m</Text>}
+                    >{t("{{duration}}m", { duration: length })}</Text>}
                 </View>
             </Animated.View>
         </Pressable>

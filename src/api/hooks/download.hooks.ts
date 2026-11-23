@@ -3,6 +3,7 @@ import { DownloadMacDenshiUpdate_Variables, DownloadRelease_Variables, DownloadT
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { DownloadReleaseResponse } from "@/api/generated/types"
 import { useOpenInExplorer } from "@/api/hooks/explorer.hooks"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 
 export function useDownloadTorrentFile(onSuccess?: () => void) {
@@ -11,7 +12,7 @@ export function useDownloadTorrentFile(onSuccess?: () => void) {
         method: API_ENDPOINTS.DOWNLOAD.DownloadTorrentFile.methods[0],
         mutationKey: [API_ENDPOINTS.DOWNLOAD.DownloadTorrentFile.key],
         onSuccess: async () => {
-            toast.success("Files downloaded")
+            toast.success(t("Files downloaded"))
             onSuccess?.()
         },
     })
@@ -25,7 +26,7 @@ export function useDownloadRelease() {
         method: API_ENDPOINTS.DOWNLOAD.DownloadRelease.methods[0],
         mutationKey: [API_ENDPOINTS.DOWNLOAD.DownloadRelease.key],
         onSuccess: async data => {
-            toast.success("Update downloaded successfully!")
+            toast.success(t("Update downloaded successfully!"))
             if (data?.error) {
                 toast.error(data.error)
             }
@@ -44,7 +45,7 @@ export function useDownloadMacDenshiUpdate() {
         method: API_ENDPOINTS.DOWNLOAD.DownloadMacDenshiUpdate.methods[0],
         mutationKey: [API_ENDPOINTS.DOWNLOAD.DownloadMacDenshiUpdate.key],
         onSuccess: async () => {
-            toast.success("Update installed successfully! Please restart the app.")
+            toast.success(t("Update installed successfully! Please restart the app."))
         },
     })
 }

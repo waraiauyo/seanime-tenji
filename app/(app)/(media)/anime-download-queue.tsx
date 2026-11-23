@@ -18,6 +18,7 @@ import {
     useRetryAllFailedAnimeDownloads,
     useRetryAnimeDownload,
 } from "@/lib/downloads"
+import { t, tc, tn } from "@/lib/i18n"
 import { Ionicons } from "@expo/vector-icons"
 import { Image } from "expo-image"
 import { Redirect } from "expo-router"
@@ -79,12 +80,13 @@ function MobileAnimeDownloadQueueScreen() {
         if (queuedDownloads.length === 0) return
 
         Alert.alert(
-            "Clear anime queue",
-            `Remove ${queuedDownloads.length} queued item${queuedDownloads.length === 1 ? "" : "s"}? Active downloads will be cancelled.`,
+            t("Clear anime queue"),
+            tn("Remove {{count}} queued item? Active downloads will be cancelled.",
+                "Remove {{count}} queued items? Active downloads will be cancelled.", queuedDownloads.length),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Clear Queue",
+                    text: t("Clear Queue"),
                     style: "destructive",
                     onPress: () => deleteQueueItems(queuedDownloads),
                 },
@@ -95,8 +97,8 @@ function MobileAnimeDownloadQueueScreen() {
     return (
         <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
             <ProfileSubpageHeader
-                title="Anime Queue"
-                detail="Track and manage current episode downloads."
+                title={t("Anime Queue")}
+                detail={t("Track and manage current episode downloads.")}
             />
 
             <ScrollView
@@ -105,24 +107,24 @@ function MobileAnimeDownloadQueueScreen() {
                 contentInsetAdjustmentBehavior="automatic"
             >
                 <Surface variant="muted" className="p-4 gap-3">
-                    <FormSectionLabel>Overview</FormSectionLabel>
+                    <FormSectionLabel>{t("Overview")}</FormSectionLabel>
 
-                    <QueueStatRow label="In queue" value={queuedDownloads.length} />
-                    <QueueStatRow label="Failed" value={failedQueue.length} />
+                    <QueueStatRow label={t("In queue")} value={queuedDownloads.length} />
+                    <QueueStatRow label={tc("downloads", "Failed")} value={failedQueue.length} />
                 </Surface>
 
                 {queuedDownloads.length > 0 && (
                     <Surface variant="brand" className="overflow-hidden">
                         <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
-                            <FormSectionLabel>In Queue ({queuedDownloads.length})</FormSectionLabel>
+                            <FormSectionLabel>{t("In Queue ({{count}})", { count: queuedDownloads.length })}</FormSectionLabel>
                             <View className="flex-row items-center gap-3">
                                 {stalledQueuedDownloads.length > 0 ? (
                                     <Pressable onPress={() => resumeAll(stalledQueuedDownloads)} hitSlop={8}>
-                                        <Text className="text-sm font-medium text-brand-200">Resume All</Text>
+                                        <Text className="text-sm font-medium text-brand-200">{t("Resume All")}</Text>
                                     </Pressable>
                                 ) : null}
                                 <Pressable onPress={handleClearQueue} hitSlop={8}>
-                                    <Text className="text-sm font-medium text-red-300">Clear Queue</Text>
+                                    <Text className="text-sm font-medium text-red-300">{t("Clear Queue")}</Text>
                                 </Pressable>
                             </View>
                         </View>
@@ -154,9 +156,9 @@ function MobileAnimeDownloadQueueScreen() {
                 {failedQueue.length > 0 && (
                     <Surface variant="danger" className="overflow-hidden">
                         <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
-                            <FormSectionLabel>Failed ({failedQueue.length})</FormSectionLabel>
+                            <FormSectionLabel>{t("Failed ({{count}})", { count: failedQueue.length })}</FormSectionLabel>
                             <Pressable onPress={() => retryAll(failedQueue)} hitSlop={8}>
-                                <Text className="text-sm font-medium text-red-300">Retry All</Text>
+                                <Text className="text-sm font-medium text-red-300">{t("Retry All")}</Text>
                             </Pressable>
                         </View>
 
@@ -188,7 +190,7 @@ function MobileAnimeDownloadQueueScreen() {
                 {queuedDownloads.length === 0 && failedQueue.length === 0 && (
                     <View className="items-center gap-3 py-20">
                         <Ionicons name="cloud-download-outline" size={40} color="rgba(255,255,255,0.2)" />
-                        <Text className="text-sm text-white/40">No anime downloads in the queue</Text>
+                        <Text className="text-sm text-white/40">{t("No anime downloads in the queue")}</Text>
                     </View>
                 )}
             </ScrollView>
@@ -220,11 +222,11 @@ function AnimeQueueRow({
     const isDownloading = episode.status === "downloading"
     const isPending = episode.status === "pending"
     const subtitle = isFailed
-        ? episode.errorMessage || "Download failed"
+        ? episode.errorMessage || t("Download failed")
         : isDownloading
-            ? `${progressPct}% downloaded`
+            ? t("{{percent}}% downloaded", { percent: progressPct })
             : isPending
-                ? "Waiting in queue"
+                ? t("Waiting in queue")
                 : formatBytes(episode.fileSize)
 
     return (
@@ -244,7 +246,7 @@ function AnimeQueueRow({
 
                 <View className="ml-3 flex-1">
                     <Text className="text-xs text-white/35" numberOfLines={1}>
-                        {animeInfo?.title || `Anime #${episode.mediaId}`}
+                        {animeInfo?.title || t("Anime #{{id}}", { id: episode.mediaId })}
                     </Text>
                     <Text className="mt-0.5 text-sm font-medium text-foreground" numberOfLines={1}>
                         {episode.displayTitle}
@@ -261,7 +263,7 @@ function AnimeQueueRow({
 
                 <View className="ml-3 flex-row items-center gap-2">
                     {onRetry ? (
-                        <QueueActionButton label="Retry" onPress={onRetry} tone="brand" />
+                        <QueueActionButton label={t("Retry")} onPress={onRetry} tone="brand" />
                     ) : null}
                     <Pressable
                         onPress={onDelete}

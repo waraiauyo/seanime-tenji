@@ -13,6 +13,7 @@ import {
     useDeleteMangaChapterDownload,
 } from "@/lib/downloads"
 import { getMangaDownloadDiskUsage } from "@/lib/downloads/manga-download-manager"
+import { t, tn } from "@/lib/i18n"
 import { Ionicons } from "@expo/vector-icons"
 import { useRouter } from "expo-router"
 import * as React from "react"
@@ -55,8 +56,8 @@ export function MangaEntryDownloadedView({ media }: MangaEntryDownloadedViewProp
     if (allChapters.length === 0) {
         return (
             <LuffyError
-                title="No downloads yet"
-                description="Download chapters from the Chapters tab to read them offline."
+                title={t("No downloads yet")}
+                description={t("Download chapters from the Chapters tab to read them offline.")}
             />
         )
     }
@@ -65,20 +66,20 @@ export function MangaEntryDownloadedView({ media }: MangaEntryDownloadedViewProp
         <View className="px-4 pt-4 gap-4">
             <View className="flex-row items-center justify-between px-1">
                 <Text className="text-sm text-white/40">
-                    {completedChapters.length} chapter{completedChapters.length !== 1 ? "s" : ""} · {formatBytes(diskBytes)}
+                    {tn("{{count}} chapter", "{{count}} chapters", completedChapters.length)} · {formatBytes(diskBytes)}
                 </Text>
                 {completedChapters.length > 0 && (
                     <Pressable
                         onPress={() => {
                             Alert.alert(
-                                "Delete all downloads",
-                                `Remove all ${completedChapters.length} downloaded chapter${completedChapters.length !== 1
-                                    ? "s"
-                                    : ""} for this manga?`,
+                                t("Delete all downloads"),
+                                tn("Remove all {{count}} downloaded chapter for this manga?",
+                                    "Remove all {{count}} downloaded chapters for this manga?",
+                                    completedChapters.length),
                                 [
-                                    { text: "Cancel", style: "cancel" },
+                                    { text: t("Cancel"), style: "cancel" },
                                     {
-                                        text: "Delete",
+                                        text: t("Delete"),
                                         style: "destructive",
                                         onPress: () => deleteAll(mediaId),
                                     },
@@ -86,7 +87,7 @@ export function MangaEntryDownloadedView({ media }: MangaEntryDownloadedViewProp
                             )
                         }}
                     >
-                        <Text className="text-sm text-red-400">Delete All</Text>
+                        <Text className="text-sm text-red-400">{t("Delete All")}</Text>
                     </Pressable>
                 )}
             </View>
@@ -94,7 +95,7 @@ export function MangaEntryDownloadedView({ media }: MangaEntryDownloadedViewProp
             {inProgressChapters.length > 0 && (
                 <Surface variant="brand" className="overflow-hidden">
                     <View className="px-4 pt-3 pb-1">
-                        <FormSectionLabel>Downloading ({inProgressChapters.length})</FormSectionLabel>
+                        <FormSectionLabel>{t("Downloading ({{count}})", { count: inProgressChapters.length })}</FormSectionLabel>
                     </View>
 
                     {inProgressPagination.hasMultiplePages && (
@@ -158,12 +159,12 @@ export function MangaEntryDownloadedView({ media }: MangaEntryDownloadedViewProp
                                     }}
                                     onDelete={() => {
                                         Alert.alert(
-                                            "Delete chapter",
-                                            `Remove Chapter ${ch.chapterNumber} from your device?`,
+                                            t("Delete chapter"),
+                                            t("Remove Chapter {{number}} from your device?", { number: ch.chapterNumber }),
                                             [
-                                                { text: "Cancel", style: "cancel" },
+                                                { text: t("Cancel"), style: "cancel" },
                                                 {
-                                                    text: "Delete",
+                                                    text: t("Delete"),
                                                     style: "destructive",
                                                     onPress: () => deleteChapter(ch.mediaId, ch.provider, ch.chapterId),
                                                 },
@@ -199,15 +200,15 @@ function InProgressChapterRow({
     const pct = Math.max(0, Math.min(100, Math.round((chapter.progress ?? 0) * 100)))
     const isDownloading = chapter.status === "downloading"
     const subtitle = isDownloading
-        ? `${chapter.pagesDownloaded}/${chapter.totalPages} pages · ${pct}%`
-        : "Waiting in queue"
+        ? t("{{downloaded}}/{{total}} pages · {{percent}}%", { downloaded: chapter.pagesDownloaded, total: chapter.totalPages, percent: pct })
+        : t("Waiting in queue")
 
     return (
         <View className="px-4 py-3 gap-2">
             <View className="flex-row items-center">
                 <View className="flex-1 mr-3">
                     <Text className="text-sm font-medium text-foreground" numberOfLines={1}>
-                        {chapter.title || `Chapter ${chapter.chapterNumber}`}
+                        {chapter.title || t("Chapter {{number}}", { number: chapter.chapterNumber })}
                     </Text>
                     <Text className="text-xs text-white/40 mt-0.5">
                         {subtitle}
@@ -256,10 +257,10 @@ function DownloadedChapterRow({
 
             <View className="flex-1">
                 <Text className="text-foreground font-medium text-sm" numberOfLines={1}>
-                    {chapter.title || `Chapter ${chapter.chapterNumber}`}
+                    {chapter.title || t("Chapter {{number}}", { number: chapter.chapterNumber })}
                 </Text>
                 <View className="flex-row items-center gap-2 mt-0.5">
-                    <Text className="text-white/35 text-xs">{chapter.totalPages} pages</Text>
+                    <Text className="text-white/35 text-xs">{tn("{{count}} page", "{{count}} pages", chapter.totalPages)}</Text>
                     {!!chapter.scanlator && (
                         <Text className="text-white/35 text-xs" numberOfLines={1}>· {chapter.scanlator}</Text>
                     )}

@@ -16,6 +16,7 @@ import {
     Onlinestream_EpisodeSource,
     Onlinestream_MappingResponse,
 } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -68,7 +69,7 @@ export function useOnlineStreamEmptyCache() {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlinestreamMapping.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlineStreamEpisodeList.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlineStreamEpisodeSource.key] })
-            toast.info("Stream cache emptied")
+            toast.info(t("Stream cache emptied"))
         },
     })
 }
@@ -93,7 +94,7 @@ export function useOnlinestreamManualMapping() {
         method: API_ENDPOINTS.ONLINESTREAM.OnlinestreamManualMapping.methods[0],
         mutationKey: [API_ENDPOINTS.ONLINESTREAM.OnlinestreamManualMapping.key],
         onSuccess: async () => {
-            toast.success("Mapping added")
+            toast.success(t("Mapping added"))
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlinestreamMapping.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlineStreamEpisodeList.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlineStreamEpisodeSource.key] })
@@ -119,7 +120,7 @@ export function useRemoveOnlinestreamMapping() {
         method: API_ENDPOINTS.ONLINESTREAM.RemoveOnlinestreamMapping.methods[0],
         mutationKey: [API_ENDPOINTS.ONLINESTREAM.RemoveOnlinestreamMapping.key],
         onSuccess: async () => {
-            toast.info("Mapping removed")
+            toast.info(t("Mapping removed"))
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlinestreamMapping.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlineStreamEpisodeList.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ONLINESTREAM.GetOnlineStreamEpisodeSource.key] })

@@ -12,6 +12,7 @@ import {
     useRemoveOnlinestreamMapping,
 } from "@/api/hooks/onlinestream.hooks"
 import type { HibikeOnlinestream_SearchResult } from "@/api/generated/types"
+import { t, tc } from "@/lib/i18n"
 
 type TVManualMatchResultCardProps = {
     result: HibikeOnlinestream_SearchResult
@@ -54,7 +55,7 @@ const TVManualMatchResultCard = React.memo(function TVManualMatchResultCard({
                     {result.title}
                 </Text>
                 <Text style={{ fontSize: tvSize(12), color: "rgba(255,255,255,0.4)" }}>
-                    {result.subOrDub === "both" ? "Sub & Dub" : result.subOrDub === "dub" ? "Dub" : "Sub"}
+                    {result.subOrDub === "both" ? t("Sub & Dub") : result.subOrDub === "dub" ? tc("version", "Dub") : tc("version", "Sub")}
                 </Text>
             </Animated.View>
         </Pressable>
@@ -119,24 +120,24 @@ export function TVOnlinestreamManualMatchDrawer({
         <TVDrawer
             open={open}
             onOpenChange={onOpenChange}
-            title="Manual Match"
+            title={t("Manual Match")}
             subtitle={mediaTitle}
             width={650}
         >
             <View style={{ flex: 1, gap: tvSize(20), paddingTop: tvSize(10) }}>
                 <View style={{ gap: tvSize(6), paddingHorizontal: tvSize(30) }}>
-                    <Text style={{ fontSize: tvSize(14), color: "rgba(255,255,255,0.4)", fontWeight: "600" }}>SEARCH QUERY</Text>
+                    <Text style={{ fontSize: tvSize(14), color: "rgba(255,255,255,0.4)", fontWeight: "600" }}>{t("SEARCH QUERY")}</Text>
                     <View style={{ flexDirection: "row", gap: tvSize(10), alignItems: "center" }}>
                         <TVInput
                             ref={inputRef}
                             value={query}
                             onChangeText={setQuery}
                             onSubmitEditing={handleSearch}
-                            placeholder="Search title..."
+                            placeholder={t("Search title...")}
                             placeholderTextColor="rgba(255,255,255,0.3)"
                         />
                         <TVButton
-                            label="Search"
+                            label={tc("action", "Search")}
                             size="compact"
                             icon={<Ionicons name="search" size={tvSize(20)} color="white" />}
                             onPress={handleSearch}
@@ -148,11 +149,11 @@ export function TVOnlinestreamManualMatchDrawer({
                 {currentMapping?.animeId && (
                     <View style={{ marginHorizontal: tvSize(30), flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "rgba(168,159,255,0.06)", borderWidth: tvSize(1), borderColor: "rgba(168,159,255,0.15)", borderRadius: tvSize(12), padding: tvSize(12) }}>
                         <View style={{ gap: tvSize(2) }}>
-                            <Text style={{ fontSize: tvSize(12), color: "rgba(255,255,255,0.4)", fontWeight: "600" }}>CURRENTLY MAPPED TO</Text>
+                            <Text style={{ fontSize: tvSize(12), color: "rgba(255,255,255,0.4)", fontWeight: "600" }}>{t("CURRENTLY MAPPED TO")}</Text>
                             <Text style={{ fontSize: tvSize(16), color: "#a89fff", fontWeight: "bold" }}>{currentMapping.animeId}</Text>
                         </View>
                         <TVButton
-                            label="Remove mapping"
+                            label={t("Remove mapping")}
                             variant="danger"
                             size="compact"
                             icon={<Ionicons name="trash-outline" size={tvSize(18)} color="#ef4444" />}
@@ -189,7 +190,7 @@ export function TVOnlinestreamManualMatchDrawer({
                         </TVFocusGuideView>
                     ) : searchResults && searchResults.length === 0 ? (
                         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                            <Text style={{ fontSize: tvSize(16), color: "rgba(255,255,255,0.4)" }}>No results found</Text>
+                            <Text style={{ fontSize: tvSize(16), color: "rgba(255,255,255,0.4)" }}>{t("No results found")}</Text>
                         </View>
                     ) : null}
                 </View>

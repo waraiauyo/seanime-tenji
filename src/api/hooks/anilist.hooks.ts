@@ -20,6 +20,7 @@ import {
     Manga_Entry,
     Nullish,
 } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import { createListDataConflictGuard, useOfflineListEntryDelete, useOfflineListEntryEdit } from "@/lib/offline"
 import { toast } from "@/lib/utils/toast"
 import type { MutationFunctionContext } from "@tanstack/query-core"
@@ -126,7 +127,7 @@ export function useRefreshAnimeCollection() {
         method: API_ENDPOINTS.ANILIST.GetAnimeCollection.methods[1],
         mutationKey: [API_ENDPOINTS.ANILIST.GetAnimeCollection.key],
         onSuccess: async () => {
-            toast.success("AniList is up-to-date")
+            toast.success(t("AniList is up-to-date"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetAnimeCollection.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollection.key] })
@@ -150,7 +151,7 @@ export function useEditAnilistListEntry(id: Nullish<string | number>, type: "ani
         method: API_ENDPOINTS.ANILIST.EditAnilistListEntry.methods[0],
         mutationKey: [API_ENDPOINTS.ANILIST.EditAnilistListEntry.key, String(id)],
         onSuccess: async () => {
-            toast.success("Entry updated")
+            toast.success(t("Entry updated"))
             if (type === "anime") {
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key] })
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
@@ -232,7 +233,7 @@ export function useDeleteAnilistListEntry(id: Nullish<string | number>,
         method: API_ENDPOINTS.ANILIST.DeleteAnilistListEntry.methods[0],
         mutationKey: [API_ENDPOINTS.ANILIST.DeleteAnilistListEntry.key],
         onSuccess: async () => {
-            toast.success("Entry deleted")
+            toast.success(t("Entry deleted"))
             if (type === "anime") {
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key] })
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })

@@ -15,6 +15,7 @@ import { Surface } from "@/components/shared/surface"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
 import { getEpisodeSpoilerState, getSpoilerSafeAnimeImage } from "@/lib/anime-spoilers"
+import { getDateLocale, t } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { getHorizontalCardRenderCount, getMediaGridLayout } from "@/lib/responsive-card-layout"
 import { getShelfBadge, getShelfTitle, type ShelfEpisode } from "@/lib/schedule-episodes"
@@ -111,7 +112,7 @@ export default function ScheduleScreen() {
         ? []
         : upcomingEpisodes?.episodes?.filter(episode => !!episode.baseAnime) ?? []
 
-    const monthYearLabel = format(addDays(currentWeekStart, 3), "yyyy MMMM")
+    const monthYearLabel = format(addDays(currentWeekStart, 3), t("yyyy MMMM"), { locale: getDateLocale() })
 
     function goToPreviousWeek() {
         setCurrentWeekStart((prev) => subWeeks(prev, 1))
@@ -184,8 +185,8 @@ export default function ScheduleScreen() {
     const listFooter = missing.length > 0 || upcoming.length > 0
         ? (
             <View className="gap-5 pt-6 pb-8">
-                <ScheduleEpisodeShelf title="Missing Episodes" episodes={missing} />
-                <ScheduleEpisodeShelf title="Upcoming Episodes" episodes={upcoming} />
+                <ScheduleEpisodeShelf title={t("Missing Episodes")} episodes={missing} />
+                <ScheduleEpisodeShelf title={t("Upcoming Episodes")} episodes={upcoming} />
             </View>
         )
         : null
@@ -199,7 +200,7 @@ export default function ScheduleScreen() {
                     <View className="flex-1 items-center justify-center px-8">
                         <Ionicons name="cloud-offline-outline" size={40} color="rgba(255,255,255,0.2)" />
                         <Text className="text-white/30 text-sm mt-3 text-center">
-                            Connect to your server to see your schedule
+                            {t("Connect to your server to see your schedule")}
                         </Text>
                     </View>
                 ) : isLoading ? (
@@ -213,7 +214,7 @@ export default function ScheduleScreen() {
                         refreshControl={refreshControl}
                         header={listHeader}
                         footer={listFooter}
-                        emptyLabel={`Nothing scheduled for ${format(selectedDate, "EEEE, MMM d")}`}
+                        emptyLabel={t("Nothing scheduled for {{date}}", { date: format(selectedDate, t("EEEE, MMM d"), { locale: getDateLocale() }) })}
                     />
                 )}
 
@@ -243,7 +244,7 @@ type ScheduleEvent = Anime_ScheduleItem & {
 // Helpers
 ///////////////////////////////////////////////////////////////////////////////
 
-const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+const DAY_LABELS = [t("Mon"), t("Tue"), t("Wed"), t("Thu"), t("Fri"), t("Sat"), t("Sun")]
 
 function WeekDaySelector({
     weekDays,
@@ -440,7 +441,7 @@ function ScheduleCardWrapper({
 
                     <View className="absolute top-1.5 right-1.5 bg-black/70 rounded px-1.5 py-0.5">
                         <Text className="text-[11px] font-bold text-white/80">
-                            {item.isSeasonFinale && !item.isMovie && "FIN. "}{item.isMovie ? "Movie" : "Ep. " + item.episodeNumber}
+                            {item.isSeasonFinale && !item.isMovie && t("FIN.") + " "}{item.isMovie ? t("Movie") : t("Ep. {{number}}", { number: item.episodeNumber })}
                         </Text>
                     </View>
 
@@ -529,11 +530,11 @@ function ScheduleEpisodeShelf({ title, episodes }: { title: string; episodes: Sh
 
 
 const STATUS_OPTIONS: { label: string; value: AL_MediaListStatus }[] = [
-    { label: "Watching", value: "CURRENT" },
-    { label: "Planning", value: "PLANNING" },
-    { label: "Completed", value: "COMPLETED" },
-    { label: "Paused", value: "PAUSED" },
-    { label: "Repeating", value: "REPEATING" },
+    { label: t("Watching"), value: "CURRENT" },
+    { label: t("Planning"), value: "PLANNING" },
+    { label: t("Completed"), value: "COMPLETED" },
+    { label: t("Paused"), value: "PAUSED" },
+    { label: t("Repeating"), value: "REPEATING" },
 ]
 
 function ScheduleSettingsSheet({
@@ -582,12 +583,12 @@ function ScheduleSettingsSheet({
         <SeaBottomSheet
             open={open}
             onOpenChange={onOpenChange}
-            title="Schedule settings"
+            title={t("Schedule settings")}
             snapPoints={["65%"]}
         >
             <View className="gap-5">
                 <View className="gap-2">
-                    <Text className="text-sm font-medium text-white/50">Filter by status</Text>
+                    <Text className="text-sm font-medium text-white/50">{t("Filter by status")}</Text>
                     <Surface variant="muted" className="overflow-hidden">
                         {STATUS_OPTIONS.map((opt, i) => {
                             const active = settings.listStatuses.includes(opt.value)
@@ -613,18 +614,18 @@ function ScheduleSettingsSheet({
 
                 <View className="gap-3 px-1">
                     <LabeledSwitch
-                        label="Indicate watched episodes"
-                        helper="Dim episodes you've already watched"
+                        label={t("Indicate watched episodes")}
+                        helper={t("Dim episodes you've already watched")}
                         checked={settings.indicateWatchedEpisodes}
                         onToggle={toggleIndicateWatched}
                     />
                     <LabeledSwitch
-                        label="Hide missing episodes"
+                        label={t("Hide missing episodes")}
                         checked={settings.hideMissingEpisodes ?? false}
                         onToggle={toggleMissingEpisodes}
                     />
                     <LabeledSwitch
-                        label="Hide upcoming episodes"
+                        label={t("Hide upcoming episodes")}
                         checked={settings.hideUpcomingEpisodes ?? false}
                         onToggle={toggleUpcomingEpisodes}
                     />
@@ -635,8 +636,8 @@ function ScheduleSettingsSheet({
 }
 
 const MONTHS = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    t("Jan"), t("Feb"), t("Mar"), t("Apr"), t("May"), t("Jun"),
+    t("Jul"), t("Aug"), t("Sep"), t("Oct"), t("Nov"), t("Dec"),
 ]
 
 function MonthYearPicker({

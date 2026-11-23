@@ -9,6 +9,7 @@ import { SeaImage } from "@/components/shared/sea-image"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { getEpisodeSpoilerState, getSpoilerSafeAnimeImage } from "@/lib/anime-spoilers"
 import { useIsLocalServer } from "@/lib/downloads"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { toast } from "@/lib/utils/toast"
 import { Ionicons } from "@expo/vector-icons"
@@ -105,7 +106,7 @@ export function ServerDownloadModal({ entry, open, onOpenChange }: ServerDownloa
         if (!entry.media) return
             const dest = destination || getDefaultDestination(entry, serverStatus?.settings?.library?.libraryPath, serverStatus?.os)
         if (!dest) {
-            toast.error("Library path not configured on server")
+            toast.error(t("Library path not configured on server"))
             return
         }
 
@@ -134,7 +135,7 @@ export function ServerDownloadModal({ entry, open, onOpenChange }: ServerDownloa
             if (!entry.media || !selectedFileId) return
             const dest = destination || getDefaultDestination(entry, serverStatus?.settings?.library?.libraryPath, serverStatus?.os)
             if (!dest) {
-                toast.error("Library path not configured on server")
+                toast.error(t("Library path not configured on server"))
                 return
             }
 
@@ -199,15 +200,15 @@ export function ServerDownloadModal({ entry, open, onOpenChange }: ServerDownloa
             <SeaBottomSheet
                 open={open}
                 onOpenChange={onOpenChange}
-                title="Download on Server"
+                title={t("Download on Server")}
                 snapPoints={["70%", "92%"]}
             >
                 <View className="mb-4">
                     <Text className="text-xs text-white/40 leading-relaxed">
                         {!isLocalServer
-                            ? "Add anime releases to your server's library. Select an episode below to search and download torrents or debrid files."
+                            ? t("Add anime releases to your server's library. Select an episode below to search and download torrents or debrid files.")
                             :
-                            "Select an episode below to search and download torrents. Downloaded episodes will automatically be available for offline playback."}
+                            t("Select an episode below to search and download torrents. Downloaded episodes will automatically be available for offline playback.")}
                     </Text>
                 </View>
 
@@ -215,7 +216,7 @@ export function ServerDownloadModal({ entry, open, onOpenChange }: ServerDownloa
                     <View className="py-8 items-center">
                         <Ionicons name="cloud-offline-outline" size={40} color="rgba(255,255,255,0.3)" />
                         <Text className="text-white/40 text-sm mt-3">
-                            No episodes available
+                            {t("No episodes available")}
                         </Text>
                     </View>
                 ) : (
@@ -376,7 +377,7 @@ function EpisodeDownloadRow({ episode, watchedProgress, onPress }: EpisodeDownlo
                             {episode.type === "special" ? "SP " : "NC "}
                         </Text>
                     )}
-                    Episode {episode.episodeNumber}
+                    {t("Episode {{number}}", { number: episode.episodeNumber })}
                 </Text>
                 {!!episode.episodeTitle && !spoiler.hideTitle && (
                     <Text className="text-xs text-white/40 mt-0.5" numberOfLines={1}>
@@ -385,7 +386,7 @@ function EpisodeDownloadRow({ episode, watchedProgress, onPress }: EpisodeDownlo
                 )}
                 {isWatched && (
                     <Text className="text-[10px] text-muted-foreground/60 mt-0.5 font-bold">
-                        Watched
+                        {t("Watched")}
                     </Text>
                 )}
             </View>

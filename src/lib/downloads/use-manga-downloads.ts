@@ -34,6 +34,7 @@ import {
     type MangaDownloadStatus,
     subscribeToMangaDownloadChanges,
 } from "@/lib/downloads/manga-download-store"
+import { t, tn } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useCallback, useMemo, useSyncExternalStore } from "react"
 
@@ -224,7 +225,7 @@ export function useStartMangaChapterDownload(
         (chapters: Array<Pick<HibikeManga_ChapterDetails, "id" | "chapter" | "title" | "scanlator">>) => {
             void (async () => {
                 if (!serverUrl || !entry || !provider) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -241,7 +242,7 @@ export function useStartMangaChapterDownload(
                     scanlator: ch.scanlator,
                 }))
 
-                toast.info(`Downloading ${mapped.length} chapter${mapped.length > 1 ? "s" : ""}...`)
+                toast.info(tn("Downloading {{count}} chapter...", "Downloading {{count}} chapters...", mapped.length))
                 enqueueMangaChapterDownloads(
                     serverUrl,
                     entry,
@@ -273,7 +274,7 @@ export function useDeleteMangaChapterDownload() {
     return useCallback(
         (mediaId: number, provider: string, chapterId: string) => {
             deleteMangaChapterDownload(mediaId, provider, chapterId)
-            toast.info("Chapter deleted")
+            toast.info(t("Chapter deleted"))
         },
         [],
     )
@@ -290,7 +291,7 @@ export function useDeleteMangaQueueItems() {
                 }
             })
 
-            toast.info(`Removed ${chapters.length} queued chapter${chapters.length > 1 ? "s" : ""}`)
+            toast.info(tn("Removed {{count}} queued chapter", "Removed {{count}} queued chapters", chapters.length))
         },
         [],
     )
@@ -304,7 +305,7 @@ export function useDeleteAllMangaDownloadsForMedia() {
         (mediaId: number) => {
             void (async () => {
                 await deleteAllMangaDownloadsForMedia(mediaId)
-                toast.info("All chapters deleted")
+                toast.info(t("All chapters deleted"))
             })()
         },
         [],
@@ -318,7 +319,7 @@ export function useClearAllMangaDownloads() {
     return useCallback(() => {
         void (async () => {
             await clearAllMangaDownloads()
-            toast.info("All manga downloads cleared")
+            toast.info(t("All manga downloads cleared"))
         })()
     }, [])
 }
@@ -371,7 +372,7 @@ export function useRetryMangaChapterDownload() {
         (chapter: DownloadedMangaChapter) => {
             void (async () => {
                 if (!serverUrl) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -381,7 +382,7 @@ export function useRetryMangaChapterDownload() {
                     return
                 }
 
-                toast.info(`Retrying Chapter ${chapter.chapterNumber}...`)
+                toast.info(t("Retrying Chapter {{number}}...", { number: chapter.chapterNumber }))
                 retryMangaChapterDownload(serverUrl, chapter)
             })()
         },
@@ -397,7 +398,7 @@ export function useRetryAllFailedMangaDownloads() {
             void (async () => {
                 if (chapters.length === 0) return
                 if (!serverUrl) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -407,7 +408,7 @@ export function useRetryAllFailedMangaDownloads() {
                     return
                 }
 
-                toast.info(`Retrying ${chapters.length} failed chapter${chapters.length > 1 ? "s" : ""}...`)
+                toast.info(tn("Retrying {{count}} failed chapter...", "Retrying {{count}} failed chapters...", chapters.length))
                 retryFailedMangaDownloads(serverUrl, chapters)
             })()
         },
@@ -422,7 +423,7 @@ export function useResumeMangaChapterDownload() {
         (chapter: DownloadedMangaChapter) => {
             void (async () => {
                 if (!serverUrl) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -432,7 +433,7 @@ export function useResumeMangaChapterDownload() {
                     return
                 }
 
-                toast.info(`Resuming Chapter ${chapter.chapterNumber}...`)
+                toast.info(t("Resuming Chapter {{number}}...", { number: chapter.chapterNumber }))
                 resumeMangaChapterDownload(serverUrl, chapter)
             })()
         },
@@ -448,7 +449,7 @@ export function useResumeAllMangaDownloads() {
             void (async () => {
                 if (chapters.length === 0) return
                 if (!serverUrl) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -458,7 +459,7 @@ export function useResumeAllMangaDownloads() {
                     return
                 }
 
-                toast.info(`Resuming ${chapters.length} queued chapter${chapters.length > 1 ? "s" : ""}...`)
+                toast.info(tn("Resuming {{count}} queued chapter...", "Resuming {{count}} queued chapters...", chapters.length))
                 resumeStalledMangaDownloads(serverUrl, chapters)
             })()
         },

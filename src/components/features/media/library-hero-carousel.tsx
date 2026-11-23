@@ -2,6 +2,7 @@ import { Manga_Entry } from "@/api/generated/types"
 import { SeaImage } from "@/components/shared/sea-image"
 import { COLORS } from "@/constants/colors"
 import { ContinueWatchingItem } from "@/hooks/use-anime-library-collection"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { LinearGradient } from "expo-linear-gradient"
@@ -87,7 +88,7 @@ export function LibraryHeroCarousel({
                     const media = item.episode.baseAnime
                     return {
                         id: media?.id ?? 0,
-                        title: media?.title?.userPreferred || media?.title?.english || media?.title?.romaji || "Unknown Anime",
+                        title: media?.title?.userPreferred || media?.title?.english || media?.title?.romaji || t("Unknown Anime"),
                         bannerImage: media?.bannerImage ?? "",
                         coverImage: media?.coverImage?.extraLarge ?? "",
                         genres: media?.genres?.slice(0, 3) ?? [],
@@ -104,7 +105,7 @@ export function LibraryHeroCarousel({
                     const media = entry.media
                     return {
                         id: entry.mediaId,
-                        title: media?.title?.userPreferred || media?.title?.english || media?.title?.romaji || "Unknown Manga",
+                        title: media?.title?.userPreferred || media?.title?.english || media?.title?.romaji || t("Unknown Manga"),
                         bannerImage: media?.bannerImage ?? "",
                         coverImage: media?.coverImage?.extraLarge ?? "",
                         genres: media?.genres?.slice(0, 3) ?? [],
@@ -307,10 +308,10 @@ function LibraryHeroSlide({
     titleFontSize: number
 }) {
     const buttonLabel = type === "anime"
-        ? `Watch Episode ${item.episodeNumber}`
+        ? t("Watch Episode {{number}}", { number: item.episodeNumber ?? "" })
         : item.progress && item.progress > 0
-            ? `Read Ch. ${item.progress + 1}`
-            : "Start Reading"
+            ? t("Read Ch. {{number}}", { number: item.progress + 1 })
+            : t("Start Reading")
 
     const iconName = type === "anime" ? "play" : "book"
 
@@ -371,7 +372,7 @@ function LibraryHeroSlide({
                                 <Text className="text-white/20 text-[10px] font-bold"> • </Text>
                             )}
                             <Text className="text-white/55 text-[11px] font-semibold tracking-wider uppercase">
-                                {genre}
+                                {t(genre)}
                             </Text>
                         </React.Fragment>
                     ))}

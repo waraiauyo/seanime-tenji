@@ -1,5 +1,6 @@
 import { TabBarIcon } from "@/components/navigation/tab-bar-icon"
 import { BAR_ITEM_INACTIVE, GlassBar } from "@/components/shared/glass-bar"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import * as React from "react"
@@ -20,9 +21,9 @@ type MangaEntryViewSwitcherProps = {
 }
 
 const VIEW_ITEMS: Array<{ label: string, icon: React.ComponentProps<typeof Ionicons>["name"], view: MangaEntryView }> = [
-    { label: "Chapters", icon: "list-outline", view: "chapters" },
-    { label: "Info", icon: "information-circle-outline", view: "info" },
-    { label: "Downloads", icon: "download-outline", view: "downloaded" },
+    { label: t("Chapters"), icon: "list-outline", view: "chapters" },
+    { label: t("Info"), icon: "information-circle-outline", view: "info" },
+    { label: t("Downloads"), icon: "download-outline", view: "downloaded" },
 ]
 
 const OFFLINE_DISABLED_VIEWS: Set<MangaEntryView> = new Set(["chapters"])

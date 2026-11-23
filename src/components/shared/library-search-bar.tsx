@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import * as React from "react"
@@ -15,7 +16,7 @@ export type LibrarySearchBarProps = {
 export function LibrarySearchBar({
     value,
     onChangeText,
-    placeholder = "Search...",
+    placeholder = t("Search..."),
     className,
     autoFocus,
 }: LibrarySearchBarProps) {

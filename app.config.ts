@@ -18,6 +18,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         icon: "./src/assets/images/icon.png",
         scheme: "seanime",
         userInterfaceStyle: "automatic",
+        // Translations of the strings iOS shows itself. Declaring a language here also makes iOS
+        // display its own UI (pickers, system buttons) in that language inside the app.
+        locales: {
+            fr: {
+                ios: {
+                    NSLocalNetworkUsageDescription: "Seanime a besoin d’accéder au réseau local pour se connecter à votre serveur sur votre réseau domestique.",
+                },
+            },
+        },
         runtimeVersion: isTV ? `${version}-tv` : { policy: "appVersion" },
         updates: isTVDev ? {
             enabled: false,

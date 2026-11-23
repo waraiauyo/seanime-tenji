@@ -15,6 +15,7 @@ import {
     useDownloadedEpisodeCount,
     useFailedAnimeDownloads,
 } from "@/lib/downloads"
+import { t, tn } from "@/lib/i18n"
 import { Ionicons } from "@expo/vector-icons"
 import { Image } from "expo-image"
 import { Redirect, router } from "expo-router"
@@ -50,12 +51,16 @@ function MobileAnimeDownloadsScreen() {
     const handleClearAll = () => {
         if (downloadedAnime.length === 0) return
         Alert.alert(
-            "Clear all downloads",
-            `This will delete all ${downloadedAnime.length} downloaded anime (${episodeCount} episodes, ${totalSize.formatted}) from your device. This cannot be undone.`,
+            t("Clear all downloads"),
+            t("This will delete all {{animeCount}} downloaded anime ({{episodeCount}} episodes, {{size}}) from your device. This cannot be undone.", {
+                animeCount: downloadedAnime.length,
+                episodeCount,
+                size: totalSize.formatted,
+            }),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Delete All",
+                    text: t("Delete All"),
                     style: "destructive",
                     onPress: () => clearAll(),
                 },
@@ -70,7 +75,7 @@ function MobileAnimeDownloadsScreen() {
                 <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
                     <Ionicons name="chevron-back" size={24} color="white" />
                 </TouchableOpacity>
-                <Text className="text-xl font-bold text-foreground">Anime Downloads</Text>
+                <Text className="text-xl font-bold text-foreground">{t("Anime Downloads")}</Text>
             </View>
 
             <ScrollView
@@ -79,20 +84,20 @@ function MobileAnimeDownloadsScreen() {
             >
 
                 <Surface variant="muted" className="p-4 gap-3">
-                    <FormSectionLabel>Storage</FormSectionLabel>
+                    <FormSectionLabel>{t("Storage")}</FormSectionLabel>
 
                     <View className="flex-row justify-between items-center">
-                        <Text className="text-white/70 text-sm">Disk usage</Text>
+                        <Text className="text-white/70 text-sm">{t("Disk usage")}</Text>
                         <Text className="text-foreground text-sm font-medium">{diskUsage.formatted}</Text>
                     </View>
 
                     <View className="flex-row justify-between items-center">
-                        <Text className="text-white/70 text-sm">Downloaded episodes</Text>
+                        <Text className="text-white/70 text-sm">{t("Downloaded episodes")}</Text>
                         <Text className="text-foreground text-sm font-medium">{episodeCount}</Text>
                     </View>
 
                     <View className="flex-row justify-between items-center">
-                        <Text className="text-white/70 text-sm">Downloaded anime</Text>
+                        <Text className="text-white/70 text-sm">{t("Downloaded anime")}</Text>
                         <Text className="text-foreground text-sm font-medium">{downloadedAnime.length}</Text>
                     </View>
                 </Surface>
@@ -107,9 +112,9 @@ function MobileAnimeDownloadsScreen() {
                         onPress={() => router.push("/(app)/(media)/anime-download-queue" as never)}
                     >
                         <View className="flex-1 pr-3">
-                            <FormSectionLabel>Queue</FormSectionLabel>
+                            <FormSectionLabel>{t("Queue")}</FormSectionLabel>
                             <Text className="text-sm text-white/70">
-                                {formatQueueSummary(activeDownloads.length, failedDownloads.length, "episode")}
+                                {formatQueueSummary(activeDownloads.length, failedDownloads.length)}
                             </Text>
                         </View>
                         <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.3)" />
@@ -120,7 +125,7 @@ function MobileAnimeDownloadsScreen() {
                 {downloadedAnime.length > 0 && (
                     <Surface variant="muted" className="overflow-hidden">
                         <View className="px-4 pt-4 pb-2">
-                            <FormSectionLabel>Downloaded Anime</FormSectionLabel>
+                            <FormSectionLabel>{t("Downloaded Anime")}</FormSectionLabel>
                         </View>
 
                         {downloadedAnimePagination.hasMultiplePages && (
@@ -147,22 +152,22 @@ function MobileAnimeDownloadsScreen() {
                 {downloadedAnime.length === 0 && activeDownloads.length === 0 && (
                     <View className="py-16 items-center gap-3">
                         <Ionicons name="tv-outline" size={40} color="rgba(255,255,255,0.2)" />
-                        <Text className="text-white/40 text-sm">No anime downloads yet</Text>
+                        <Text className="text-white/40 text-sm">{t("No anime downloads yet")}</Text>
                     </View>
                 )}
 
 
                 {downloadedAnime.length > 0 && (
                     <Surface variant="danger" className="p-4 gap-3">
-                        <FormSectionLabel>Danger Zone</FormSectionLabel>
+                        <FormSectionLabel>{t("Danger Zone")}</FormSectionLabel>
                         <TouchableOpacity
                             className="flex-row items-center justify-between py-2"
                             onPress={handleClearAll}
                         >
                             <View className="flex-1">
-                                <Text className="text-white text-sm font-medium">Clear all anime downloads</Text>
+                                <Text className="text-white text-sm font-medium">{t("Clear all anime downloads")}</Text>
                                 <Text className="text-white/40 text-xs mt-0.5">
-                                    Remove all downloaded episodes and free up {totalSize.formatted}
+                                    {t("Remove all downloaded episodes and free up {{size}}", { size: totalSize.formatted })}
                                 </Text>
                             </View>
                             <Ionicons name="trash-outline" size={18} color="rgba(239,68,68,0.7)" />
@@ -185,12 +190,12 @@ function AnimeDownloadRow({ anime }: { anime: DownloadedAnimeInfo }) {
             activeOpacity={0.7}
             onLongPress={() => {
                 Alert.alert(
-                    "Delete downloads",
-                    `Remove all ${anime.downloadedCount} downloaded episodes for "${anime.title}"?`,
+                    t("Delete downloads"),
+                    t("Remove all {{count}} downloaded episodes for \"{{title}}\"?", { count: anime.downloadedCount, title: anime.title }),
                     [
-                        { text: "Cancel", style: "cancel" },
+                        { text: t("Cancel"), style: "cancel" },
                         {
-                            text: "Delete",
+                            text: t("Delete"),
                             style: "destructive",
                             onPress: () => deleteAllForMedia(anime.mediaId),
                         },
@@ -218,7 +223,7 @@ function AnimeDownloadRow({ anime }: { anime: DownloadedAnimeInfo }) {
                     {anime.title}
                 </Text>
                 <Text className="text-white/40 text-xs mt-0.5">
-                    {anime.downloadedCount} episode{anime.downloadedCount !== 1 ? "s" : ""}
+                    {tn("{{count}} episode", "{{count}} episodes", anime.downloadedCount)}
                 </Text>
             </View>
             <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.25)" />
@@ -226,13 +231,13 @@ function AnimeDownloadRow({ anime }: { anime: DownloadedAnimeInfo }) {
     )
 }
 
-function formatQueueSummary(activeCount: number, failedCount: number, itemLabel: string): string {
+function formatQueueSummary(activeCount: number, failedCount: number): string {
     const parts: string[] = []
     if (activeCount > 0) {
-        parts.push(`${activeCount} ${itemLabel}${activeCount === 1 ? "" : "s"} in queue`)
+        parts.push(tn("{{count}} episode in queue", "{{count}} episodes in queue", activeCount))
     }
     if (failedCount > 0) {
-        parts.push(`${failedCount} failed`)
+        parts.push(t("{{count}} failed", { count: failedCount }))
     }
-    return parts.join(" · ") || `No active ${itemLabel}s or failures`
+    return parts.join(" · ") || t("No active episodes or failures")
 }

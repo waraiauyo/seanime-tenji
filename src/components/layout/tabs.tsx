@@ -3,6 +3,7 @@ import { TabBarIcon } from "@/components/navigation/tab-bar-icon"
 import { BAR_ITEM_INACTIVE, GlassBar } from "@/components/shared/glass-bar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { COLORS } from "@/constants/colors"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import type { BottomTabBarProps, BottomTabNavigationOptions } from "expo-router/js-tabs"
@@ -140,7 +141,7 @@ export function TabBarButton(props: {
                     BAR_ITEM_INACTIVE,
                     { "text-brand-300": props.focused },
                 )}
-            /> : <Avatar alt="Profile picture" className="w-7 h-7">
+            /> : <Avatar alt={t("Profile picture")} className="w-7 h-7">
                 <AvatarImage source={{ uri: props.viewer?.viewer?.avatar?.large || "" }} />
                 <AvatarFallback>
                     <Text>S</Text>

@@ -15,6 +15,7 @@ import { SegmentedControl } from "@/components/shared/segmented-control"
 import { SheetFooter, SheetFooterButton } from "@/components/shared/sheet-footer"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { FormSectionLabel } from "@/components/ui/form-field"
+import { t, tc, tn } from "@/lib/i18n"
 import { copyOfflineLogTextToClipboard } from "@/lib/offline-logger"
 import { cn } from "@/lib/utils"
 import { toast } from "@/lib/utils/toast"
@@ -155,10 +156,10 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
     } = props
 
     const primaryLabel = React.useMemo(() => {
-        if (pickerStage === "files") return "Stream selected file"
-        if (!selectedTorrent) return "Auto select now"
-        if (selectedTorrent.isBatch) return "Choose file"
-        return "Start selected"
+        if (pickerStage === "files") return t("Stream selected file")
+        if (!selectedTorrent) return t("Auto select now")
+        if (selectedTorrent.isBatch) return t("Choose file")
+        return t("Start selected")
     }, [pickerStage, selectedTorrent, streamMode])
 
     const snapPoints = React.useMemo(() => ["72%", "92%"], [])
@@ -167,19 +168,19 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
         if (mode === "download") {
             const hasDebrid = streamMode === "debrid"
             const isBatchSelected = pickerStage === "torrents" && !!selectedTorrent?.isBatch
-            const label = hasDebrid ? "Download with Debrid" : isBatchSelected ? "Download Batch" : "Download to Server"
+            const label = hasDebrid ? t("Download with Debrid") : isBatchSelected ? t("Download Batch") : t("Download to Server")
             const showPrimary = selectedTorrent && (pickerStage === "torrents" || selectedFileId !== null)
 
             return (
                 <SheetFooter className="flex-col gap-2">
                     {destination !== undefined && onChangeDestination && (
                         <View className="w-full gap-1 px-1 mb-1">
-                            <Text className="text-[10px] font-semibold text-white/35 uppercase tracking-wider">Destination Path</Text>
+                            <Text className="text-[10px] font-semibold text-white/35 uppercase tracking-wider">{t("Destination Path")}</Text>
                             <View className="h-10 flex-row items-center rounded-xl border border-white/10 bg-white/5 px-3">
                                 <BottomSheetTextInput
                                     value={destination}
                                     onChangeText={onChangeDestination}
-                                    placeholder="Destination directory"
+                                    placeholder={t("Destination directory")}
                                     placeholderTextColor="rgba(255,255,255,0.35)"
                                     className="flex-1 py-0 text-xs text-foreground"
                                     autoCorrect={false}
@@ -197,7 +198,7 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
                                     disabled={isDownloading}
                                     className="bg-indigo-500/10 border border-indigo-500/25 active:bg-indigo-500/20"
                                 >
-                                    <Text className="font-semibold text-indigo-400">Download Missing</Text>
+                                    <Text className="font-semibold text-indigo-400">{t("Download Missing")}</Text>
                                 </SheetFooterButton>
                             )}
                             {canChooseFile && (
@@ -207,7 +208,7 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
                                     disabled={isDownloading}
                                     className="bg-indigo-500/10 border border-indigo-500/25 active:bg-indigo-500/20"
                                 >
-                                    <Text className="font-semibold text-indigo-400">Choose File</Text>
+                                    <Text className="font-semibold text-indigo-400">{t("Choose File")}</Text>
                                 </SheetFooterButton>
                             )}
                         </View>
@@ -218,7 +219,7 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
                             onPress={() => onOpenChange(false)}
                             disabled={isDownloading}
                         >
-                            <Text className="font-medium text-foreground/70">Close</Text>
+                            <Text className="font-medium text-foreground/70">{t("Close")}</Text>
                         </SheetFooterButton>
                         <SheetFooterButton
                             variant="primary"
@@ -233,7 +234,7 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
                             className={!showPrimary ? "opacity-40" : undefined}
                         >
                             <Text className="font-semibold text-primary-foreground">
-                                {isDownloading ? "Downloading..." : label}
+                                {isDownloading ? t("Downloading...") : label}
                             </Text>
                         </SheetFooterButton>
                     </View>
@@ -248,13 +249,13 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
                         variant="cancel"
                         onPress={onBackToTorrentList}
                     >
-                        <Text className="font-medium text-foreground/70">Back</Text>
+                        <Text className="font-medium text-foreground/70">{t("Back")}</Text>
                     </SheetFooterButton>
                     <SheetFooterButton
                         variant="primary"
                         onPress={onBackToTorrentList}
                     >
-                        <Text className="font-semibold text-primary-foreground">Confirm</Text>
+                        <Text className="font-semibold text-primary-foreground">{t("Confirm")}</Text>
                     </SheetFooterButton>
                 </SheetFooter>
             )
@@ -267,7 +268,7 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
                     onPress={() => onOpenChange(false)}
                     disabled={isStarting}
                 >
-                    <Text className="font-medium text-foreground/70">Close</Text>
+                    <Text className="font-medium text-foreground/70">{t("Close")}</Text>
                 </SheetFooterButton>
                 <SheetFooterButton
                     variant="primary"
@@ -279,7 +280,7 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
                     }
                 >
                     <Text className="font-semibold text-primary-foreground">
-                        {isStarting ? "Starting..." : primaryLabel}
+                        {isStarting ? t("Starting...") : primaryLabel}
                     </Text>
                 </SheetFooterButton>
             </SheetFooter>
@@ -307,7 +308,7 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
 
     return (
         <SeaBottomSheet
-            title={selectedEpisode ? `Episode ${selectedEpisode.episodeNumber}` : streamMode === "debrid" ? "Select release" : "Select torrent"}
+            title={selectedEpisode ? t("Episode {{number}}", { number: selectedEpisode.episodeNumber }) : streamMode === "debrid" ? t("Select release") : t("Select torrent")}
             open={open}
             onOpenChange={onOpenChange}
             index={1}
@@ -318,8 +319,8 @@ export function TorrentStreamPickerSheet(props: TorrentStreamPickerSheetProps) {
                 <View className="gap-1.5">
                     <Text className="text-sm font-medium text-muted-foreground">
                         {selectedEpisode?.episodeTitle || selectedEpisode?.displayTitle || (streamMode === "debrid"
-                            ? "Choose a release"
-                            : "Choose a torrent")}
+                            ? t("Choose a release")
+                            : t("Choose a torrent"))}
                     </Text>
                 </View>
 
@@ -505,14 +506,14 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
     )
 
     const selectedProviderLabel = React.useMemo(() => {
-        if (selectedProviderId === NONE_PROVIDER) return "None"
+        if (selectedProviderId === NONE_PROVIDER) return tc("provider", "None")
         return selectedProvider?.name ?? selectedProviderId
     }, [selectedProvider, selectedProviderId])
 
     const nativeProviderOptions = React.useMemo<NativeSelectOption[]>(
         () => [
             ...providerOptions.map(p => ({ id: p.id, label: p.name, sublabel: p.lang?.toUpperCase() ?? undefined })),
-            { id: NONE_PROVIDER, label: "None" },
+            { id: NONE_PROVIDER, label: tc("provider", "None") },
         ],
         [providerOptions],
     )
@@ -542,14 +543,14 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
     }, [cacheSet, episodes, onSelectTorrent, selectedTorrent?.downloadUrl, selectedTorrent?.infoHash, torrents, torrentMetadataByInfoHash])
 
     const segmentedOptions = React.useMemo(() => [
-        { value: "torrent", label: "Torrent Client" },
-        { value: "debrid", label: "Debrid Service" },
+        { value: "torrent", label: t("Torrent Client") },
+        { value: "debrid", label: t("Debrid Service") },
     ].filter(opt => availableModes?.includes(opt.value as StreamMode)), [availableModes])
 
     const nativeEpisodeOptions = React.useMemo<NativeSelectOption[]>(
         () => episodes.map(ep => ({
             id: String(ep.episodeNumber),
-            label: `Episode ${ep.episodeNumber}`,
+            label: t("Episode {{number}}", { number: ep.episodeNumber }),
             sublabel: ep.episodeTitle || ep.displayTitle || undefined,
         })),
         [episodes],
@@ -576,43 +577,43 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
                 />
             )}
             {episodeCollectionHasMappingError && (
-                <SurfaceMessage text="AniDB mapping is missing for this title. Manual torrent and file selection may be required." tone="warning" />
+                <SurfaceMessage text={t("AniDB mapping is missing for this title. Manual torrent and file selection may be required.")} tone="warning" />
             )}
 
             <View className="gap-3.5">
                 <View className="gap-1.5">
-                    <FormSectionLabel>Provider</FormSectionLabel>
+                    <FormSectionLabel>{t("Provider")}</FormSectionLabel>
                     {providerOptions.length === 0 ? (
-                        <SurfaceMessage text="No provider extensions" tone="muted" />
+                        <SurfaceMessage text={t("No provider extensions")} tone="muted" />
                     ) : (
                         <NativeSelect
                             options={nativeProviderOptions}
                             selectedId={selectedProviderId}
                             onSelect={onSelectProvider}
-                            title="Select Provider"
+                            title={t("Select Provider")}
                         />
                     )}
                 </View>
 
                 {selectedProviderId !== NONE_PROVIDER && (
                     <LabeledSwitch
-                        label="Smart search"
+                        label={t("Smart search")}
                         checked={searchMode === "smart"}
                         onToggle={() => onSelectSearchMode(searchMode === "smart" ? "simple" : "smart")}
                         disabled={!supportsSmartSearch}
-                        helper={supportsSmartSearch ? "Automated search based on given parameters." : "This provider does not support smart search."}
+                        helper={supportsSmartSearch ? t("Automated search based on given parameters.") : t("This provider does not support smart search.")}
                     />
                 )}
 
                 {selectedProviderId !== NONE_PROVIDER && searchMode === "smart" && mode !== "stream" && supportsSmartSearch && smartSearchFilters.includes(
                     "episodeNumber") && onSelectEpisodeNumber && episodes.length > 0 && (
                     <View className="gap-1.5">
-                        <FormSectionLabel>Episode</FormSectionLabel>
+                        <FormSectionLabel>{t("Episode")}</FormSectionLabel>
                         <NativeSelect
                             options={nativeEpisodeOptions}
                             selectedId={selectedEpisode ? String(selectedEpisode.episodeNumber) : ""}
                             onSelect={(id) => onSelectEpisodeNumber?.(Number(id))}
-                            title="Select Episode"
+                            title={t("Select Episode")}
                         />
                     </View>
                 )}
@@ -620,7 +621,7 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
 
             {selectedProviderId !== NONE_PROVIDER && (searchMode === "simple") && (
                 <View className="gap-2">
-                    <Text className="text-xs text-white/35">Search query</Text>
+                    <Text className="text-xs text-white/35">{t("Search query")}</Text>
                     <TorrentSearchQueryField
                         value={searchQuery}
                         onChangeText={onUpdateSearchQuery}
@@ -635,13 +636,13 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
                         className="flex-row items-center justify-between rounded-lg border-2 border-transparent border-b-white/5 py-2 px-2 active:opacity-60 focus:border-brand-100 focus:bg-white/10"
                     >
                         <Text className="text-xs font-semibold text-white/40 uppercase tracking-wider">
-                            Search Settings
+                            {t("Search Settings")}
                         </Text>
                         <View className="flex-row items-center gap-2">
                             {activeFilterCount > 0 && (
                                 <View className="bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-md">
                                     <Text className="text-[10px] font-semibold text-indigo-400">
-                                        {activeFilterCount} active
+                                        {tn("1 active", "{{count}} active", activeFilterCount)}
                                     </Text>
                                 </View>
                             )}
@@ -658,10 +659,10 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
                             {providerOptions.length > 1 && (
                                 <View className="gap-2.5">
                                     <LabeledSwitch
-                                        label="Search across providers"
+                                        label={t("Search across providers")}
                                         checked={searchAcrossProviders}
                                         onToggle={onToggleSearchAcrossProviders}
-                                        helper="Runs the same search against other installed providers."
+                                        helper={t("Runs the same search against other installed providers.")}
                                     />
                                     {searchAcrossProviders && (
                                         <Pressable
@@ -670,8 +671,8 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
                                         >
                                             <Text className="text-sm font-medium text-white">
                                                 {extraProviderIds.filter(id => id !== selectedProviderId).length === 0
-                                                    ? "Select providers..."
-                                                    : `${extraProviderIds.filter(id => id !== selectedProviderId).length} selected`}
+                                                    ? t("Select providers...")
+                                                    : tn("1 selected", "{{count}} selected", extraProviderIds.filter(id => id !== selectedProviderId).length)}
                                             </Text>
                                             <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.45)" />
                                         </Pressable>
@@ -681,7 +682,7 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
 
                             {(smartSearchFilters.includes("query")) && (
                                 <View className="gap-2">
-                                    <Text className="text-xs text-white/35">Search query</Text>
+                                    <Text className="text-xs text-white/35">{t("Search query")}</Text>
                                     <TorrentSearchQueryField
                                         value={searchQuery}
                                         onChangeText={onUpdateSearchQuery}
@@ -693,20 +694,20 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
                                 <View className="gap-3.5">
                                     {smartSearchFilters.includes("batch") && (
                                         <LabeledSwitch
-                                            label="Search batches"
+                                            label={t("Search batches")}
                                             checked={smartSearchBatch}
                                             onToggle={onToggleSmartBatch}
-                                            helper="Prefer finished-season batch releases when available."
+                                            helper={t("Prefer finished-season batch releases when available.")}
                                         />
                                     )}
 
                                     {smartSearchFilters.includes("resolution") && (
                                         <View className="gap-2">
-                                            <Text className="text-xs text-white/35">Resolution</Text>
+                                            <Text className="text-xs text-white/35">{t("Resolution")}</Text>
                                             <ChipWrap>
                                                 <ChoiceChip
                                                     key="any"
-                                                    label="Any"
+                                                    label={tc("resolution", "Any")}
                                                     active={resolution === undefined || (resolution as any) === ""}
                                                     onPress={() => onSelectResolution(undefined)}
                                                 />
@@ -724,10 +725,10 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
 
                                     {smartSearchFilters.includes("bestReleases") && (
                                         <LabeledSwitch
-                                            label="Best releases"
+                                            label={t("Best releases")}
                                             checked={bestRelease}
                                             onToggle={onToggleBestRelease}
-                                            helper="Prefer best-ranked releases when the provider supports it."
+                                            helper={t("Prefer best-ranked releases when the provider supports it.")}
                                         />
                                     )}
                                 </View>
@@ -740,9 +741,9 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
             {!!batchHistory?.torrent && (
                 <View className="gap-2">
                     <View className="flex-row justify-between items-center">
-                        <FormSectionLabel>Previous Selection</FormSectionLabel>
+                        <FormSectionLabel>{t("Previous Selection")}</FormSectionLabel>
                         {usePreviousBatch && mode !== "download" && (
-                            <Text className="text-xs text-white/35">Auto-selected on episode tap</Text>
+                            <Text className="text-xs text-white/35">{t("Auto-selected on episode tap")}</Text>
                         )}
                     </View>
                     <Pressable
@@ -764,28 +765,28 @@ function TorrentSelectionStage(props: TorrentSelectionStageProps) {
 
             <View className="gap-2">
                 <View className="flex-row justify-between items-center">
-                    <FormSectionLabel>Releases</FormSectionLabel>
+                    <FormSectionLabel>{t("Releases")}</FormSectionLabel>
                     <Pressable
                         onPress={onRefetchSearch}
                         className="rounded-lg border-2 border-transparent px-3 py-2 focus:border-brand-100 focus:bg-white/10"
                     >
                         <Text className="text-xs font-semibold text-white/35">
-                            Refresh
+                            {t("Refresh")}
                         </Text>
                     </Pressable>
                 </View>
 
                 {selectedProviderId === NONE_PROVIDER ? (
-                    <SurfaceMessage text="Select a provider to search for torrents." tone="muted" />
+                    <SurfaceMessage text={t("Select a provider to search for torrents.")} tone="muted" />
                 ) : isSearching ? (
                     <View className="py-16 items-center gap-2.5">
                         <ActivityIndicator size="small" color="rgba(255,255,255,0.45)" />
-                        <Text className="text-sm text-white/35">Searching torrents...</Text>
+                        <Text className="text-sm text-white/35">{t("Searching torrents...")}</Text>
                     </View>
                 ) : torrents.length === 0 ? (
                     <View className="py-16 items-center gap-2">
                         <Ionicons name="search-outline" size={32} color="rgba(255,255,255,0.15)" />
-                        <Text className="text-sm text-white/35">No torrents found for this episode</Text>
+                        <Text className="text-sm text-white/35">{t("No torrents found for this episode")}</Text>
                     </View>
                 ) : (
                     <View className="gap-2.5">{releaseCards}</View>
@@ -851,7 +852,7 @@ function TorrentSearchQueryField({
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onSubmitEditing={handleSubmitEditing}
-                placeholder="Search torrents"
+                placeholder={t("Search torrents")}
                 placeholderTextColor="rgba(255,255,255,0.35)"
                 className="flex-1 py-0 text-foreground"
                 returnKeyType="search"
@@ -881,26 +882,26 @@ function TorrentFileSelectionStage({ filePreviews, isLoading, onBack, selectedFi
             <View className="py-16 items-center gap-2.5">
                 <ActivityIndicator size="small" color="rgba(255,255,255,0.45)" />
                 <Text className="text-sm text-white/35">
-                    {streamMode === "debrid" ? "Loading matching files..." : "Loading torrent files..."}
+                    {streamMode === "debrid" ? t("Loading matching files...") : t("Loading torrent files...")}
                 </Text>
             </View>
         )
     }
 
     if (!previews.length) {
-        return <SurfaceMessage text="No matching files were found in this torrent." tone="warning" />
+        return <SurfaceMessage text={t("No matching files were found in this torrent.")} tone="warning" />
     }
 
     return (
         <View className="gap-2.5">
             <View className="flex-row justify-between items-center">
-                <FormSectionLabel>File Selection</FormSectionLabel>
+                <FormSectionLabel>{t("File Selection")}</FormSectionLabel>
                 <Pressable
                     onPress={onBack}
                     className="rounded-lg border-2 border-transparent px-3 py-2 focus:border-brand-100 focus:bg-white/10"
                 >
                     <Text className="text-xs font-semibold text-white/40">
-                        Back to releases
+                        {t("Back to releases")}
                     </Text>
                 </Pressable>
             </View>
@@ -925,7 +926,7 @@ function TorrentFileSelectionStage({ filePreviews, isLoading, onBack, selectedFi
                                     {file.displayTitle || file.displayPath}
                                 </Text>
                                 {file.isLikely &&
-                                    <MiniBadge label="Likely" color="#a7f3d0" bg="rgba(16,185,129,0.14)" border="rgba(16,185,129,0.24)" />}
+                                    <MiniBadge label={t("Likely")} color="#a7f3d0" bg="rgba(16,185,129,0.14)" border="rgba(16,185,129,0.24)" />}
                             </View>
                             <Text className="text-xs text-white/35" numberOfLines={2}>
                                 {file.displayPath}
@@ -979,13 +980,13 @@ function TorrentProviderSelectionStage({
     return (
         <View className="gap-3">
             <View className="flex-row justify-between items-center">
-                <FormSectionLabel>Additional Providers</FormSectionLabel>
+                <FormSectionLabel>{t("Additional Providers")}</FormSectionLabel>
                 <Pressable
                     onPress={onBack}
                     className="rounded-lg border-2 border-transparent px-3 py-2 focus:border-brand-100 focus:bg-white/10"
                 >
                     <Text className="text-xs font-semibold text-white/40">
-                        Back to releases
+                        {t("Back to releases")}
                     </Text>
                 </Pressable>
             </View>
@@ -994,7 +995,7 @@ function TorrentProviderSelectionStage({
                 <BottomSheetTextInput
                     value={searchQuery}
                     onChangeText={setSearchQuery}
-                    placeholder="Filter providers..."
+                    placeholder={t("Filter providers...")}
                     placeholderTextColor="rgba(255,255,255,0.35)"
                     className="flex-1 py-0 text-foreground text-sm"
                     autoCorrect={false}
@@ -1007,19 +1008,19 @@ function TorrentProviderSelectionStage({
                     onPress={handleSelectAll}
                     className="h-10 flex-1 items-center justify-center rounded-xl border-2 border-white/10 bg-white/5 active:bg-white/10 focus:border-brand-100"
                 >
-                    <Text className="text-xs font-semibold text-white/70">Select All</Text>
+                    <Text className="text-xs font-semibold text-white/70">{t("Select All")}</Text>
                 </Pressable>
                 <Pressable
                     onPress={handleClearAll}
                     className="h-10 flex-1 items-center justify-center rounded-xl border-2 border-white/10 bg-white/5 active:bg-white/10 focus:border-brand-100"
                 >
-                    <Text className="text-xs font-semibold text-white/70">Clear All</Text>
+                    <Text className="text-xs font-semibold text-white/70">{t("Clear All")}</Text>
                 </Pressable>
             </View>
 
             {filteredProviders.length === 0 ? (
                 <View className="py-8 items-center">
-                    <Text className="text-sm text-white/35">No providers found</Text>
+                    <Text className="text-sm text-white/35">{t("No providers found")}</Text>
                 </View>
             ) : (
                 <View className="gap-2">
@@ -1134,13 +1135,11 @@ function formatRelativeDate(dateStr: string): string {
     try {
         const date = new Date(dateStr)
         const diffDays = Math.floor((Date.now() - date.getTime()) / 86400000)
-        if (diffDays === 0) return "Today"
-        if (diffDays === 1) return "1 day ago"
-        if (diffDays < 30) return `${diffDays} days ago`
+        if (diffDays === 0) return t("Today")
+        if (diffDays < 30) return tn("1 day ago", "{{count}} days ago", diffDays)
         const diffMonths = Math.floor(diffDays / 30)
-        if (diffMonths === 1) return "1 month ago"
-        if (diffMonths < 12) return `${diffMonths} months ago`
-        return `${Math.floor(diffDays / 365)}y ago`
+        if (diffMonths < 12) return tn("1 month ago", "{{count}} months ago", diffMonths)
+        return tn("1y ago", "{{count}}y ago", Math.floor(diffDays / 365))
     }
     catch {
         return dateStr
@@ -1158,9 +1157,9 @@ function getTorrentCardTitle(torrent: HibikeTorrent_AnimeTorrent, metadata: Haba
     if (!torrent.isBatch) {
         if (episodeNumbers?.length === 1) {
             const parsedEpisodeNumber = Number.parseInt(episodeNumbers[0], 10)
-            return `Episode ${normalizeEpisodeNumber(parsedEpisodeNumber, episodes)}`
+            return t("Episode {{number}}", { number: normalizeEpisodeNumber(parsedEpisodeNumber, episodes) })
         }
-        if (episodeNumbers?.length === 0) return "Batch"
+        if (episodeNumbers?.length === 0) return t("Batch")
         if (metadata?.formatted_title) return metadata.formatted_title
         return ""
     }
@@ -1171,10 +1170,10 @@ function getTorrentCardTitle(torrent: HibikeTorrent_AnimeTorrent, metadata: Haba
         const last = partNumbers[partNumbers.length - 1]
         if (first !== last) {
             return partNumbers.length === 2 && last - first === 1
-                ? `Part ${first} and ${last}`
-                : `Parts ${first} to ${last}`
+                ? t("Part {{first}} and {{last}}", { first, last })
+                : t("Parts {{first}} to {{last}}", { first, last })
         }
-        return `Part ${first}`
+        return t("Part {{number}}", { number: first })
     }
 
     const seasonNumbers = uniqueInts(metadata?.season_number)
@@ -1183,23 +1182,23 @@ function getTorrentCardTitle(torrent: HibikeTorrent_AnimeTorrent, metadata: Haba
         const last = seasonNumbers[seasonNumbers.length - 1]
         if (first !== last) {
             return seasonNumbers.length === 2 && last - first === 1
-                ? `Season ${first} and ${last}`
-                : `Seasons ${first} to ${last}`
+                ? t("Season {{first}} and {{last}}", { first, last })
+                : t("Seasons {{first}} to {{last}}", { first, last })
         }
-        return `Season ${first}`
+        return t("Season {{number}}", { number: first })
     }
 
     const batchEpisodeNumbers = uniqueInts(metadata?.episode_number)
     if (batchEpisodeNumbers.length > 1) {
-        let title = `Episodes ${batchEpisodeNumbers[0]} to ${batchEpisodeNumbers[batchEpisodeNumbers.length - 1]}`
+        let title = t("Episodes {{first}} to {{last}}", { first: batchEpisodeNumbers[0], last: batchEpisodeNumbers[batchEpisodeNumbers.length - 1] })
         if (seasonNumbers.length === 1) {
-            title += ` (Season ${seasonNumbers[0]})`
+            title += ` (${t("Season {{number}}", { number: seasonNumbers[0] })})`
         }
         return title
     }
 
-    if (seasonNumbers.length === 1) return `Season ${seasonNumbers[0]}`
-    return "Batch"
+    if (seasonNumbers.length === 1) return t("Season {{number}}", { number: seasonNumbers[0] })
+    return t("Batch")
 }
 
 function startCaseLabel(value: string) {
@@ -1261,28 +1260,28 @@ function TorrentMetadataTags({ metadata }: { metadata?: Habari_Metadata }) {
             ))}
             {languages.length > 2 && (
                 <MetaTag
-                    label="Languages"
+                    label={t("Languages")}
                     icon={<Ionicons name="chatbubble-ellipses" size={11} color="#93c5fd" />}
                 />
             )}
             {multiAudioTerms.map(term => (
                 <MetaTag
                     key={term}
-                    label={term.toLowerCase().includes("dual") ? "Original + Dub" : startCaseLabel(term)}
+                    label={term.toLowerCase().includes("dual") ? t("Original + Dub") : startCaseLabel(term)}
                     tone="subtle"
                     icon={<Ionicons name="mic" size={11} color="#fda4af" />}
                 />
             ))}
             {hasDubs && (
                 <MetaTag
-                    label="Dubbed"
+                    label={t("Dubbed")}
                     tone="indigo"
                     icon={<Ionicons name="mic" size={11} color="#fca5a5" />}
                 />
             )}
             {hasMultiSubs && (
                 <MetaTag
-                    label="Multi Subs"
+                    label={t("Multi Subs")}
                     tone="indigo"
                     icon={<Ionicons name="chatbubble-ellipses" size={11} color="#93c5fd" />}
                 />
@@ -1364,16 +1363,16 @@ function TorrentCard({
                                 style={{ backgroundColor: "rgba(131,24,67,0.72)" }}
                             >
                                 <Ionicons name="diamond" size={11} color="#fbcfe8" />
-                                <Text className="text-[11px] font-medium text-pink-100">Highest quality</Text>
+                                <Text className="text-[11px] font-medium text-pink-100">{t("Highest quality")}</Text>
                             </View>
                         )}
 
                         <View className="flex-row items-center gap-1">
                             <Ionicons name={seederInfo.iconName} size={13} color={seederInfo.color} />
                             <Text className="text-xs font-semibold" style={{ color: seederInfo.color }}>
-                                {torrent.seeders || "No"}
+                                {torrent.seeders || tc("seeders", "No")}
                             </Text>
-                            <Text className="text-xs text-white/35">seeder{torrent.seeders === 1 ? "" : "s"}</Text>
+                            <Text className="text-xs text-white/35">{tn("seeder", "seeders", torrent.seeders)}</Text>
                         </View>
 
                         <Text className="text-xs font-medium text-white/55">{torrent.formattedSize}</Text>
@@ -1399,7 +1398,7 @@ function TorrentCard({
                                     const copyUrl = torrent.magnetLink || torrent.downloadUrl || torrent.link
                                     if (copyUrl) {
                                         copyOfflineLogTextToClipboard(copyUrl)
-                                        toast.success("Link copied to clipboard")
+                                        toast.success(t("Link copied to clipboard"))
                                     }
                                 }}
                                 className="ml-auto p-1.5 bg-white/5 border border-white/10 rounded-lg active:bg-white/10"
@@ -1413,7 +1412,7 @@ function TorrentCard({
                     {isCached && (
                         <View className="flex-row items-center gap-1.5">
                             <Ionicons name="speedometer" size={11} color="#a4f4cf" />
-                            <Text className="text-[11px] font-medium text-emerald-200/70">Cached</Text>
+                            <Text className="text-[11px] font-medium text-emerald-200/70">{t("Cached")}</Text>
                         </View>
                     )}
 

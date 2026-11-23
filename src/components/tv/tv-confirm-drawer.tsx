@@ -1,6 +1,7 @@
 import { TVDrawer } from "@/components/tv/tv-drawer"
 import { TVButton } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import * as React from "react"
 import { Text, TVFocusGuideView, View } from "react-native"
 
@@ -28,7 +29,7 @@ export function TVConfirmDrawer({
             open={open}
             onOpenChange={onOpenChange}
             title={title}
-            subtitle="Confirm action"
+            subtitle={t("Confirm action")}
             width={tvSize(650)}
         >
             <View
@@ -47,7 +48,7 @@ export function TVConfirmDrawer({
                     style={{ flexDirection: "row", gap: tvSize(12) }}
                 >
                     <TVButton
-                        label="Cancel"
+                        label={t("Cancel")}
                         variant="secondary"
                         preferred
                         onPress={() => onOpenChange(false)}

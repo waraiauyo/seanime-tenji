@@ -18,6 +18,7 @@ import {
 import type { TVMediaMeta } from "@/components/tv/tv-shelf"
 import { ContinueWatchingItem, useAnimeLibraryCollection } from "@/hooks/use-anime-library-collection"
 import { getContinueWatchingSpoilerActive, getEpisodeSpoilerState, getSpoilerSafeAnimeImage } from "@/lib/anime-spoilers"
+import { t } from "@/lib/i18n"
 import { Ionicons } from "@/lib/icons/Ionicons"
 import { cleanHtml, mediaTitle } from "@/lib/media-metadata"
 import { getServerLocalEpisodeCount, parseServerLocalAnimeEntry, useIsServerConnected, useServerLocalAnimeRecords } from "@/lib/offline"
@@ -40,11 +41,11 @@ type Shelf = {
 }
 
 const LABELS: Record<string, string> = {
-    CURRENT: "Currently watching",
-    PAUSED: "Paused",
-    PLANNING: "Planning",
-    COMPLETED: "Completed",
-    DROPPED: "Dropped",
+    CURRENT: t("Currently watching"),
+    PAUSED: t("Paused"),
+    PLANNING: t("Planning"),
+    COMPLETED: t("Completed"),
+    DROPPED: t("Dropped"),
 }
 
 export function TVLibraryScreen() {
@@ -108,7 +109,7 @@ export function TVLibraryScreen() {
             const entry = parseServerLocalAnimeEntry(record)
             if (!entry?.media) continue
             localMedia.push(entry.media)
-            localBadges.set(record.mediaId, `Server · ${getServerLocalEpisodeCount(record)}`)
+            localBadges.set(record.mediaId, t("Server · {{count}}", { count: getServerLocalEpisodeCount(record) }))
             localMeta.set(record.mediaId, {
                 listData: entry.listData,
                 libraryData: entry.libraryData,
@@ -118,7 +119,7 @@ export function TVLibraryScreen() {
         if (localMedia.length > 0) {
             items.push({
                 key: "server-local",
-                title: "On Seanime Server",
+                title: t("On Seanime Server"),
                 media: localMedia,
                 badgeById: localBadges,
                 metaById: localMeta,
@@ -180,13 +181,13 @@ export function TVLibraryScreen() {
                         ?? episode.episodeMetadata?.image
                         ?? media.coverImage?.extraLarge
                         ?? media.coverImage?.large,
-                    kicker: "Continue watching",
+                    kicker: t("Continue watching"),
                     title: mediaTitle(media),
                     subtitle: `${episode.displayTitle}${!spoiler.hideTitle && episode.episodeTitle ? `  ·  ${episode.episodeTitle}` : ""}`,
                     meta: [
                         media.seasonYear,
-                        media.format?.replaceAll("_", " "),
-                        media.genres?.slice(0, 3).join("  ·  "),
+                        media.format && t(media.format.replaceAll("_", " ")),
+                        media.genres?.slice(0, 3).map(name => t(name)).join("  ·  "),
                     ].filter(Boolean).join("  ·  "),
                     description: cleanHtml(media.description),
                     score: media.meanScore,
@@ -195,9 +196,9 @@ export function TVLibraryScreen() {
                         media.id,
                         episode.progressNumber,
                     ),
-                    actionLabel: `Play ${episode.displayTitle}`,
+                    actionLabel: t("Play {{title}}", { title: episode.displayTitle }),
                     onAction: () => openContinue(item),
-                    secondaryLabel: "View details",
+                    secondaryLabel: t("View details"),
                     onSecondary: () => openMedia(media.id),
                 }
             })
@@ -233,14 +234,14 @@ export function TVLibraryScreen() {
                     }}
                 >
                     <Text className="font-bold text-white" style={{ fontSize: tvSize(30) }}>
-                        {isConnected ? "Your anime library is empty" : "Server is offline"}
+                        {isConnected ? t("Your anime library is empty") : t("Server is offline")}
                     </Text>
                     <Text className="text-white/45" style={{ fontSize: tvSize(20) }}>
-                        {isConnected ? "Use Discover to find something to watch." : "Reconnect to load your library."}
+                        {isConnected ? t("Use Discover to find something to watch.") : t("Reconnect to load your library.")}
                     </Text>
                     <View style={{ marginTop: tvSize(20) }}>
                         <TVButton
-                            label={isConnected ? "Open Discover" : "Open Settings"}
+                            label={isConnected ? t("Open Discover") : t("Open Settings")}
                             variant="primary"
                             hasTVPreferredFocus
                             onPress={() => router.navigate((isConnected ? "/(app)/(tabs)/discover" : "/(app)/(tabs)/(profile)") as never)}
@@ -267,7 +268,7 @@ export function TVLibraryScreen() {
                     <TVInput
                         value={search}
                         onChangeText={setSearch}
-                        placeholder="Search your anime library"
+                        placeholder={t("Search your anime library")}
                         placeholderTextColor="rgba(255,255,255,0.35)"
                         autoCorrect={false}
                         autoCapitalize="none"
@@ -291,7 +292,7 @@ export function TVLibraryScreen() {
                     media={searchMedia}
                     query={search}
                     topInset={TV.navInset}
-                    emptyText="Try another title from your AniList library."
+                    emptyText={t("Try another title from your AniList library.")}
                 />
             ) : (
                 <Animated.ScrollView
@@ -317,7 +318,7 @@ export function TVLibraryScreen() {
                         {continueWatchingList.length > 0 ? (
                             <View style={{ gap: tvSize(12) }}>
                                 <TVSectionHeader
-                                    title="Continue watching"
+                                    title={t("Continue watching")}
                                     count={continueWatchingList.length}
                                 />
                                 <TVFocusGuideView trapFocusLeft trapFocusRight>

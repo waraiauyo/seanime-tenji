@@ -1,5 +1,6 @@
 import { getStoredString, setStoredString } from "@/atoms/storage"
 import { isManualOfflineModeEnabled } from "@/lib/connection-state"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import Constants from "expo-constants"
 import * as Updates from "expo-updates"
@@ -104,19 +105,19 @@ export function getOtaVersionInfo(): OtaVersionInfo {
 
 export async function checkForOtaUpdateManually(): Promise<void> {
     if (__DEV__ || !Updates.isEnabled) {
-        toast.info("OTA updates are available in release builds")
+        toast.info(t("OTA updates are available in release builds"))
         return
     }
 
     if (isManualOfflineModeEnabled()) {
-        toast.info("Disable offline mode to check for updates")
+        toast.info(t("Disable offline mode to check for updates"))
         return
     }
 
     try {
         const result = await Updates.checkForUpdateAsync()
         if (!result.isAvailable || result.isRollBackToEmbedded) {
-            toast.info("Seanime is up to date")
+            toast.info(t("Seanime is up to date"))
             return
         }
 
@@ -124,7 +125,7 @@ export async function checkForOtaUpdateManually(): Promise<void> {
     }
     catch (error: any) {
         console.error(error)
-        toast.error(`Failed to check for updates`)
+        toast.error(t("Failed to check for updates"))
     }
 }
 
@@ -162,7 +163,9 @@ async function checkForPromptableUpdate({
 
 function promptInstallUpdate(manifest: unknown) {
     const extra = getSeanimeUpdateExtra(manifest)
-    const versionLabel = extra.otaVersion ? `OTA ${extra.otaVersion}` : "A new update"
+    const message = extra.otaVersion
+        ? t("OTA {{version}} is ready to install.", { version: extra.otaVersion })
+        : t("A new update is ready to install.")
     const updateId = isRecord(manifest) && typeof manifest.id === "string" ? manifest.id : undefined
     const info = { updateId, otaVersion: extra.otaVersion }
 
@@ -172,18 +175,18 @@ function promptInstallUpdate(manifest: unknown) {
     }
 
     Alert.alert(
-        "Update available",
-        `${versionLabel} is ready to install.`,
+        t("Update available"),
+        message,
         [
             {
-                text: "Later",
+                text: t("Later"),
                 style: "cancel",
                 onPress: () => {
                     dismissOta(info)
                 },
             },
             {
-                text: "Install",
+                text: t("Install"),
                 onPress: () => {
                     void fetchAndPromptReload(updateId, extra.otaVersion)
                 },
@@ -196,18 +199,20 @@ async function fetchAndPromptReload(updateId: string | undefined, otaVersion: st
     try {
         const ready = await downloadOta()
         if (!ready) {
-            toast.info("Seanime is already up to date")
+            toast.info(t("Seanime is already up to date"))
             return
         }
 
-        const versionLabel = otaVersion ? `OTA ${otaVersion}` : "The update"
+        const message = otaVersion
+            ? t("OTA {{version}} has been downloaded and will load after restart.", { version: otaVersion })
+            : t("The update has been downloaded and will load after restart.")
         Alert.alert(
-            "Restart Seanime?",
-            `${versionLabel} has been downloaded and will load after restart.`,
+            t("Restart Seanime?"),
+            message,
             [
-                { text: "Later", style: "cancel" },
+                { text: t("Later"), style: "cancel" },
                 {
-                    text: "Restart",
+                    text: t("Restart"),
                     onPress: () => {
                         void restartOta()
                     },
@@ -220,7 +225,7 @@ async function fetchAndPromptReload(updateId: string | undefined, otaVersion: st
         if (updateId) {
             setStoredString(DISMISSED_OTA_ID_KEY, updateId)
         }
-        toast.error(`Failed to download update: ${error?.message || error}`)
+        toast.error(t("Failed to download update: {{error}}", { error: String(error?.message || error) }))
     }
 }
 

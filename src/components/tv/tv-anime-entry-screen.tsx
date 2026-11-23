@@ -37,6 +37,7 @@ import { CenteredSpinner } from "@/components/shared/centered-spinner"
 import type { AnimeEntryView } from "@/components/features/media/anime-entry-view-switcher"
 import { tvEntryView } from "@/components/features/media/anime-entry-view-utils"
 import { getEpisodeSpoilerState } from "@/lib/anime-spoilers"
+import { t, tc } from "@/lib/i18n"
 import { altTitle, cleanHtml, listStatus, mediaTitle, startLabel } from "@/lib/media-metadata"
 import { router, useFocusEffect } from "expo-router"
 import { useAtom } from "jotai/react"
@@ -164,8 +165,8 @@ export function TVAnimeEntryScreen({
             duration: item.episodeMetadata?.length,
             badge: item.displayTitle,
             title: spoiler.hideTitle
-                ? `Episode ${item.episodeNumber}`
-                : item.episodeTitle || `Episode ${item.episodeNumber}`,
+                ? t("Episode {{number}}", { number: item.episodeNumber })
+                : item.episodeTitle || t("Episode {{number}}", { number: item.episodeNumber }),
             subtitle: spoiler.hideTitle ? undefined : item.localFile?.name,
             progressPercent: getEpisodePercentageComplete(watchHistory, entry.mediaId, item.progressNumber),
             completed,
@@ -218,10 +219,10 @@ export function TVAnimeEntryScreen({
     const date = startLabel(entry.media)
     const heroMeta = [
         date,
-        entry.media?.season?.replaceAll("_", " "),
-        entry.media?.status?.replaceAll("_", " "),
-        entry.media?.format?.replaceAll("_", " "),
-        entry.media?.genres?.slice(0, 3).join("  ·  "),
+        entry.media?.season && t(entry.media.season.replaceAll("_", " ")),
+        entry.media?.status && t(entry.media.status.replaceAll("_", " ")),
+        entry.media?.format && t(entry.media.format.replaceAll("_", " ")),
+        entry.media?.genres?.slice(0, 3).map(genre => t(genre)).join("  ·  "),
     ].filter(Boolean).join("  ·  ")
     const progressLabel = `${entry.listData?.progress ?? 0}/${entry.media?.episodes || "-"}`
     const statusLabel = listStatus(entry.listData?.status)
@@ -233,11 +234,11 @@ export function TVAnimeEntryScreen({
 
     const visibleTabs = React.useMemo(() => {
         return [
-            !isOffline && { key: "library", label: "Library" },
-            hasServerLocal && { key: "server-local", label: "On Server" },
-            hasTorrentStream && { key: "torrentstream", label: "Torrents" },
-            hasOnlineStream && { key: "onlinestream", label: "Online" },
-            { key: "info", label: "Details" },
+            !isOffline && { key: "library", label: t("Library") },
+            hasServerLocal && { key: "server-local", label: t("On Server") },
+            hasTorrentStream && { key: "torrentstream", label: t("Torrents") },
+            hasOnlineStream && { key: "onlinestream", label: t("Online") },
+            { key: "info", label: t("Details") },
         ].filter((tab): tab is { key: AnimeEntryView; label: string } => !!tab)
     }, [hasOnlineStream, hasServerLocal, hasTorrentStream, isOffline])
 
@@ -313,7 +314,7 @@ export function TVAnimeEntryScreen({
                         }}
                     >
                         <TVButton
-                            label="Back"
+                            label={t("Back")}
                             variant="ghost"
                             size="compact"
                             icon={<Ionicons name="arrow-back" size={tvSize(22)} color="white" />}
@@ -461,7 +462,7 @@ export function TVAnimeEntryScreen({
                     ) : null}*/}
                     <TVPillButton
                         ref={editRef}
-                        label={entry.listData ? "Edit entry" : "Add to list"}
+                        label={entry.listData ? t("Edit entry") : t("Add to list")}
                         // preferred={!nextEpisodeToPlay}
                         // preferred
                         icon={(
@@ -487,7 +488,7 @@ export function TVAnimeEntryScreen({
                         <View style={{ gap: tvSize(30) }}>
                             {mainEpisodes.length > 0 ? (
                                 <TVEpisodeGrid
-                                    title="Episodes"
+                                    title={t("Episodes")}
                                     episodes={mainEpisodes}
                                     renderItem={renderEpisode}
                                     initialPage={mainEpisodesInitialPage}
@@ -501,14 +502,14 @@ export function TVAnimeEntryScreen({
                             ) : null}
                             {specialEpisodes.length > 0 ? (
                                 <TVEpisodeGrid
-                                    title="Specials"
+                                    title={t("Specials")}
                                     episodes={specialEpisodes}
                                     renderItem={renderEpisode}
                                 />
                             ) : null}
                             {ncEpisodes.length > 0 ? (
                                 <TVEpisodeGrid
-                                    title="NC Episodes"
+                                    title={t("NC Episodes")}
                                     episodes={ncEpisodes}
                                     renderItem={renderEpisode}
                                 />
@@ -516,7 +517,7 @@ export function TVAnimeEntryScreen({
                             {mainEpisodes.length === 0 && specialEpisodes.length === 0 && ncEpisodes.length === 0 ? (
                                 <View style={{ paddingHorizontal: TV.gutter, paddingTop: tvSize(20) }}>
                                     <Text className="text-white/60 text-lg">
-                                        No local files scanned on your server.
+                                        {t("No local files scanned on your server.")}
                                     </Text>
                                 </View>
                             ) : null}
@@ -526,7 +527,7 @@ export function TVAnimeEntryScreen({
                     {activeView === "server-local" && serverLocalEntry ? (
                         <View style={{ gap: tvSize(30) }}>
                             <TVEpisodeGrid
-                                title="Episodes"
+                                title={t("Episodes")}
                                 episodes={serverGroups.main}
                                 renderItem={renderServerEpisode}
                                 initialPage={serverMainInitialPage}
@@ -538,19 +539,19 @@ export function TVAnimeEntryScreen({
                                 ) : null}
                             />
                             <TVEpisodeGrid
-                                title="Specials"
+                                title={t("Specials")}
                                 episodes={serverGroups.special}
                                 renderItem={renderServerEpisode}
                             />
                             <TVEpisodeGrid
-                                title="NC Episodes"
+                                title={t("NC Episodes")}
                                 episodes={serverGroups.nc}
                                 renderItem={renderServerEpisode}
                             />
                             {serverLocalEntry.episodes?.length ? null : (
                                 <View style={{ paddingHorizontal: TV.gutter, paddingTop: tvSize(20) }}>
                                     <Text className="text-white/60" style={{ fontSize: tvSize(20) }}>
-                                        No files are available in the cached server catalog.
+                                        {t("No files are available in the cached server catalog.")}
                                     </Text>
                                 </View>
                             )}
@@ -615,9 +616,8 @@ export const TVAnimeEntryInfoView = React.memo(function TVAnimeEntryInfoView({
     const relationBadges = React.useMemo(() => new Map(
         relations.map(edge => {
             const type = edge.relationType ?? ""
-            const label = type.charAt(0) + type.slice(1).toLowerCase().replaceAll("_", " ")
-            const suffix = edge.node.format === "MOVIE" ? " (Movie)" : ""
-            return [edge.node.id, `${label}${suffix}`]
+            const label = t(type.charAt(0) + type.slice(1).toLowerCase().replaceAll("_", " "))
+            return [edge.node.id, edge.node.format === "MOVIE" ? t("{{relation}} (Movie)", { relation: label }) : label]
         }),
     ), [relations])
 
@@ -636,7 +636,7 @@ export const TVAnimeEntryInfoView = React.memo(function TVAnimeEntryInfoView({
             {description ? (
                 <View style={{ paddingHorizontal: TV.gutter, gap: tvSize(12) }}>
                     <Text className="font-bold text-white" style={{ fontSize: tvSize(30) }}>
-                        Description
+                        {t("Description")}
                     </Text>
                     <Text className="leading-7 text-white/60" style={{ fontSize: tvSize(22) }}>
                         {description}
@@ -648,7 +648,7 @@ export const TVAnimeEntryInfoView = React.memo(function TVAnimeEntryInfoView({
                 <View style={{ gap: tvSize(12) }}>
                     <View style={{ paddingHorizontal: TV.gutter }}>
                         <Text className="font-bold text-white" style={{ fontSize: tvSize(30) }}>
-                            Characters
+                            {t("Characters")}
                         </Text>
                     </View>
                     <TVFocusGuideView trapFocusLeft trapFocusRight>
@@ -672,7 +672,7 @@ export const TVAnimeEntryInfoView = React.memo(function TVAnimeEntryInfoView({
 
             {relationMedia.length > 0 ? (
                 <TVShelf
-                    title="Relations"
+                    title={t("Relations")}
                     media={relationMedia}
                     badgeById={relationBadges}
                     showAudienceScore
@@ -680,16 +680,16 @@ export const TVAnimeEntryInfoView = React.memo(function TVAnimeEntryInfoView({
             ) : null}
 
             {recommendations.length > 0 ? (
-                <TVShelf title="Recommendations" media={recommendations} showAudienceScore />
+                <TVShelf title={t("Recommendations")} media={recommendations} showAudienceScore />
             ) : null}
 
             {!description && characters.length === 0 && relationMedia.length === 0 && recommendations.length === 0 ? (
                 <View style={{ paddingHorizontal: TV.gutter, paddingTop: tvSize(40), alignItems: "center" }}>
                     <Text className="font-semibold text-white" style={{ fontSize: tvSize(24) }}>
-                        No details available
+                        {t("No details available")}
                     </Text>
                     <Text className="text-white/45" style={{ fontSize: tvSize(18), marginTop: tvSize(8) }}>
-                        AniList did not return extra information for this title.
+                        {t("AniList did not return extra information for this title.")}
                     </Text>
                 </View>
             ) : null}
@@ -703,7 +703,7 @@ type TVCharacterCardProps = {
 
 const TVCharacterCard = React.memo(function TVCharacterCard({ edge }: TVCharacterCardProps) {
     const focus = useTVFocus(1.1)
-    const name = edge.node?.name?.full || edge.name || "Unknown"
+    const name = edge.node?.name?.full || edge.name || tc("character", "Unknown")
     const image = edge.node?.image?.large
 
     return (
@@ -770,7 +770,7 @@ const TVCharacterCard = React.memo(function TVCharacterCard({ edge }: TVCharacte
                         width: "100%",
                     }}
                 >
-                    {edge.role.replace(/_/g, " ")}
+                    {t(edge.role.replace(/_/g, " "))}
                 </Text>
             ) : null}
         </Pressable>

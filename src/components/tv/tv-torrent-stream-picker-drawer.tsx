@@ -20,6 +20,7 @@ import { CenteredSpinner } from "@/components/shared/centered-spinner"
 import { TVButton, TVDrawer, TVInput, TVPillButton, useTVFocus } from "@/components/tv"
 import type { TVInputHandle } from "@/components/tv/tv-input"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t, tc, tn } from "@/lib/i18n"
 import { Ionicons } from "@expo/vector-icons"
 import * as React from "react"
 import { Animated, FlatList, Pressable, ScrollView, Text, TVFocusGuideView, View } from "react-native"
@@ -124,11 +125,11 @@ function getTorrentCardTitle(
     if (!torrent.isBatch) {
         if (episodeNumbers?.length === 1) {
             const parsedEpisodeNumber = Number.parseInt(episodeNumbers[0], 10);
-            return `Episode ${normalizeEpisodeNumber(parsedEpisodeNumber, episodes)}`;
+            return t("Episode {{number}}", { number: normalizeEpisodeNumber(parsedEpisodeNumber, episodes) });
         }
-        if (episodeNumbers?.length === 0) return "Batch";
+        if (episodeNumbers?.length === 0) return t("Batch");
         if (metadata?.formatted_title) return metadata.formatted_title;
-        return `Episode ${torrent.episodeNumber || ""}`;
+        return t("Episode {{number}}", { number: torrent.episodeNumber || "" });
     }
 
     const partNumbers = uniqueInts(metadata?.part_number);
@@ -137,10 +138,10 @@ function getTorrentCardTitle(
         const last = partNumbers[partNumbers.length - 1];
         if (first !== last) {
             return partNumbers.length === 2 && last - first === 1
-                ? `Part ${first} and ${last}`
-                : `Parts ${first} to ${last}`;
+                ? t("Part {{first}} and {{last}}", { first, last })
+                : t("Parts {{first}} to {{last}}", { first, last });
         }
-        return `Part ${first}`;
+        return t("Part {{number}}", { number: first });
     }
 
     const seasonNumbers = uniqueInts(metadata?.season_number);
@@ -149,23 +150,23 @@ function getTorrentCardTitle(
         const last = seasonNumbers[seasonNumbers.length - 1];
         if (first !== last) {
             return seasonNumbers.length === 2 && last - first === 1
-                ? `Season ${first} and ${last}`
-                : `Seasons ${first} to ${last}`;
+                ? t("Season {{first}} and {{last}}", { first, last })
+                : t("Seasons {{first}} to {{last}}", { first, last });
         }
-        return `Season ${first}`;
+        return t("Season {{number}}", { number: first });
     }
 
     const batchEpisodeNumbers = uniqueInts(metadata?.episode_number);
     if (batchEpisodeNumbers.length > 1) {
-        let title = `Episodes ${batchEpisodeNumbers[0]} to ${batchEpisodeNumbers[batchEpisodeNumbers.length - 1]}`;
+        let title = t("Episodes {{first}} to {{last}}", { first: batchEpisodeNumbers[0], last: batchEpisodeNumbers[batchEpisodeNumbers.length - 1] });
         if (seasonNumbers.length === 1) {
-            title += ` (Season ${seasonNumbers[0]})`;
+            title = t("{{episodes}} (Season {{season}})", { episodes: title, season: seasonNumbers[0] });
         }
         return title;
     }
 
-    if (seasonNumbers.length === 1) return `Season ${seasonNumbers[0]}`;
-    return "Batch";
+    if (seasonNumbers.length === 1) return t("Season {{number}}", { number: seasonNumbers[0] });
+    return t("Batch");
 }
 
 function formatProviderName(provider: string) {
@@ -305,13 +306,13 @@ export function TVTorrentStreamPickerDrawer({
     ]);
 
     const primaryLabel = React.useMemo(() => {
-        if (isStarting) return "Starting...";
-        if (pickerStage === "files") return "Stream selected file";
+        if (isStarting) return t("Starting...");
+        if (pickerStage === "files") return t("Stream selected file");
         if (!selectedTorrent) {
-            return "Auto select now";
+            return t("Auto select now");
         }
-        if (selectedTorrent.isBatch) return "Choose file";
-        return "Start selected";
+        if (selectedTorrent.isBatch) return t("Choose file");
+        return t("Start selected");
     }, [isStarting, pickerStage, selectedTorrent, streamMode]);
 
     const previews = React.useMemo(
@@ -330,17 +331,17 @@ export function TVTorrentStreamPickerDrawer({
     }, [onSelectTorrent, selectedTorrent, onConfirmTorrentSelection]);
 
     const subtitle = pickerStage === "files"
-        ? "Select File"
+        ? t("Select File")
         : pickerStage === "providers"
-          ? "Additional Providers"
-          : "Select Release";
+          ? t("Additional Providers")
+          : t("Select Release");
 
     return (
         <TVDrawer
             open={open}
             onOpenChange={onOpenChange}
             onShow={handleDrawerShow}
-            title={`Episode ${selectedEpisode?.episodeNumber || ""}`}
+            title={t("Episode {{number}}", { number: selectedEpisode?.episodeNumber || "" })}
             subtitle={subtitle}
             width={DRAWER_WIDTH}
         >
@@ -362,7 +363,7 @@ export function TVTorrentStreamPickerDrawer({
                                 fontWeight: "600",
                             }}
                         >
-                            SEARCH QUERY
+                            {t("SEARCH QUERY")}
                         </Text>
                         <View
                             style={{
@@ -376,11 +377,11 @@ export function TVTorrentStreamPickerDrawer({
                                 value={localQuery}
                                 onChangeText={setLocalQuery}
                                 onSubmitEditing={handleSearchSubmit}
-                                placeholder="Search release..."
+                                placeholder={t("Search release...")}
                                 placeholderTextColor="rgba(255,255,255,0.3)"
                             />
                             <TVButton
-                                label="Search"
+                                label={tc("action", "Search")}
                                 size="compact"
                                 icon={
                                     <Ionicons
@@ -404,7 +405,7 @@ export function TVTorrentStreamPickerDrawer({
                                     fontWeight: "600",
                                 }}
                             >
-                                PROVIDER
+                                {t("PROVIDER")}
                             </Text>
                             <TVFocusGuideView trapFocusLeft trapFocusRight>
                                 <FlatList
@@ -450,7 +451,7 @@ export function TVTorrentStreamPickerDrawer({
                     >
                         {supportsSmartSearch && (
                             <TVPillButton
-                                label="Smart search"
+                                label={t("Smart search")}
                                 active={searchMode === "smart"}
                                 onPress={() =>
                                     onSelectSearchMode(
@@ -463,7 +464,7 @@ export function TVTorrentStreamPickerDrawer({
                             && searchMode === "smart"
                             && smartSearchFilters.includes("batch") && (
                             <TVPillButton
-                                label="Search batches"
+                                label={t("Search batches")}
                                 active={smartSearchBatch}
                                 onPress={onToggleSmartBatch}
                             />
@@ -472,14 +473,14 @@ export function TVTorrentStreamPickerDrawer({
                             && searchMode === "smart"
                             && smartSearchFilters.includes("bestReleases") && (
                             <TVPillButton
-                                label="Best releases"
+                                label={t("Best releases")}
                                 active={bestRelease}
                                 onPress={onToggleBestRelease}
                             />
                         )}
                         {extraProviders.length > 0 && (
                             <TVPillButton
-                                label="Search across providers"
+                                label={t("Search across providers")}
                                 active={searchAcrossProviders}
                                 onPress={toggleAcross}
                             />
@@ -487,8 +488,8 @@ export function TVTorrentStreamPickerDrawer({
                         {searchAcrossProviders && extraProviders.length > 0 && (
                             <TVPillButton
                                 label={activeExtraProviderIds.length > 0
-                                    ? `${activeExtraProviderIds.length} extra provider${activeExtraProviderIds.length === 1 ? "" : "s"}`
-                                    : "Choose providers"}
+                                    ? tn("{{count}} extra provider", "{{count}} extra providers", activeExtraProviderIds.length)
+                                    : t("Choose providers")}
                                 active={activeExtraProviderIds.length > 0}
                                 onPress={() => onSelectStage("providers")}
                             />
@@ -510,7 +511,7 @@ export function TVTorrentStreamPickerDrawer({
                             }}
                         >
                             <TVPillButton
-                                label="ANY"
+                                label={tc("resolution", "ANY")}
                                 active={!resolution}
                                 onPress={() => onSelectResolution(undefined)}
                             />
@@ -570,7 +571,7 @@ export function TVTorrentStreamPickerDrawer({
                         }}
                     >
                         <TVButton
-                            label="Back to Releases"
+                            label={t("Back to Releases")}
                             variant="secondary"
                             size="compact"
                             preferred
@@ -584,7 +585,7 @@ export function TVTorrentStreamPickerDrawer({
                             onPress={onBackToTorrentList}
                         />
                         <TVButton
-                            label="Select All"
+                            label={t("Select All")}
                             variant="secondary"
                             size="compact"
                             onPress={() =>
@@ -595,7 +596,7 @@ export function TVTorrentStreamPickerDrawer({
                             disabled={extraProviders.length === 0}
                         />
                         <TVButton
-                            label="Clear"
+                            label={t("Clear")}
                             variant="ghost"
                             size="compact"
                             onPress={() => onSelectExtraProviderIds([])}
@@ -611,8 +612,8 @@ export function TVTorrentStreamPickerDrawer({
                         }}
                     >
                         {activeExtraProviderIds.length === 0
-                            ? "Choose at least one additional provider."
-                            : `${activeExtraProviderIds.length} additional provider${activeExtraProviderIds.length === 1 ? "" : "s"} selected.`}
+                            ? t("Choose at least one additional provider.")
+                            : tn("{{count}} additional provider selected.", "{{count}} additional providers selected.", activeExtraProviderIds.length)}
                     </Text>
 
                     {extraProviders.length > 0 ? (
@@ -642,7 +643,7 @@ export function TVTorrentStreamPickerDrawer({
                             className="text-white/40 text-center py-20"
                             style={{ fontSize: tvSize(18) }}
                         >
-                            No additional providers installed.
+                            {t("No additional providers installed.")}
                         </Text>
                     )}
                 </View>
@@ -657,7 +658,7 @@ export function TVTorrentStreamPickerDrawer({
                         }}
                     >
                         <TVButton
-                            label="Back to Releases"
+                            label={t("Back to Releases")}
                             variant="secondary"
                             size="compact"
                             preferred
@@ -671,7 +672,7 @@ export function TVTorrentStreamPickerDrawer({
                             onPress={onBackToTorrentList}
                         />
                         <TVButton
-                            label="Stream selected file"
+                            label={t("Stream selected file")}
                             variant="primary"
                             size="compact"
                             icon={
@@ -725,7 +726,7 @@ export function TVTorrentStreamPickerDrawer({
                             className="text-white/40 text-center py-20"
                             style={{ fontSize: tvSize(18) }}
                         >
-                            No files found inside this release.
+                            {t("No files found inside this release.")}
                         </Text>
                     )}
                 </View>
@@ -775,7 +776,7 @@ export function TVTorrentStreamPickerDrawer({
                             className="text-white/40 text-center py-20"
                             style={{ fontSize: tvSize(18) }}
                         >
-                            No releases found for this episode.
+                            {t("No releases found for this episode.")}
                         </Text>
                     )}
                 </View>
@@ -985,7 +986,7 @@ const TVTorrentCard = React.memo(function TVTorrentCard({
                                     color: "#fbcfe8",
                                 }}
                             >
-                                Highest quality
+                                {t("Highest quality")}
                             </Text>
                         </View>
                     )}
@@ -1017,7 +1018,7 @@ const TVTorrentCard = React.memo(function TVTorrentCard({
                                 color: "rgba(255,255,255,0.4)",
                             }}
                         >
-                            seeder{torrent.seeders === 1 ? "" : "s"}
+                            {tn("seeder", "seeders", torrent.seeders || 0)}
                         </Text>
                     </View>
 
@@ -1058,7 +1059,7 @@ const TVTorrentCard = React.memo(function TVTorrentCard({
                     {isCached && (
                         <View className="flex-row items-center gap-1.5">
                             <Ionicons name="speedometer" size={11} color="#a4f4cf" />
-                            <Text className="text-[11px] font-medium text-emerald-200/70">Cached</Text>
+                            <Text className="text-[11px] font-medium text-emerald-200/70">{t("Cached")}</Text>
                         </View>
                     )}
                 </View>
@@ -1179,7 +1180,7 @@ const TVFileCard = React.memo(function TVFileCard({
                                     color: focus.focused ? "#047857" : "#a7f3d0",
                                 }}
                             >
-                                LIKELY
+                                {t("LIKELY")}
                             </Text>
                         </View>
                     )}

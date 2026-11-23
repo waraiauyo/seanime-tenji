@@ -6,6 +6,7 @@ import { LabeledSwitch } from "@/components/shared/labeled-switch"
 import { SegmentedControl } from "@/components/shared/segmented-control"
 import { Surface } from "@/components/shared/surface"
 import { getEpisodeSpoilerState, getSequentialContinueWatchingSpoilerActive } from "@/lib/anime-spoilers"
+import { t } from "@/lib/i18n"
 import * as React from "react"
 import { Platform, Pressable, Text, TVFocusGuideView, View } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
@@ -98,8 +99,8 @@ function TVTorrentStreamView({
                 key={ep.episodeNumber}
                 image={ep.episodeMetadata?.image || entry.media?.bannerImage}
                 duration={ep.episodeMetadata?.length}
-                badge={isLoading ? "Preparing…" : (isNext ? "Up next" : undefined)}
-                title={spoiler.hideTitle ? `Episode ${ep.episodeNumber}` : ep.episodeTitle || `Episode ${ep.episodeNumber}`}
+                badge={isLoading ? t("Preparing…") : (isNext ? t("Up next") : undefined)}
+                title={spoiler.hideTitle ? t("Episode {{number}}", { number: ep.episodeNumber }) : ep.episodeTitle || t("Episode {{number}}", { number: ep.episodeNumber })}
                 subtitle={spoiler.hideTitle ? undefined : ep.displayTitle}
                 completed={isWatched}
                 blurred={spoiler.hideThumbnail}
@@ -130,7 +131,7 @@ function TVTorrentStreamView({
         >
             {availableModes.length > 1 ? (
                 <TVPillButton
-                    label={streamMode === "debrid" ? "Debrid streaming" : "Torrent streaming"}
+                    label={streamMode === "debrid" ? t("Debrid streaming") : t("Torrent streaming")}
                     active
                     icon={<Ionicons name="swap-horizontal" size={tvSize(22)} color="#b8b0ff" />}
                     onPress={() => onSelectStreamMode(streamMode === "debrid" ? "torrent" : "debrid")}
@@ -138,14 +139,14 @@ function TVTorrentStreamView({
             ) : null}
 
             <TVPillButton
-                label={"Auto-select torrent"}
+                label={t("Auto-select torrent")}
                 active={autoSelect}
                 onPress={onToggleAutoSelect}
             />
 
             {!autoSelect && usePreviousBatch ? (
                 <TVPillButton
-                    label="Reuse previous batch"
+                    label={t("Reuse previous batch")}
                     active
                     onPress={onToggleUsePreviousBatch}
                 />
@@ -153,7 +154,7 @@ function TVTorrentStreamView({
 
             {!autoSelect && !usePreviousBatch ? (
                 <TVPillButton
-                    label="Auto-select file"
+                    label={t("Auto-select file")}
                     active={autoSelectFile}
                     onPress={onToggleAutoSelectFile}
                 />
@@ -161,7 +162,7 @@ function TVTorrentStreamView({
 
             {hasMappingError ? (
                 <Text className="text-yellow-200" style={{ fontSize: tvSize(16) }}>
-                    AniDB mapping missing
+                    {t("AniDB mapping missing")}
                 </Text>
             ) : null}
         </TVFocusGuideView>
@@ -170,7 +171,7 @@ function TVTorrentStreamView({
     return (
         <View style={{ paddingBottom: tvSize(80) }}>
             <TVEpisodeGrid
-                title="Episodes"
+                title={t("Episodes")}
                 episodes={episodes}
                 pageSize={TV_PAGE_SIZE}
                 initialPage={initialPage}
@@ -238,34 +239,34 @@ function MobileTorrentStreamView({
 
                     {hasMappingError && (
                         <Text className="text-yellow-200 text-xs leading-relaxed">
-                            AniDB mapping is missing for this title. Manual release selection may be required.
+                            {t("AniDB mapping is missing for this title. Manual release selection may be required.")}
                         </Text>
                     )}
 
                     <LabeledSwitch
-                        label={streamMode === "debrid" ? "Auto-select debrid stream" : "Auto-select torrent"}
+                        label={streamMode === "debrid" ? t("Auto-select debrid stream") : t("Auto-select torrent")}
                         checked={autoSelect}
                         onToggle={onToggleAutoSelect}
                         helper={streamMode === "debrid"
-                            ? "Automatically pick the best torrent and debrid file for the episode."
-                            : "Automatically pick the best torrent and file for the episode."}
+                            ? t("Automatically pick the best torrent and debrid file for the episode.")
+                            : t("Automatically pick the best torrent and file for the episode.")}
                     />
 
                     {!autoSelect && usePreviousBatch && (
                         <LabeledSwitch
-                            label="Reuse previous batch"
+                            label={t("Reuse previous batch")}
                             checked={usePreviousBatch}
                             onToggle={onToggleUsePreviousBatch}
-                            helper="Reuse the previously selected batch torrent for subsequent episodes when possible."
+                            helper={t("Reuse the previously selected batch torrent for subsequent episodes when possible.")}
                         />
                     )}
 
                     {!autoSelect && !usePreviousBatch && (
                         <LabeledSwitch
-                            label="Auto-select file"
+                            label={t("Auto-select file")}
                             checked={autoSelectFile}
                             onToggle={onToggleAutoSelectFile}
-                            helper={"Automatically select the matching file from batch torrents."}
+                            helper={t("Automatically select the matching file from batch torrents.")}
                         />
                     )}
                 </Surface>
@@ -274,7 +275,7 @@ function MobileTorrentStreamView({
             {continueEpisodes.length > 0 && (
                 <View className="mb-6">
                     <EpisodeCardList
-                        title="Continue Watching"
+                        title={t("Continue Watching")}
                         episodes={continueEpisodes}
                         onEpisodePress={handleAvailableEpisodePress}
                         watchedProgress={progress}
@@ -287,7 +288,7 @@ function MobileTorrentStreamView({
 
             <View className="px-4 gap-6">
                 <AnimeEpisodeSection
-                    title={`Episodes`}
+                    title={t("Episodes")}
                     episodes={episodes}
                     progress={progress}
                     entry={entry}

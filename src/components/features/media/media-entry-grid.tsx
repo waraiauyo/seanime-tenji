@@ -1,5 +1,6 @@
 import { AL_BaseAnime, AL_BaseManga } from "@/api/generated/types"
 import { MediaEntryCard } from "@/components/features/media/media-entry-card"
+import { t } from "@/lib/i18n"
 import { getMediaGridLayout } from "@/lib/responsive-card-layout"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import * as React from "react"
@@ -46,7 +47,7 @@ export function MediaEntryGrid<T extends "anime" | "manga">({
             >
                 <Ionicons name="search-outline" size={36} color="rgba(255,255,255,0.15)" />
                 <Text className="text-white/30 text-sm">
-                    {query ? `No results for "${query}"` : "No results"}
+                    {query ? t("No results for \"{{query}}\"", { query }) : t("No results")}
                 </Text>
             </Animated.View>
         )

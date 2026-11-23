@@ -2,6 +2,7 @@ import { useServerMutation, useServerQuery } from "@/api/client/requests"
 import { EditMALListEntryProgress_Variables, MALAuth_Variables } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { MalAuthResponse } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -35,7 +36,7 @@ export function useMALLogout() {
         mutationKey: [API_ENDPOINTS.MAL.MALLogout.key],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetStatus.key] })
-            toast.success("Successfully logged out of MyAnimeList")
+            toast.success(t("Successfully logged out of MyAnimeList"))
         },
     })
 }

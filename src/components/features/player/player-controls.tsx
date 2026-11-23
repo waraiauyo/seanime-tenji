@@ -1,3 +1,4 @@
+import { formatDecimal, t } from "@/lib/i18n"
 import type { PlayerChapter, PlayerState as PlayerStateType } from "@/lib/player"
 import type { MobilePlaybackSource } from "@/lib/player/types"
 import { cn } from "@/lib/utils"
@@ -250,13 +251,13 @@ export function ControlsOverlay(props: ControlsOverlayProps) {
                         {state.speed !== 1.0 && <Pill text={`${state.speed}x`} />}
                         {state.subtitleDelay !== 0 && (
                             <Pill
-                                text={`Sub ${state.subtitleDelay > 0 ? "+" : ""}${state.subtitleDelay.toFixed(1)}s`}
+                                text={t("Sub {{delay}}s", { delay: `${state.subtitleDelay > 0 ? "+" : ""}${formatDecimal(state.subtitleDelay, 1)}` })}
                                 color="#f59e0b"
                             />
                         )}
                         {state.audioDelay !== 0 && (
                             <Pill
-                                text={`Audio ${state.audioDelay > 0 ? "+" : ""}${state.audioDelay.toFixed(1)}s`}
+                                text={t("Audio {{delay}}s", { delay: `${state.audioDelay > 0 ? "+" : ""}${formatDecimal(state.audioDelay, 1)}` })}
                                 color="#a78bfa"
                             />
                         )}
@@ -481,7 +482,7 @@ export function LockModeOverlay({
                             pressed ? "bg-white/15" : "bg-black/75")}
                     >
                         <Unlock size={15} color="#fff" />
-                        <Text className="text-sm font-medium text-white">Unlock</Text>
+                        <Text className="text-sm font-medium text-white">{t("Unlock")}</Text>
                     </View>
                 )}
             </Pressable>

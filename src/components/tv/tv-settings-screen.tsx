@@ -1,7 +1,9 @@
 import { useCurrentUser, useServerUrl } from "@/atoms/server.atoms"
+import { applyLanguagePreference, LANGUAGE_PREFERENCES, languagePreferenceLabel } from "@/components/features/profile/language-setting"
 import { TVConfirmDrawer } from "@/components/tv/tv-confirm-drawer"
 import { usePreferredFocus, useTVFocus } from "@/components/tv/tv-focus"
 import { TV, tvSize } from "@/components/tv/tv-scale"
+import { getLanguagePreference, t } from "@/lib/i18n"
 import { useServerConnectionState } from "@/lib/offline"
 import { checkForOtaUpdateManually, getOtaVersionInfo } from "@/lib/ota/updates"
 import { toast } from "@/lib/utils/toast"
@@ -176,6 +178,7 @@ export function TVSettingsScreen() {
     const [confirm, setConfirm] = React.useState<Confirm>(null)
     const [clearing, setClearing] = React.useState(false)
     const [checkingOta, setCheckingOta] = React.useState(false)
+    const [languagePreference, setLanguagePreferenceState] = React.useState(getLanguagePreference)
     const version = React.useMemo(() => getOtaVersionInfo(), [])
     const cacheRef = React.useRef<RowRef>(null)
     const serverRef = React.useRef<RowRef>(null)
@@ -190,12 +193,12 @@ export function TVSettingsScreen() {
                     Image.clearDiskCache(),
                 ])
                 if (!memory && !disk) {
-                    toast.info("Image cache was already empty")
+                    toast.info(t("Image cache was already empty"))
                     return
                 }
-                toast.success("Image cache cleared")
+                toast.success(t("Image cache cleared"))
             } catch {
-                toast.error("Failed to clear image cache")
+                toast.error(t("Failed to clear image cache"))
             } finally {
                 setClearing(false)
                 focusRow(cacheRef)
@@ -211,11 +214,19 @@ export function TVSettingsScreen() {
             .finally(() => setCheckingOta(false))
     }, [checkingOta])
 
+    // There is no picker on TV: each press moves to the next choice.
+    const selectNextLanguage = React.useCallback(() => {
+        const index = LANGUAGE_PREFERENCES.indexOf(languagePreference)
+        const next = LANGUAGE_PREFERENCES[(index + 1) % LANGUAGE_PREFERENCES.length]!
+        setLanguagePreferenceState(next)
+        void applyLanguagePreference(next)
+    }, [languagePreference])
+
     const connectionLabel = connection === "connected"
-        ? "Connected to server"
+        ? t("Connected to server")
         : connection === "connecting"
-            ? "Checking server"
-            : "Offline"
+            ? t("Checking server")
+            : t("Offline")
     const dot = connection === "connected"
         ? "#86efac"
         : connection === "connecting"
@@ -274,7 +285,7 @@ export function TVSettingsScreen() {
                         )}
                         <View style={{ flex: 1, gap: tvSize(4) }}>
                             <Text className="font-bold text-white" style={{ fontSize: tvSize(26) }}>
-                                {viewer?.name || "User"}
+                                {viewer?.name || t("User")}
                             </Text>
                             <View style={{ flexDirection: "row", alignItems: "center", gap: tvSize(8) }}>
                                 <View
@@ -301,11 +312,11 @@ export function TVSettingsScreen() {
                         </Text>
                     </View>
 
-                    <SectionCard title="App">
+                    <SectionCard title={t("App")}>
                         <SettingsRow
                             ref={cacheRef}
-                            label={clearing ? "Clearing Image Cache…" : "Clear Image Cache"}
-                            detail="Purge cached posters, banners, and avatars"
+                            label={clearing ? t("Clearing Image Cache…") : t("Clear Image Cache")}
+                            detail={t("Purge cached posters, banners, and avatars")}
                             icon="images-outline"
                             preferred
                             disabled={clearing}
@@ -315,7 +326,7 @@ export function TVSettingsScreen() {
                         />
                         <Divider />
                         <SettingsRow
-                            label={checkingOta ? "Checking for Update…" : "Check OTA Update"}
+                            label={checkingOta ? t("Checking for Update…") : t("Check OTA Update")}
                             detail={`${version.otaVersion} · ${version.detail}`}
                             icon="code-download-outline"
                             disabled={checkingOta}
@@ -325,9 +336,17 @@ export function TVSettingsScreen() {
                         />
                         <Divider />
                         <SettingsRow
+                            label={t("Language")}
+                            detail={languagePreferenceLabel(languagePreference)}
+                            icon="language-outline"
+                            onPress={selectNextLanguage}
+                            showChevron={false}
+                        />
+                        <Divider />
+                        <SettingsRow
                             ref={serverRef}
-                            label="Change Server URL"
-                            detail="Return to the connection screen"
+                            label={t("Change Server URL")}
+                            detail={t("Return to the connection screen")}
                             icon="server-outline"
                             danger
                             onPress={() => setConfirm("server")}
@@ -345,9 +364,9 @@ export function TVSettingsScreen() {
                         focusRow(cacheRef)
                     }
                 }}
-                title="Clear image cache?"
-                text="This removes cached posters, banners, and avatars. Images will download again when they are shown."
-                confirmLabel="Clear cache"
+                title={t("Clear image cache?")}
+                text={t("This removes cached posters, banners, and avatars. Images will download again when they are shown.")}
+                confirmLabel={t("Clear cache")}
                 danger
                 onConfirm={clearCache}
             />
@@ -359,9 +378,9 @@ export function TVSettingsScreen() {
                         focusRow(serverRef)
                     }
                 }}
-                title="Change server URL?"
-                text="You will return to the server connection screen. Your current server stays saved until you connect to another one."
-                confirmLabel="Continue"
+                title={t("Change server URL?")}
+                text={t("You will return to the server connection screen. Your current server stays saved until you connect to another one.")}
+                confirmLabel={t("Continue")}
                 onConfirm={() => router.push("/(out)/set-server-url" as never)}
             />
         </View>

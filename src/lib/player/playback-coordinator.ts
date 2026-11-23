@@ -1,6 +1,7 @@
 import type { Anime_Entry, Anime_Episode, Onlinestream_VideoSource } from "@/api/generated/types"
 import { useServerUrl } from "@/atoms/server.atoms"
 import { isLocalServer } from "@/lib/downloads"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected, useServerLocalIdentity } from "@/lib/offline"
 import { toSourceFromOnlineStream, useStartOnlineStreamPlayback } from "@/lib/player"
 import { currentPlaybackSourceAtom, playerErrorAtom, playerLoadingMessageAtom, playerOpenAtom } from "@/lib/player"
@@ -42,7 +43,7 @@ async function tryOpenExternalPlayer(streamUrl: string, source: MobilePlaybackSo
     const opened = await openExternalPlayerURL(prefs.externalPlayerTemplate, streamUrl)
     if (!opened) {
         log.warning("External player could not be opened; using the built-in player")
-        toast.error("External player app not found")
+        toast.error(t("External player app not found"))
         return false
     }
 
@@ -90,7 +91,7 @@ export function usePlaybackCoordinator(entry: Anime_Entry | undefined) {
     const playLocalFileEpisode = (episode: Anime_Episode) => {
         if (!entry?.media) {
             log.warning("Local playback stopped: media metadata is missing")
-            toast.error("Media not available")
+            toast.error(t("Media not available"))
             return
         }
 
@@ -116,11 +117,11 @@ export function usePlaybackCoordinator(entry: Anime_Entry | undefined) {
                 hasServerUrl: !!serverUrl,
             })
             if (!episode.localFile?.path) {
-                toast.error("No local file available for this episode")
+                toast.error(t("No local file available for this episode"))
             } else if (!isServerConnected || !serverUrl) {
-                toast.error("Server not connected")
+                toast.error(t("Server not connected"))
             } else {
-                toast.error("Unable to start playback")
+                toast.error(t("Unable to start playback"))
             }
             return
         }
@@ -136,7 +137,7 @@ export function usePlaybackCoordinator(entry: Anime_Entry | undefined) {
                 hasServerUrl: !!serverUrl,
                 hasIdentity: !!serverLocalIdentity,
             })
-            toast.error("Server-owned media is unavailable")
+            toast.error(t("Server-owned media is unavailable"))
             return
         }
 
@@ -161,8 +162,8 @@ export function usePlaybackCoordinator(entry: Anime_Entry | undefined) {
                 episodeNumber: episode.episodeNumber,
             })
             Alert.alert(
-                "Seanime Server unavailable",
-                "Start Seanime Server Mobile. Without internet, enable its offline mode before starting the server.",
+                t("Seanime Server unavailable"),
+                t("Start Seanime Server Mobile. Without internet, enable its offline mode before starting the server."),
             )
             return
         }
@@ -179,7 +180,7 @@ export function usePlaybackCoordinator(entry: Anime_Entry | undefined) {
     }) => {
         if (!entry?.media) {
             log.warning("Online playback stopped: media metadata is missing")
-            toast.error("Media not available")
+            toast.error(t("Media not available"))
             return
         }
 

@@ -12,6 +12,7 @@ import {
     Manga_CollectionEntry,
 } from "@/api/generated/types"
 import { getMangaEntryLatestChapterNumber, MangaEntryFilters } from "@/hooks/use-manga-chapters"
+import { t } from "@/lib/i18n"
 import { hasMediaTags } from "@/lib/search/tag-filter"
 import type { AnimeCollectionSorting, ContinueWatchingSorting, MangaCollectionSorting } from "@/lib/theme-settings"
 import sortBy from "lodash/sortBy"
@@ -56,20 +57,20 @@ export const CONTINUE_WATCHING_SORTING_OPTIONS: { label: string; value: Continue
 ]
 
 export const COLLECTION_SORTING_OPTIONS = [
-    { label: "Highest score", value: "SCORE_DESC" },
-    { label: "Lowest score", value: "SCORE" },
-    { label: "Title", value: "TITLE" },
-    { label: "Title (Z-A)", value: "TITLE_DESC" },
-    { label: "Highest audience score", value: "AUDIENCE_SCORE_DESC" },
-    { label: "Lowest audience score", value: "AUDIENCE_SCORE" },
-    { label: "Highest progress", value: "PROGRESS_DESC" },
-    { label: "Lowest progress", value: "PROGRESS" },
-    { label: "Started recently", value: "START_DATE_DESC" },
-    { label: "Oldest start date", value: "START_DATE" },
-    { label: "Completed recently", value: "END_DATE_DESC" },
-    { label: "Oldest completion date", value: "END_DATE" },
-    { label: "Released recently", value: "RELEASE_DATE_DESC" },
-    { label: "Oldest release", value: "RELEASE_DATE" },
+    { label: t("Highest score"), value: "SCORE_DESC" },
+    { label: t("Lowest score"), value: "SCORE" },
+    { label: t("Title"), value: "TITLE" },
+    { label: t("Title (Z-A)"), value: "TITLE_DESC" },
+    { label: t("Highest audience score"), value: "AUDIENCE_SCORE_DESC" },
+    { label: t("Lowest audience score"), value: "AUDIENCE_SCORE" },
+    { label: t("Highest progress"), value: "PROGRESS_DESC" },
+    { label: t("Lowest progress"), value: "PROGRESS" },
+    { label: t("Started recently"), value: "START_DATE_DESC" },
+    { label: t("Oldest start date"), value: "START_DATE" },
+    { label: t("Completed recently"), value: "END_DATE_DESC" },
+    { label: t("Oldest completion date"), value: "END_DATE" },
+    { label: t("Released recently"), value: "RELEASE_DATE_DESC" },
+    { label: t("Oldest release"), value: "RELEASE_DATE" },
 ] satisfies { label: string; value: CollectionSorting }[]
 
 export const ANIME_COLLECTION_SORTING_OPTIONS: { label: string; value: AnimeCollectionSorting }[] = [

@@ -23,6 +23,7 @@ import {
     tvSize,
 } from "@/components/tv"
 import type { TVMediaMeta } from "@/components/tv/tv-shelf"
+import { t } from "@/lib/i18n"
 import {
     type CollectionParams,
     countActiveCollectionFilters,
@@ -52,12 +53,12 @@ const ORDER: AL_MediaListStatus[] = [
 ]
 
 const LABELS: Partial<Record<AL_MediaListStatus, string>> = {
-    CURRENT: "Watching",
-    REPEATING: "Rewatching",
-    PLANNING: "Planning",
-    PAUSED: "Paused",
-    COMPLETED: "Completed",
-    DROPPED: "Dropped",
+    CURRENT: t("Watching"),
+    REPEATING: t("Rewatching"),
+    PLANNING: t("Planning"),
+    PAUSED: t("Paused"),
+    COMPLETED: t("Completed"),
+    DROPPED: t("Dropped"),
 }
 
 type Shelf = {
@@ -110,7 +111,7 @@ function makeShelf(
 }
 
 function getChoices(lists: AL_AnimeCollection_MediaListCollection_Lists[]): ListChoice[] {
-    const choices: ListChoice[] = [{ value: "ALL", label: "All lists" }]
+    const choices: ListChoice[] = [{ value: "ALL", label: t("All lists") }]
 
     for (const status of ORDER) {
         const list = lists.find(item => !item.isCustomList && item.status === status)
@@ -231,7 +232,7 @@ export function TVMyListsScreen() {
                             value={input}
                             onChangeText={setInput}
                             onSubmitEditing={submit}
-                            placeholder="Search your AniList collection"
+                            placeholder={t("Search your AniList collection")}
                             placeholderTextColor="rgba(255,255,255,0.35)"
                             autoCorrect={false}
                             autoCapitalize="none"
@@ -246,7 +247,7 @@ export function TVMyListsScreen() {
                         />
                     </View>
                     <TVButton
-                        label="Search"
+                        label={t("Search")}
                         variant="primary"
                         size="compact"
                         icon={<Ionicons name="search" size={tvSize(20)} color="white" />}
@@ -254,7 +255,7 @@ export function TVMyListsScreen() {
                     />
                     <TVButton
                         ref={filterRef}
-                        label={active ? `Filters (${active})` : "Filters"}
+                        label={active ? t("Filters ({{count}})", { count: active }) : t("Filters")}
                         variant="secondary"
                         size="compact"
                         icon={<Ionicons name="options-outline" size={tvSize(20)} color="white" />}
@@ -316,12 +317,12 @@ export function TVMyListsScreen() {
                             }}
                         >
                             <Text className="font-semibold text-white" style={{ fontSize: tvSize(24) }}>
-                                {filtered ? "No entries match" : "No AniList entries"}
+                                {filtered ? t("No entries match") : t("No AniList entries")}
                             </Text>
                             <Text className="text-white/40" style={{ fontSize: tvSize(18) }}>
                                 {filtered
-                                    ? "Try another title or change the filters."
-                                    : "Add a title from Discover to start a list."}
+                                    ? t("Try another title or change the filters.")
+                                    : t("Add a title from Discover to start a list.")}
                             </Text>
                         </View>
                     ) : null}

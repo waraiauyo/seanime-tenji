@@ -5,6 +5,7 @@ import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
 import { getEpisodeSpoilerState, getSpoilerSafeAnimeImage } from "@/lib/anime-spoilers"
 import { type DownloadStatus, getDownloadEpisodeId, useDownloadedEpisodesForMedia, useStartAnimeBatchDownload } from "@/lib/downloads"
+import { t, tc } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Ionicons } from "@expo/vector-icons"
 import React, { useCallback, useMemo, useState } from "react"
@@ -281,7 +282,7 @@ export function DownloadEpisodesModal({
         <SeaBottomSheet
             open={open}
             onOpenChange={onOpenChange}
-            title="Download Episodes"
+            title={t("Download Episodes")}
             snapPoints={["70%", "92%"]}
             footer={
                 <View className="flex-row items-center gap-3">
@@ -291,7 +292,7 @@ export function DownloadEpisodesModal({
                         onPress={toggleAll}
                     >
                         <Text className="text-sm font-medium text-secondary-foreground">
-                            {allSelected ? "Deselect All" : "Select All"}
+                            {allSelected ? tc("episodes", "Deselect All") : tc("episodes", "Select All")}
                         </Text>
                     </Button>
                     <Button
@@ -303,7 +304,7 @@ export function DownloadEpisodesModal({
                         <View className="flex-row items-center gap-2">
                             <Ionicons name="download" size={16} color="black" />
                             <Text className="text-sm font-semibold text-primary-foreground">
-                                Download{selectedIds.size > 0 ? ` (${selectedIds.size})` : ""}
+                                {selectedIds.size > 0 ? t("Download ({{count}})", { count: selectedIds.size }) : t("Download")}
                             </Text>
                         </View>
                     </Button>
@@ -318,39 +319,39 @@ export function DownloadEpisodesModal({
                 contentContainerStyle={{ gap: 8, paddingHorizontal: 16, paddingBottom: 12 }}
             >
                 <DownloadFilterChip
-                    label={allUnwatchedSelected ? "Deselect Unwatched" : "Select Unwatched"}
+                    label={allUnwatchedSelected ? t("Deselect Unwatched") : t("Select Unwatched")}
                     icon={allUnwatchedSelected ? "eye-outline" : "eye-off-outline"}
                     selected={allUnwatchedSelected}
                     onPress={toggleUnwatched}
                 />
                 <DownloadFilterChip
-                    label={allSelected ? "Deselect All" : "Select All"}
+                    label={allSelected ? tc("episodes", "Deselect All") : tc("episodes", "Select All")}
                     icon={allSelected ? "close-circle-outline" : "checkmark-done-outline"}
                     selected={allSelected}
                     onPress={toggleAll}
                 />
                 <DownloadFilterChip
-                    label="Watched"
+                    label={tc("episodes", "Watched")}
                     icon="eye-outline"
                     selected={showWatched}
                     onPress={() => setShowWatched(prev => !prev)}
                 />
                 {hasNonMainEpisodes ? (
                     <DownloadFilterChip
-                        label="Extras"
+                        label={t("Extras")}
                         icon="sparkles-outline"
                         selected={showNonMain}
                         onPress={() => setShowNonMain(prev => !prev)}
                     />
                 ) : null}
-                <DownloadFilterChip label="Clear" icon="close-outline" onPress={deselectAll} disabled={!hasVisibleSelection} />
+                <DownloadFilterChip label={t("Clear")} icon="close-outline" onPress={deselectAll} disabled={!hasVisibleSelection} />
             </ScrollView>
 
             {downloadableEpisodes.length === 0 ? (
                 <View className="py-8 items-center">
                     <Ionicons name="cloud-offline-outline" size={40} color="rgba(255,255,255,0.3)" />
                     <Text className="text-white/40 text-sm mt-3">
-                        No episodes available for download
+                        {t("No episodes available for download")}
                     </Text>
                 </View>
             ) : (
@@ -510,7 +511,7 @@ function DownloadEpisodeRow({ episode, downloadStatus, selected, showFileName, w
                             {episode.type === "special" ? "SP " : "NC "}
                         </Text>
                     )}
-                    Episode {episode.episodeNumber}
+                    {t("Episode {{number}}", { number: episode.episodeNumber })}
                 </Text>
                 {!!(showFileName ? episode.localFile?.name : episode.episodeTitle) && !spoiler.hideTitle && (
                     <Text className="text-xs text-white/40 mt-0.5" numberOfLines={1}>
@@ -519,22 +520,22 @@ function DownloadEpisodeRow({ episode, downloadStatus, selected, showFileName, w
                 )}
                 {isDownloaded && (
                     <Text className="text-xs text-green-400/70 mt-0.5">
-                        Downloaded
+                        {t("Downloaded")}
                     </Text>
                 )}
                 {isDownloading && (
                     <Text className="text-xs text-brand-300/80 mt-0.5">
-                        Downloading
+                        {t("Downloading")}
                     </Text>
                 )}
                 {isPending && (
                     <Text className="text-xs text-white/40 mt-0.5">
-                        Queued
+                        {t("Queued")}
                     </Text>
                 )}
                 {isFailed && (
                     <Text className="text-xs text-red-400/80 mt-0.5">
-                        Failed
+                        {t("Failed")}
                     </Text>
                 )}
             </View>

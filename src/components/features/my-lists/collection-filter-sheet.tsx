@@ -4,6 +4,7 @@ import { SheetFooter, SheetFooterButton } from "@/components/shared/sheet-footer
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { FormField } from "@/components/ui/form-field"
 import { Text } from "@/components/ui/text"
+import { t } from "@/lib/i18n"
 import mediaTags from "@/lib/search/media-tags.json"
 import {
     SEARCH_FORMATS_ANIME,
@@ -158,7 +159,7 @@ export function CollectionFilterSheet({
             open={open}
             onOpenChange={onOpenChange}
             snapPoints={["90%"]}
-            title="Filters"
+            title={t("Filters")}
             keyboardBehavior="fillParent"
             keyboardBlurBehavior="restore"
             enableBlurKeyboardOnGesture
@@ -169,12 +170,12 @@ export function CollectionFilterSheet({
                     <SheetFooterButton variant="cancel" onPress={reset}>
                         <View className="flex-row items-center gap-2">
                             <Ionicons name="refresh-outline" size={15} color="rgba(255,255,255,0.6)" />
-                            <Text className="text-white/60 text-sm font-semibold">Reset</Text>
+                            <Text className="text-white/60 text-sm font-semibold">{t("Reset")}</Text>
                         </View>
                     </SheetFooterButton>
                     <SheetFooterButton onPress={apply}>
                         <Text className="text-sm font-bold">
-                            {activeCount > 0 ? `Apply (${activeCount})` : "Apply"}
+                            {activeCount > 0 ? t("Apply ({{count}})", { count: activeCount }) : t("Apply")}
                         </Text>
                     </SheetFooterButton>
                 </SheetFooter>
@@ -187,7 +188,7 @@ export function CollectionFilterSheet({
                 }}
             >
 
-                <FormField label="Sort by" icon="swap-vertical-outline">
+                <FormField label={t("Sort by")} icon="swap-vertical-outline">
                     <InlineSelect
                         options={COLLECTION_SORTING_OPTIONS}
                         value={draft.sorting}
@@ -197,7 +198,7 @@ export function CollectionFilterSheet({
                 </FormField>
 
 
-                <FormField label="Format" icon="layers-outline">
+                <FormField label={t("Format")} icon="layers-outline">
                     <InlineSelect
                         options={isAnime ? SEARCH_FORMATS_ANIME : SEARCH_FORMATS_MANGA}
                         value={draft.format}
@@ -207,7 +208,7 @@ export function CollectionFilterSheet({
 
 
                 {isAnime && (
-                    <FormField label="Season" icon="partly-sunny-outline">
+                    <FormField label={t("Season")} icon="partly-sunny-outline">
                         <InlineSelect
                             options={[...SEARCH_SEASONS]}
                             value={draft.season}
@@ -217,7 +218,7 @@ export function CollectionFilterSheet({
                 )}
 
 
-                <FormField label="Year" icon="calendar-outline">
+                <FormField label={t("Year")} icon="calendar-outline">
                     <View style={{ maxHeight: 120 }}>
                         <ScrollView
                             horizontal
@@ -257,7 +258,7 @@ export function CollectionFilterSheet({
                 </FormField>
 
 
-                <FormField label="Status" icon="radio-button-on-outline">
+                <FormField label={t("Status")} icon="radio-button-on-outline">
                     <InlineSelect
                         options={SEARCH_STATUS}
                         value={draft.status}
@@ -266,9 +267,9 @@ export function CollectionFilterSheet({
                 </FormField>
 
 
-                <FormField label="Genres" icon="pricetag-outline">
+                <FormField label={t("Genres")} icon="pricetag-outline">
                     <MultiToggle
-                        options={SEARCH_MEDIA_GENRES.map(g => ({ value: g, label: g }))}
+                        options={SEARCH_MEDIA_GENRES.map(g => ({ value: g, label: t(g) }))}
                         values={draft.genre ?? []}
                         onToggle={toggleGenre}
                     />
@@ -279,7 +280,7 @@ export function CollectionFilterSheet({
                         tagsY.current = event.nativeEvent.layout.y
                     }}
                 >
-                    <FormField label="Tags" icon="bookmark-outline">
+                    <FormField label={t("Tags")} icon="bookmark-outline">
                         <View className="gap-3">
                             <View className="h-11 flex-row items-center rounded-2xl border border-white/10 bg-white/[0.04] px-3">
                                 <Ionicons name="search-outline" size={17} color="rgba(255,255,255,0.4)" />
@@ -287,7 +288,7 @@ export function CollectionFilterSheet({
                                     ref={tagInputRef as unknown as React.Ref<React.ComponentRef<typeof BottomSheetTextInput>>}
                                     defaultValue=""
                                     onChangeText={setTagSearch}
-                                    placeholder="Find a tag"
+                                    placeholder={t("Find a tag")}
                                     placeholderTextColor="rgba(255,255,255,0.35)"
                                     selectionColor="rgba(130,115,255,0.9)"
                                     style={styles.tagSearchInput}
@@ -318,7 +319,7 @@ export function CollectionFilterSheet({
                                 />
                             ) : null}
                             <Text className="text-[11px] font-semibold uppercase tracking-wider text-white/35">
-                                {tagSearch.trim() ? "Matching tags" : "Popular tags"}
+                                {tagSearch.trim() ? t("Matching tags") : t("Popular tags")}
                             </Text>
                             {tagChoices.length > 0 ? (
                                 <MultiToggle
@@ -327,7 +328,7 @@ export function CollectionFilterSheet({
                                     onToggle={toggleTag}
                                 />
                             ) : (
-                                <Text className="py-2 text-sm text-white/35">No tags found</Text>
+                                <Text className="py-2 text-sm text-white/35">{t("No tags found")}</Text>
                             )}
                         </View>
                     </FormField>

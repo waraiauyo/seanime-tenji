@@ -4,6 +4,7 @@ import { MediaEpisodeInfoSheet } from "@/components/features/media/media-episode
 import { SeaImage } from "@/components/shared/sea-image"
 import { getEpisodeSpoilerState } from "@/lib/anime-spoilers"
 import { useEpisodeDownloadStatus } from "@/lib/downloads"
+import { t } from "@/lib/i18n"
 import { Ionicons } from "@/lib/icons/Ionicons"
 import { cn } from "@/lib/utils"
 import React from "react"
@@ -134,9 +135,9 @@ function EpisodeListItemInner({
         ? descriptionOverride
         : spoiler.hideDescription ? null : episode.episodeMetadata?.summary?.replace(/<[^>]*>/g, "") || (hideMissingDescription
             ? null
-            : "No description")
+            : t("No description"))
     const finalFootnoteText = footnoteText !== undefined ? footnoteText : spoiler.hideTitle ? null : episode.localFile?.name
-    const displayEpisodeTitle = spoiler.hideTitle ? `Episode ${episode.episodeNumber}` : episode.episodeTitle || episode.displayTitle
+    const displayEpisodeTitle = spoiler.hideTitle ? t("Episode {{number}}", { number: episode.episodeNumber }) : episode.episodeTitle || episode.displayTitle
     const effectiveRowPressable = !!rowPressable || Platform.isTV
 
     const thumbnail = (
@@ -150,7 +151,7 @@ function EpisodeListItemInner({
             />
             {isWatched && <View className="absolute z-10 rounded-full bg-gray-800/50 bottom-2 left-2 px-1.5 flex flex-row items-center gap-1">
                 <Ionicons name="checkmark" size={12} colorClassName="accent-foreground" />
-                <Text className="text-white text-xs font-medium">Completed</Text>
+                <Text className="text-white text-xs font-medium">{t("Completed")}</Text>
             </View>}
             {downloadStatus === "completed" && (
                 <View className="absolute bottom-1.5 right-1.5 rounded-full p-0.5 bg-black/60">
@@ -176,7 +177,7 @@ function EpisodeListItemInner({
             {thumbnailOverlay}
             {isFiller && (
                 <View className="absolute top-1 left-1 bg-yellow-500/80 rounded px-1.5 py-0.5">
-                    <Text className="text-xs font-bold text-black">FILLER</Text>
+                    <Text className="text-xs font-bold text-black">{t("FILLER")}</Text>
                 </View>
             )}
             {progressPercent !== undefined && progressPercent > 0 && !isWatched && (
@@ -219,11 +220,11 @@ function EpisodeListItemInner({
             <View className="flex-1 justify-start pt-0.5">
                 <View className="flex-row items-center gap-2 mb-1">
                     <Text className="text-foreground font-bold text-base">
-                        Episode {episode.episodeNumber}
+                        {t("Episode {{number}}", { number: episode.episodeNumber })}
                     </Text>
                     {!!episode.episodeMetadata?.length && (
                         <Text className="text-muted-foreground text-sm">
-                            {episode.episodeMetadata.length}m
+                            {t("{{duration}}m", { duration: episode.episodeMetadata.length })}
                         </Text>
                     )}
                 </View>

@@ -25,6 +25,7 @@ import {
     type ManagedNativeDownloadOptions,
     startManagedNativeDownload,
 } from "@/lib/downloads/native-download"
+import { t } from "@/lib/i18n"
 import { saveMangaDownloadEntrySnapshot } from "@/lib/offline/download-entry-snapshot-store"
 import { logger } from "@/lib/utils/logger"
 import { Directory, File, Paths } from "expo-file-system"
@@ -326,7 +327,7 @@ async function fetchPageContainer(
 
         const shouldRetry = res.status === 429 || res.status >= 500
         if (!shouldRetry || attempt >= PAGE_CONTAINER_RETRY_ATTEMPTS) {
-            throw new Error(`Failed to fetch pages: ${res.status} ${res.statusText}`)
+            throw new Error(t("Failed to fetch pages: {{status}} {{statusText}}", { status: res.status, statusText: res.statusText }))
         }
 
         const retryDelay = getRetryAfterDelayMs(res) ?? PAGE_CONTAINER_RETRY_BASE_DELAY_MS * (attempt + 1)
@@ -334,7 +335,7 @@ async function fetchPageContainer(
         await wait(retryDelay)
     }
 
-    throw new Error("Failed to fetch pages")
+    throw new Error(t("Failed to fetch pages"))
 }
 
 async function downloadChapterPages(
@@ -349,7 +350,7 @@ async function downloadChapterPages(
 ): Promise<number> {
     const pageContainer = await fetchPageContainer(baseUrl, mediaId, provider, chapterId)
     const pages = pageContainer.pages ?? []
-    if (pages.length === 0) throw new Error("Chapter has no pages")
+    if (pages.length === 0) throw new Error(t("Chapter has no pages"))
 
     const total = pages.length
     const pageDimensions = normalizeDownloadedPageDimensions(pageContainer.pageDimensions)
@@ -392,7 +393,7 @@ async function downloadChapterPages(
             id: downloadId,
             url: pageUrl,
             destinationPath: destFile.uri,
-            title: `Downloading chapter ${chapterId}`,
+            title: t("Downloading chapter {{chapterId}}", { chapterId }),
         }
 
         const runPageDownload = async () => {

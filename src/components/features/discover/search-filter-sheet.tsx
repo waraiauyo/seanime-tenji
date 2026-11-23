@@ -6,6 +6,7 @@ import { SheetFooter, SheetFooterButton } from "@/components/shared/sheet-footer
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { FormField } from "@/components/ui/form-field"
 import { Text } from "@/components/ui/text"
+import { t } from "@/lib/i18n"
 import mediaTags from "@/lib/search/media-tags.json"
 import {
     SEARCH_COUNTRIES_MANGA,
@@ -177,7 +178,7 @@ export function SearchFilterSheet({
             open={open}
             onOpenChange={onOpenChange}
             snapPoints={["90%"]}
-            title="Filters"
+            title={t("Filters")}
             keyboardBehavior="fillParent"
             keyboardBlurBehavior="restore"
             enableBlurKeyboardOnGesture
@@ -188,12 +189,12 @@ export function SearchFilterSheet({
                     <SheetFooterButton variant="cancel" onPress={reset}>
                         <View className="flex-row items-center gap-2">
                             <Ionicons name="refresh-outline" size={15} color="rgba(255,255,255,0.6)" />
-                            <Text className="text-white/60 text-sm font-semibold">Reset</Text>
+                            <Text className="text-white/60 text-sm font-semibold">{t("Reset")}</Text>
                         </View>
                     </SheetFooterButton>
                     <SheetFooterButton onPress={apply}>
                         <Text className="text-sm font-bold">
-                            {activeCount > 0 ? `Apply (${activeCount})` : "Apply"}
+                            {activeCount > 0 ? t("Apply ({{count}})", { count: activeCount }) : t("Apply")}
                         </Text>
                     </SheetFooterButton>
                 </SheetFooter>
@@ -206,7 +207,7 @@ export function SearchFilterSheet({
                 }}
             >
 
-                <FormField label="Sort by" icon="swap-vertical-outline">
+                <FormField label={t("Sort by")} icon="swap-vertical-outline">
                     <InlineSelect
                         options={sortingOptions}
                         value={draft.sorting}
@@ -216,7 +217,7 @@ export function SearchFilterSheet({
                 </FormField>
 
                 <FormField
-                    label={isAnime ? "Format" : "Format"}
+                    label={isAnime ? t("Format") : t("Format")}
                     icon="layers-outline"
                 >
                     <InlineSelect
@@ -227,7 +228,7 @@ export function SearchFilterSheet({
                 </FormField>
 
                 {!isAnime && (
-                    <FormField label="Country of origin" icon="globe-outline">
+                    <FormField label={t("Country of origin")} icon="globe-outline">
                         <InlineSelect
                             options={SEARCH_COUNTRIES_MANGA}
                             value={draft.countryOfOrigin}
@@ -237,7 +238,7 @@ export function SearchFilterSheet({
                 )}
 
                 {isAnime && (
-                    <FormField label="Season" icon="partly-sunny-outline">
+                    <FormField label={t("Season")} icon="partly-sunny-outline">
                         <InlineSelect
                             options={[...SEARCH_SEASONS]}
                             value={draft.season}
@@ -246,7 +247,7 @@ export function SearchFilterSheet({
                     </FormField>
                 )}
 
-                <FormField label="Year" icon="calendar-outline">
+                <FormField label={t("Year")} icon="calendar-outline">
                     <View
                         style={{ maxHeight: 120 }}
                     >
@@ -287,7 +288,7 @@ export function SearchFilterSheet({
                     </View>
                 </FormField>
 
-                <FormField label="Status" icon="radio-button-on-outline">
+                <FormField label={t("Status")} icon="radio-button-on-outline">
                     <MultiToggle
                         options={SEARCH_STATUS}
                         values={draft.status as string[]}
@@ -295,15 +296,15 @@ export function SearchFilterSheet({
                     />
                 </FormField>
 
-                <FormField label="Genres" icon="pricetag-outline">
+                <FormField label={t("Genres")} icon="pricetag-outline">
                     <MultiToggle
-                        options={SEARCH_MEDIA_GENRES.map(g => ({ value: g, label: g }))}
+                        options={SEARCH_MEDIA_GENRES.map(g => ({ value: g, label: t(g) }))}
                         values={draft.genre}
                         onToggle={toggleGenre}
                     />
                 </FormField>
 
-                <FormField label="Minimum score" icon="star-outline">
+                <FormField label={t("Minimum score")} icon="star-outline">
                     <InlineSelect
                         options={SEARCH_MIN_SCORES}
                         value={draft.minScore}
@@ -316,7 +317,7 @@ export function SearchFilterSheet({
                         tagsY.current = event.nativeEvent.layout.y
                     }}
                 >
-                    <FormField label="Tags" icon="bookmark-outline">
+                    <FormField label={t("Tags")} icon="bookmark-outline">
                         <View className="gap-3">
                             <View className="h-11 flex-row items-center rounded-2xl border border-white/10 bg-white/[0.04] px-3">
                                 <Ionicons name="search-outline" size={17} color="rgba(255,255,255,0.4)" />
@@ -324,7 +325,7 @@ export function SearchFilterSheet({
                                     ref={tagInputRef as unknown as React.Ref<React.ComponentRef<typeof BottomSheetTextInput>>}
                                     defaultValue=""
                                     onChangeText={setTagSearch}
-                                    placeholder="Find a tag"
+                                    placeholder={t("Find a tag")}
                                     placeholderTextColor="rgba(255,255,255,0.35)"
                                     selectionColor="rgba(130,115,255,0.9)"
                                     style={styles.tagSearchInput}
@@ -355,7 +356,7 @@ export function SearchFilterSheet({
                                 />
                             ) : null}
                             <Text className="text-[11px] font-semibold uppercase tracking-wider text-white/35">
-                                {tagSearch.trim() ? "Matching tags" : "Popular tags"}
+                                {tagSearch.trim() ? t("Matching tags") : t("Popular tags")}
                             </Text>
                             {tagChoices.length > 0 ? (
                                 <MultiToggle
@@ -364,7 +365,7 @@ export function SearchFilterSheet({
                                     onToggle={toggleTag}
                                 />
                             ) : (
-                                <Text className="py-2 text-sm text-white/35">No tags found</Text>
+                                <Text className="py-2 text-sm text-white/35">{t("No tags found")}</Text>
                             )}
                         </View>
                     </FormField>
@@ -372,10 +373,10 @@ export function SearchFilterSheet({
 
                 {!!serverStatus?.settings?.anilist?.enableAdultContent && (
                     <LabeledSwitch
-                        label="Adult Content"
+                        label={t("Adult Content")}
                         checked={draft.isAdult}
                         onToggle={toggleAdult}
-                        helper="Requires NSFW option enabled in web settings."
+                        helper={t("Requires NSFW option enabled in web settings.")}
                     />
                 )}
 
@@ -416,7 +417,7 @@ export function FilterButton({ activeCount, onPress }: FilterButtonProps) {
                     hasFilters ? "text-brand-400" : "text-white/50",
                 )}
             >
-                {hasFilters ? `Filter (${activeCount})` : "Filter"}
+                {hasFilters ? t("Filter ({{count}})", { count: activeCount }) : t("Filter")}
             </Text>
         </Pressable>
     )

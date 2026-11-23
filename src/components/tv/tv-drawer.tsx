@@ -1,5 +1,6 @@
 import { TVButton } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t } from "@/lib/i18n"
 import { Ionicons } from "@expo/vector-icons"
 import * as React from "react"
 import { Animated, Modal, Pressable, Text, View, TVFocusGuideView, ViewStyle } from "react-native"
@@ -113,7 +114,7 @@ export function TVDrawer({
                             </Text>
                         </View>
                         <TVButton
-                            label="Close"
+                            label={t("Close")}
                             variant="secondary"
                             size="compact"
                             icon={<Ionicons name="close" size={tvSize(20)} color="white" />}

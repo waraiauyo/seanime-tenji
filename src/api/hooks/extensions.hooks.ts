@@ -28,6 +28,7 @@ import {
     Nullish,
     RunPlaygroundCodeResponse,
 } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 import { atom } from "jotai"
@@ -101,7 +102,7 @@ export function useUninstallExternalExtension() {
         mutationKey: [API_ENDPOINTS.EXTENSIONS.UninstallExternalExtension.key],
         onSuccess: async () => {
             // DEVNOTE: No need to refetch, the websocket listener will do it
-            toast.success("Extension uninstalled successfully.")
+            toast.success(t("Extension uninstalled successfully."))
         },
     })
 }
@@ -122,7 +123,7 @@ export function useUpdateExtensionCode() {
         mutationKey: [API_ENDPOINTS.EXTENSIONS.UpdateExtensionCode.key],
         onSuccess: async () => {
             // DEVNOTE: No need to refetch, the websocket listener will do it
-            toast.success("Extension updated successfully.")
+            toast.success(t("Extension updated successfully."))
         },
     })
 }
@@ -211,7 +212,7 @@ export function useSaveExtensionUserConfig() {
         mutationKey: [API_ENDPOINTS.EXTENSIONS.SaveExtensionUserConfig.key],
         onSuccess: async () => {
             // DEVNOTE: No need to refetch, the websocket listener will do it
-            toast.success("Config saved successfully.")
+            toast.success(t("Config saved successfully."))
         },
     })
 }
@@ -232,7 +233,7 @@ export function useReloadExternalExtension() {
         method: API_ENDPOINTS.EXTENSIONS.ReloadExternalExtension.methods[0],
         mutationKey: [API_ENDPOINTS.EXTENSIONS.ReloadExternalExtension.key],
         onSuccess: async () => {
-            toast.success("Extension reloaded successfully.")
+            toast.success(t("Extension reloaded successfully."))
             queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.EXTENSIONS.ListDevelopmentModeExtensions.key] })
             queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.EXTENSIONS.GetPluginSettings.key] })
             // DEVNOTE: No need to refetch, the websocket listener will do it
@@ -269,7 +270,7 @@ export function useGrantPluginPermissions() {
         mutationKey: [API_ENDPOINTS.EXTENSIONS.GrantPluginPermissions.key],
         onSuccess: async (data) => {
             if (data) {
-                toast.success("Plugin permissions granted successfully.")
+                toast.success(t("Plugin permissions granted successfully."))
                 queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.EXTENSIONS.GetPluginSettings.key] })
                 queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.EXTENSIONS.GetAllExtensions.key] })
             }

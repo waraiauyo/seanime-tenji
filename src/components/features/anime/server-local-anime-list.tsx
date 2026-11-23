@@ -1,5 +1,6 @@
 import { MediaEntryCard } from "@/components/features/media/media-entry-card"
 import { Animations } from "@/components/shared/animations"
+import { t } from "@/lib/i18n"
 import { getServerLocalEpisodeCount, parseServerLocalAnimeEntry, type ServerLocalAnimeRecord, useServerLocalAnimeRecords } from "@/lib/offline"
 import { getHorizontalCardRenderCount, getHorizontalMediaCardWidth } from "@/lib/responsive-card-layout"
 import { Ionicons } from "@expo/vector-icons"
@@ -78,7 +79,7 @@ export function ServerLocalAnimeList() {
         >
             <View className="flex-row items-center justify-between">
                 <Text className="p-4 text-xl font-bold text-foreground">
-                    On Seanime Server{" "}
+                    {t("On Seanime Server")}{" "}
                     <Text className="ml-4 text-xl text-muted-foreground">{visibleRecords.length}</Text>
                 </Text>
             </View>

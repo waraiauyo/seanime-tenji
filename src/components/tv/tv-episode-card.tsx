@@ -2,6 +2,7 @@ import { usePreferredFocus, useTVFocus } from "@/components/tv/tv-focus"
 import { TV, tvSize } from "@/components/tv/tv-scale"
 import { Image } from "expo-image"
 import { LinearGradient } from "expo-linear-gradient"
+import { t } from "@/lib/i18n"
 import { Ionicons } from "@/lib/icons/Ionicons"
 import * as React from "react"
 import { Animated, Pressable, type PressableProps, Text, View } from "react-native"
@@ -110,7 +111,7 @@ export const TVEpisodeCard = React.memo(
                                 >
                                     <Ionicons name="checkmark" size={tvSize(15)} color="#ffffff" />
                                     <Text className="font-semibold text-white" style={{ fontSize: tvSize(15) }}>
-                                        Completed
+                                        {t("Completed")}
                                     </Text>
                                 </View>
                             ) : filler ? (
@@ -126,7 +127,7 @@ export const TVEpisodeCard = React.memo(
                                     }}
                                 >
                                     <Text className="font-bold text-black" style={{ fontSize: tvSize(14) }}>
-                                        FILLER
+                                        {t("FILLER")}
                                     </Text>
                                 </View>
                             ) : null}
@@ -146,7 +147,7 @@ export const TVEpisodeCard = React.memo(
                                 </Text>
                                 {duration ? (
                                     <Text className="text-white/80" style={{ fontSize: tvSize(17) }}>
-                                        {duration}m
+                                        {t("{{duration}}m", { duration })}
                                     </Text>
                                 ) : null}
                             </View>

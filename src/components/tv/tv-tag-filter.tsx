@@ -1,6 +1,7 @@
 import { TVFilterChoiceRow } from "@/components/tv/tv-filter-choice-row"
 import { TVInput, type TVInputHandle } from "@/components/tv/tv-input"
 import { tvSize } from "@/components/tv/tv-scale"
+import { t, tn } from "@/lib/i18n"
 import { filterMediaTags, type MediaTag } from "@/lib/search/tag-filter"
 import * as React from "react"
 import { Text, View } from "react-native"
@@ -46,26 +47,26 @@ export const TVTagFilter = React.memo(function TVTagFilter({
     return (
         <View style={{ gap: tvSize(8) }}>
             <Text className="font-semibold text-white/55" style={{ fontSize: tvSize(17) }}>
-                Tags
+                {t("Tags")}
             </Text>
             <TVInput
                 ref={inputRef}
                 value={search}
                 onChangeText={onSearch}
-                placeholder="Find a tag"
+                placeholder={t("Find a tag")}
                 autoCorrect={false}
                 autoCapitalize="none"
             />
             {hidden.length > 0 ? (
                 <TVFilterChoiceRow
-                    label="Selected tags"
+                    label={t("Selected tags")}
                     values={hidden.map(value => ({ value, label: value }))}
                     selected={() => true}
                     onPress={removeHidden}
                 />
             ) : null}
             <TVFilterChoiceRow
-                label={choices.length === 80 ? "First 80 matches" : `${choices.length} matches`}
+                label={choices.length === 80 ? t("First 80 matches") : tn("{{count}} match", "{{count}} matches", choices.length)}
                 values={choices.map(tag => ({ value: tag.name, label: tag.name }))}
                 selected={value => selected.includes(value)}
                 onPress={onToggle}

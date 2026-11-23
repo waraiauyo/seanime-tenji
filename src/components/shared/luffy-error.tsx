@@ -1,4 +1,5 @@
 import { IMAGES } from "@/constants/images"
+import { t } from "@/lib/i18n"
 import * as React from "react"
 import { Image, Text, View } from "react-native"
 
@@ -8,7 +9,7 @@ type LuffyErrorProps = {
     children?: React.ReactNode
 }
 
-export function LuffyError({ title = "Oops!", description, children }: LuffyErrorProps) {
+export function LuffyError({ title = t("Oops!"), description, children }: LuffyErrorProps) {
     return (
         <View className="mt-10 w-full items-center gap-4 px-8">
             <View style={{ width: 128, height: 128 }}>

@@ -1,5 +1,6 @@
 import { TVPillButton } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
+import { tc } from "@/lib/i18n"
 import * as React from "react"
 import { FlatList, Text, TVFocusGuideView, View } from "react-native"
 
@@ -24,7 +25,7 @@ export const TVFilterChoiceRow = React.memo(function TVFilterChoiceRow({
     allowAll,
 }: Props) {
     const items = React.useMemo(
-        () => allowAll ? [{ value: "", label: "All" }, ...values] : [...values],
+        () => allowAll ? [{ value: "", label: tc("filter", "All") }, ...values] : [...values],
         [allowAll, values],
     )
 

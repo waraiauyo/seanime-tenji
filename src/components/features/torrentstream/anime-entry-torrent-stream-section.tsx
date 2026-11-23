@@ -4,6 +4,7 @@ import { animeEntryPlaybackIntentAtom } from "@/atoms/anime-entry.atoms"
 import { CenteredSpinner } from "@/components/shared/centered-spinner"
 import { LuffyError } from "@/components/shared/luffy-error"
 import { Button } from "@/components/ui/button"
+import { formatDecimal, t, tn } from "@/lib/i18n"
 import {
     debridStreamStateAtom,
     getTorrentStreamLoadingLabel,
@@ -76,7 +77,7 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
             if (debridStreamState?.message === "External player link sent") {
                 return ""
             }
-            return debridStreamState?.message || "Preparing debrid stream..."
+            return debridStreamState?.message || t("Preparing debrid stream...")
         }
 
         return getTorrentStreamLoadingLabel(loadingState, loadingTorrentName)
@@ -102,10 +103,10 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
             pendingInfo.media?.title?.english
 
         if (title) {
-            return `Episode ${pendingInfo.episodeNumber} · ${title}`
+            return t("Episode {{number}} · {{title}}", { number: pendingInfo.episodeNumber, title })
         }
 
-        return `Episode ${pendingInfo.episodeNumber}`
+        return t("Episode {{number}}", { number: pendingInfo.episodeNumber })
     }, [pendingInfo])
 
     const activeStreamLabel = React.useMemo(() => {
@@ -116,8 +117,8 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
         if (!torrentStatus) return null
 
         const parts = [
-            `${torrentStatus.progressPercentage.toFixed(1)}%`,
-            `${torrentStatus.seeders} seeders`,
+            t("{{value}}%", { value: formatDecimal(torrentStatus.progressPercentage, 1) }),
+            tn("{{count}} seeder", "{{count}} seeders", torrentStatus.seeders),
         ]
 
         if (torrentStatus.downloadSpeed) {
@@ -198,7 +199,7 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
                                 )}
                             </View>
                             <TVPillButton
-                                label="Cancel"
+                                label={t("Cancel")}
                                 disabled={torrentStream.isStopping}
                                 onPress={stopTVStream}
                             />
@@ -226,7 +227,7 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
                                 className="rounded-full border border-white/20 bg-white/10 px-3"
                             >
                                 <Text className="text-white text-xs font-semibold">
-                                    Cancel
+                                    {t("Cancel")}
                                 </Text>
                             </Button>
                         </View>
@@ -253,7 +254,7 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
                             <View style={{ width: tvSize(12), height: tvSize(12), borderRadius: tvSize(6), backgroundColor: "#4ade80" }} />
                             <View style={{ gap: tvSize(4) }}>
                                 <Text className="text-white font-bold" style={{ fontSize: tvSize(20) }}>
-                                    {torrentStream.streamMode === "debrid" ? "Debrid stream active" : "Torrent stream active"}
+                                    {torrentStream.streamMode === "debrid" ? t("Debrid stream active") : t("Torrent stream active")}
                                 </Text>
                                 {!!activeStreamLabel && (
                                     <Text className="text-white/70" style={{ fontSize: tvSize(16) }} numberOfLines={1}>
@@ -262,7 +263,7 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
                                 )}
                             </View>
                             <TVPillButton
-                                label={torrentStream.isStopping ? "Stopping..." : "Stop"}
+                                label={torrentStream.isStopping ? t("Stopping...") : t("Stop")}
                                 disabled={torrentStream.isStopping}
                                 onPress={stopTVStream}
                                 className="bg-red-600/80 border-red-500"
@@ -275,7 +276,7 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
                             <View className="w-2 h-2 rounded-full bg-green-400" />
                             <View className="flex-1 gap-0.5">
                                 <Text className="text-white font-semibold text-sm">
-                                    {torrentStream.streamMode === "debrid" ? "Debrid stream active" : "Torrent stream active"}
+                                    {torrentStream.streamMode === "debrid" ? t("Debrid stream active") : t("Torrent stream active")}
                                 </Text>
                                 {!!activeStreamLabel && (
                                     <Text className="text-xs text-white/70" numberOfLines={1}>
@@ -291,7 +292,7 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
                                 className="rounded-full"
                             >
                                 <Text className="text-white text-xs font-semibold">
-                                    {torrentStream.isStopping ? "Stopping..." : "Stop"}
+                                    {torrentStream.isStopping ? t("Stopping...") : t("Stop")}
                                 </Text>
                             </Button>
                         </View>
@@ -326,8 +327,8 @@ export function AnimeEntryTorrentStreamSection({ entry }: AnimeEntryTorrentStrea
             ) : (
                 <View className="">
                     <LuffyError
-                        title="No episodes found"
-                        description="Seanime couldn't find any streamable episodes for this anime."
+                        title={t("No episodes found")}
+                        description={t("Seanime couldn't find any streamable episodes for this anime.")}
                     />
                 </View>
             )}

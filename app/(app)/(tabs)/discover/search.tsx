@@ -6,6 +6,7 @@ import { SafeView } from "@/components/layout/layout-view"
 import { LibrarySearchBar } from "@/components/shared/library-search-bar"
 import { TVSearchScreen } from "@/components/tv/tv-search-screen"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
+import { t } from "@/lib/i18n"
 import { getMediaGridLayout } from "@/lib/responsive-card-layout"
 import { DEFAULT_SEARCH_PARAMS, getActiveFiltersCount, isSearchActive, SearchParams, searchParamsAtom } from "@/lib/search/search.atoms"
 import Ionicons from "@expo/vector-icons/Ionicons"
@@ -29,7 +30,7 @@ function EmptyState({ query }: { query: string }) {
         >
             <Ionicons name="search-outline" size={40} color="rgba(255,255,255,0.12)" />
             <Text className="text-center text-sm text-white/30">
-                {query.trim() ? `No results for "${query}"` : "Use the search bar or filters above"}
+                {query.trim() ? t("No results for \"{{query}}\"", { query }) : t("Use the search bar or filters above")}
             </Text>
         </Animated.View>
     )
@@ -179,7 +180,7 @@ function MobileSearchScreen() {
                         <LibrarySearchBar
                             value={titleInput}
                             onChangeText={handleTitleChange}
-                            placeholder={params.type === "anime" ? "Search anime\u2026" : "Search manga\u2026"}
+                            placeholder={params.type === "anime" ? t("Search anime\u2026") : t("Search manga\u2026")}
                         />
                     </View>
                 </View>

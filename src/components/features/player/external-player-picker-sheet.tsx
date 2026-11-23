@@ -2,6 +2,7 @@ import { OptionRow } from "@/components/shared/option-row"
 import { RowDivider } from "@/components/shared/row-divider"
 import { Surface } from "@/components/shared/surface"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
+import { t } from "@/lib/i18n"
 import { type ExternalPlayerPreset, getPlatformExternalPlayers } from "@/lib/player/external-players"
 import { getPlayerPreferences, setPlayerPreferences } from "@/lib/player/player-preferences"
 import React from "react"
@@ -67,20 +68,20 @@ export function ExternalPlayerPickerSheet({ open, onOpenChange }: ExternalPlayer
 
     return (
         <SeaBottomSheet
-            title="Media Player"
+            title={t("Media Player")}
             open={open}
             onOpenChange={onOpenChange}
             snapPoints={["65%", "92%"]}
         >
             <Text className="text-white/50 text-sm mb-4 leading-5">
-                When set, video URLs are handed off to the chosen external app instead of the in-app player.
+                {t("When set, video URLs are handed off to the chosen external app instead of the in-app player.")}
                 {/* Use <Text className="text-white/70 font-mono">{"{url}"}</Text> as the placeholder for the stream URL. */}
             </Text>
 
 
             <Surface variant="muted" className="overflow-hidden mb-3">
                 <OptionRow
-                    label="In-App player (mpv)"
+                    label={t("In-App player (mpv)")}
                     active={selected === null}
                     onPress={() => handleSelect(null)}
                 />

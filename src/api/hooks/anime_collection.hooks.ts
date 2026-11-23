@@ -3,6 +3,7 @@ import { AddUnknownMedia_Variables } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { AL_AnimeCollection, Anime_LibraryCollection, Anime_ScheduleItem } from "@/api/generated/types"
 import { useRefreshAnimeCollection } from "@/api/hooks/anilist.hooks"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -24,7 +25,7 @@ export function useAddUnknownMedia() {
         method: API_ENDPOINTS.ANIME_COLLECTION.AddUnknownMedia.methods[0],
         mutationKey: [API_ENDPOINTS.ANIME_COLLECTION.AddUnknownMedia.key],
         onSuccess: async () => {
-            toast.success("Media added successfully")
+            toast.success(t("Media added successfully"))
             mutate(undefined, {
                 onSuccess: () => {
                     queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.LIBRARY_EXPLORER.GetLibraryExplorerFileTree.key] })

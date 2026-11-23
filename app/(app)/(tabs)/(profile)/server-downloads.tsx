@@ -6,6 +6,7 @@ import { ProfileSubpageHeader } from "@/components/features/profile/profile-menu
 import { getDownloadQueueViewState, keepTorrent, shouldShowQueueRefreshWarning } from "@/components/features/profile/server-downloads-state"
 import { SegmentedControl } from "@/components/shared/segmented-control"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { toast } from "@/lib/utils/toast"
 import { Ionicons } from "@expo/vector-icons"
@@ -60,12 +61,12 @@ export default function ServerDownloadsScreen() {
     const handleTorrentAction = React.useCallback((hash: string, name: string, action: "pause" | "resume" | "remove") => {
         if (action === "remove") {
             Alert.alert(
-                "Delete torrent download?",
-                `Are you sure you want to delete "${name}" from your torrent client?`,
+                t("Delete torrent download?"),
+                t("Are you sure you want to delete \"{{name}}\" from your torrent client?", { name }),
                 [
-                    { text: "Cancel", style: "cancel" },
+                    { text: t("Cancel"), style: "cancel" },
                     {
-                        text: "Delete",
+                        text: t("Delete"),
                         style: "destructive",
                         onPress: () => {
                             performTorrentAction({ hash, action: "remove", dir: "" })
@@ -81,7 +82,7 @@ export default function ServerDownloadsScreen() {
     const handleDebridDownload = React.useCallback((item: Debrid_TorrentItem) => {
         const libraryPath = serverStatus?.settings?.library?.libraryPath
         if (!libraryPath) {
-            toast.error("Library path not configured on server settings")
+            toast.error(t("Library path not configured on server settings"))
             return
         }
         downloadDebrid({ torrentItem: item, destination: libraryPath })
@@ -93,12 +94,12 @@ export default function ServerDownloadsScreen() {
 
     const handleDebridDelete = React.useCallback((item: Debrid_TorrentItem) => {
         Alert.alert(
-            "Delete debrid torrent?",
-            `Are you sure you want to remove "${item.name}" from your debrid service?`,
+            t("Delete debrid torrent?"),
+            t("Are you sure you want to remove \"{{name}}\" from your debrid service?", { name: item.name }),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Delete",
+                    text: t("Delete"),
                     style: "destructive",
                     onPress: () => {
                         deleteDebridTorrent({ torrentItem: item })
@@ -111,11 +112,11 @@ export default function ServerDownloadsScreen() {
     if (!isConnected) {
         return (
             <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
-                <ProfileSubpageHeader title="Server Downloads" />
+                <ProfileSubpageHeader title={t("Server Downloads")} />
                 <View className="flex-1 items-center justify-center px-6 gap-3">
                     <Ionicons name="wifi-outline" size={48} color="rgba(255,255,255,0.25)" />
-                    <Text className="text-white text-base font-semibold text-center">Server Offline</Text>
-                    <Text className="text-white/40 text-sm text-center">Please connect to the Seanime server to manage downloads.</Text>
+                    <Text className="text-white text-base font-semibold text-center">{t("Server Offline")}</Text>
+                    <Text className="text-white/40 text-sm text-center">{t("Please connect to the Seanime server to manage downloads.")}</Text>
                 </View>
             </View>
         )
@@ -132,7 +133,7 @@ export default function ServerDownloadsScreen() {
         itemCount: activeItems.length,
     })
     const showRefreshWarning = shouldShowQueueRefreshWarning(viewState, activeQuery.isRefetchError)
-    const errorMessage = activeQuery.error?.error || "The server download queue could not be loaded."
+    const errorMessage = activeQuery.error?.error || t("The server download queue could not be loaded.")
 
     const handleRefresh = React.useCallback(() => {
         setIsPullRefreshing(true)
@@ -154,15 +155,15 @@ export default function ServerDownloadsScreen() {
     return (
         <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
             <ProfileSubpageHeader
-                title="Server Downloads"
-                detail="Monitor active downloads running on the server."
+                title={t("Server Downloads")}
+                detail={t("Monitor active downloads running on the server.")}
             />
 
             <View className="mx-4 mt-2 mb-4">
                 <SegmentedControl
                     options={[
-                        { value: "torrent", label: "Torrent Client" },
-                        { value: "debrid", label: "Debrid Service" },
+                        { value: "torrent", label: t("Torrent Client") },
+                        { value: "debrid", label: t("Debrid Service") },
                     ]}
                     value={activeTab}
                     onChange={(val) => setActiveTab(val as DownloadTab)}
@@ -219,8 +220,8 @@ function QueueEmptyState() {
     return (
         <View className="flex-1 items-center justify-center px-6 gap-3">
             <Ionicons name="cloud-download-outline" size={48} color="rgba(255,255,255,0.15)" />
-            <Text className="text-sm font-medium text-white/40 text-center">No active server downloads found</Text>
-            <Text className="text-xs text-white/25 text-center">Pull down to check again.</Text>
+            <Text className="text-sm font-medium text-white/40 text-center">{t("No active server downloads found")}</Text>
+            <Text className="text-xs text-white/25 text-center">{t("Pull down to check again.")}</Text>
         </View>
     )
 }
@@ -231,7 +232,7 @@ function QueueErrorState({ message, onRetry, isRetrying }: { message: string; on
             <View className="size-12 items-center justify-center rounded-2xl border border-red-500/20 bg-red-500/10">
                 <Ionicons name="cloud-offline-outline" size={24} color="rgb(248 113 113)" />
             </View>
-            <Text className="text-base font-semibold text-white text-center">Couldn&apos;t load server downloads</Text>
+            <Text className="text-base font-semibold text-white text-center">{t("Couldn't load server downloads")}</Text>
             <Text className="text-sm leading-5 text-white/40 text-center" numberOfLines={3}>{message}</Text>
             <Pressable
                 onPress={onRetry}
@@ -243,7 +244,7 @@ function QueueErrorState({ message, onRetry, isRetrying }: { message: string; on
                 ) : (
                     <Ionicons name="refresh-outline" size={16} color="white" />
                 )}
-                <Text className="text-sm font-semibold text-white">Retry</Text>
+                <Text className="text-sm font-semibold text-white">{t("Retry")}</Text>
             </Pressable>
         </View>
     )
@@ -254,8 +255,8 @@ function QueueRefreshWarning({ onRetry, isRetrying }: { onRetry: () => void; isR
         <View className="mb-3 flex-row items-center gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3">
             <Ionicons name="warning-outline" size={18} color="rgb(251 191 36)" />
             <View className="flex-1 gap-0.5">
-                <Text className="text-xs font-semibold text-amber-200">Unable to refresh</Text>
-                <Text className="text-xs text-white/40">Showing the last server response.</Text>
+                <Text className="text-xs font-semibold text-amber-200">{t("Unable to refresh")}</Text>
+                <Text className="text-xs text-white/40">{t("Showing the last server response.")}</Text>
             </View>
             <Pressable
                 onPress={onRetry}
@@ -266,7 +267,7 @@ function QueueRefreshWarning({ onRetry, isRetrying }: { onRetry: () => void; isR
                 {isRetrying ? (
                     <ActivityIndicator size="small" colorClassName="accent-amber-300" />
                 ) : (
-                    <Text className="text-xs font-semibold text-amber-300">Retry</Text>
+                    <Text className="text-xs font-semibold text-amber-300">{t("Retry")}</Text>
                 )}
             </Pressable>
         </View>
@@ -276,7 +277,7 @@ function QueueRefreshWarning({ onRetry, isRetrying }: { onRetry: () => void; isR
 function StatusBadge({ status }: { status: string }) {
     let bgClass = "bg-white/5 border border-white/10"
     let textClass = "text-white/40"
-    const label = status.toUpperCase()
+    const label = t(status.toUpperCase())
 
     switch (status.toLowerCase()) {
         case "downloading":
@@ -338,14 +339,14 @@ function TorrentRow({ torrent, onAction }: { torrent: TorrentClient_Torrent; onA
                 <Text className="text-xs text-white/40">{torrent.size}</Text>
                 <View className="flex-row items-center gap-2">
                     {!!torrent.downSpeed && torrent.downSpeed !== "0 B/s" && (
-                        <Text className="text-xs text-white/40">D: {torrent.downSpeed}</Text>
+                        <Text className="text-xs text-white/40">{t("D: {{speed}}", { speed: torrent.downSpeed })}</Text>
                     )}
                     {!!torrent.upSpeed && torrent.upSpeed !== "0 B/s" && (
-                        <Text className="text-xs text-white/40">U: {torrent.upSpeed}</Text>
+                        <Text className="text-xs text-white/40">{t("U: {{speed}}", { speed: torrent.upSpeed })}</Text>
                     )}
                 </View>
                 {!!torrent.eta && torrent.eta !== "0s" && (
-                    <Text className="text-xs text-white/40">ETA: {torrent.eta}</Text>
+                    <Text className="text-xs text-white/40">{t("ETA: {{eta}}", { eta: torrent.eta })}</Text>
                 )}
             </View>
 
@@ -354,7 +355,7 @@ function TorrentRow({ torrent, onAction }: { torrent: TorrentClient_Torrent; onA
                     <View className="h-full bg-brand-500 rounded-full" style={{ width: `${progressPercent}%` }} />
                 </View>
                 <View className="flex-row justify-between mt-1">
-                    <Text className="text-[10px] text-white/40">Progress</Text>
+                    <Text className="text-[10px] text-white/40">{t("Progress")}</Text>
                     <Text className="text-[10px] text-white/60 font-semibold">{progressPercent}%</Text>
                 </View>
             </View>
@@ -365,14 +366,14 @@ function TorrentRow({ torrent, onAction }: { torrent: TorrentClient_Torrent; onA
                     className="flex-row items-center bg-white/5 active:bg-white/10 px-3 py-1.5 rounded-lg gap-1 border border-white/5"
                 >
                     <Ionicons name={canResume ? "play-outline" : "pause-outline"} size={14} color="white" />
-                    <Text className="text-white text-xs font-medium">{canResume ? "Resume" : "Pause"}</Text>
+                    <Text className="text-white text-xs font-medium">{canResume ? t("Resume") : t("Pause")}</Text>
                 </Pressable>
                 <Pressable
                     onPress={() => onAction("remove")}
                     className="flex-row items-center bg-red-500/10 active:bg-red-500/20 px-3 py-1.5 rounded-lg gap-1 border border-red-500/20"
                 >
                     <Ionicons name="trash-outline" size={14} color="rgb(190 110 110)" />
-                    <Text className="text-red-400 text-xs font-medium">Delete</Text>
+                    <Text className="text-red-400 text-xs font-medium">{t("Delete")}</Text>
                 </Pressable>
             </View>
         </View>
@@ -407,7 +408,7 @@ function DebridRow({
                     <Text className="text-xs text-white/40">{item.speed}</Text>
                 )}
                 {!!item.eta && (
-                    <Text className="text-xs text-white/40">ETA: {item.eta}</Text>
+                    <Text className="text-xs text-white/40">{t("ETA: {{eta}}", { eta: item.eta })}</Text>
                 )}
             </View>
 
@@ -416,7 +417,7 @@ function DebridRow({
                     <View className="h-full bg-brand-300 rounded-full" style={{ width: `${item.completionPercentage}%` }} />
                 </View>
                 <View className="flex-row justify-between mt-1">
-                    <Text className="text-[10px] text-white/40">Progress</Text>
+                    <Text className="text-[10px] text-white/40">{t("Progress")}</Text>
                     <Text className="text-[10px] text-white/60 font-semibold">{item.completionPercentage}%</Text>
                 </View>
             </View>
@@ -428,7 +429,7 @@ function DebridRow({
                         className="flex-row items-center bg-amber-500/10 active:bg-amber-500/20 px-3 py-1.5 rounded-lg gap-1 border border-amber-500/20"
                     >
                         <Ionicons name="close-circle-outline" size={14} color="rgb(190 155 95)" />
-                        <Text className="text-amber-400 text-xs font-medium">Cancel Local</Text>
+                        <Text className="text-amber-400 text-xs font-medium">{t("Cancel Local")}</Text>
                     </Pressable>
                 ) : item.isReady ? (
                     <Pressable
@@ -436,7 +437,7 @@ function DebridRow({
                         className="flex-row items-center bg-brand-500/10 active:bg-brand-500/20 px-3 py-1.5 rounded-lg gap-1 border border-brand-500/20"
                     >
                         <Ionicons name="cloud-download-outline" size={14} color="rgb(159 146 255)" />
-                        <Text className="text-brand-400 text-xs font-medium">Download to Server</Text>
+                        <Text className="text-brand-400 text-xs font-medium">{t("Download to Server")}</Text>
                     </Pressable>
                 ) : null}
 
@@ -445,7 +446,7 @@ function DebridRow({
                     className="flex-row items-center bg-red-500/10 active:bg-red-500/20 px-3 py-1.5 rounded-lg gap-1 border border-red-500/20"
                 >
                     <Ionicons name="trash-outline" size={14} color="rgb(190 110 110)" />
-                    <Text className="text-red-400 text-xs font-medium">Delete</Text>
+                    <Text className="text-red-400 text-xs font-medium">{t("Delete")}</Text>
                 </Pressable>
             </View>
         </View>

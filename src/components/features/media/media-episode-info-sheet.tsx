@@ -5,6 +5,7 @@ import { Surface } from "@/components/shared/surface"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { Text } from "@/components/ui/text"
 import { getEpisodeSpoilerState, getSpoilerSafeAnimeImage } from "@/lib/anime-spoilers"
+import { t } from "@/lib/i18n"
 import { Ionicons } from "@/lib/icons/Ionicons"
 import { LinearGradient } from "expo-linear-gradient"
 import * as React from "react"
@@ -38,8 +39,8 @@ export function MediaEpisodeInfoSheet({
         episodeNumber: episode.progressNumber || episode.episodeNumber,
         watchedProgress,
     })
-    const sheetTitle = episode.displayTitle || `Episode ${episode.episodeNumber}`
-    const episodeTitle = spoiler.hideTitle ? `Episode ${episode.episodeNumber}` : cleanEpisodeText(episode.episodeTitle) || sheetTitle
+    const sheetTitle = episode.displayTitle || t("Episode {{number}}", { number: episode.episodeNumber })
+    const episodeTitle = spoiler.hideTitle ? t("Episode {{number}}", { number: episode.episodeNumber }) : cleanEpisodeText(episode.episodeTitle) || sheetTitle
     const summary = spoiler.hideDescription ? null : cleanEpisodeText(episode.episodeMetadata?.summary || episode.episodeMetadata?.overview)
     const filename = spoiler.hideTitle ? null : episode.localFile?.name?.trim()
     const spoilerSafeImage = getSpoilerSafeAnimeImage(episode.baseAnime)
@@ -89,15 +90,15 @@ export function MediaEpisodeInfoSheet({
                         <View className="flex-row flex-wrap items-center gap-2">
                             {(airDate || length) ? (
                                 <Text className="text-sm text-white/45">
-                                    {airDate || "Unknown airing date"}
-                                    {length ? ` • ${length} min` : ""}
+                                    {airDate || t("Unknown airing date")}
+                                    {length ? ` • ${t("{{duration}} min", { duration: length })}` : ""}
                                 </Text>
                             ) : null}
 
                             {episode.isInvalid ? (
                                 <View className="flex-row items-center gap-1 rounded-full bg-red-500/10 px-2 py-1">
                                     <Ionicons name="warning-outline" size={12} colorClassName="text-red-300" />
-                                    <Text className="text-xs font-medium text-red-200">Metadata mismatch</Text>
+                                    <Text className="text-xs font-medium text-red-200">{t("Metadata mismatch")}</Text>
                                 </View>
                             ) : null}
                         </View>
@@ -105,7 +106,7 @@ export function MediaEpisodeInfoSheet({
                 </View>
 
                 <Text className="text-sm leading-6 text-white/70">
-                    {summary || "No summary available."}
+                    {summary || t("No summary available.")}
                 </Text>
 
                 {filename ? (

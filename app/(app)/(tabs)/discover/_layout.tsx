@@ -1,8 +1,9 @@
+import { t } from "@/lib/i18n"
 import { Stack } from "expo-router"
 
 export default function DiscoverLayout() {
     return (
-        <Stack screenOptions={{ headerBackTitle: "Discover" }}>
+        <Stack screenOptions={{ headerBackTitle: t("Discover") }}>
             <Stack.Screen
                 name="index"
                 options={{

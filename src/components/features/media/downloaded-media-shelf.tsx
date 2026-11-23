@@ -1,6 +1,7 @@
 import { AL_BaseAnime, AL_BaseManga } from "@/api/generated/types"
 import { MediaEntryCard } from "@/components/features/media/media-entry-card"
 import { Animations } from "@/components/shared/animations"
+import { t } from "@/lib/i18n"
 import { getHorizontalCardRenderCount, getHorizontalMediaCardWidth } from "@/lib/responsive-card-layout"
 import { Ionicons } from "@expo/vector-icons"
 import { downloadedAnimeMedia, downloadedMangaMedia, type DownloadedMedia } from "@/lib/downloads/downloaded-media"
@@ -79,7 +80,7 @@ export function DownloadedMediaShelf<T extends "anime" | "manga">({ type, items 
         >
             <View className="flex flex-row items-center justify-between w-full">
                 <Text className="p-4 text-xl font-bold text-foreground">
-                    Downloads{" "}
+                    {t("Downloads")}{" "}
                     <Text className="ml-4 text-xl text-muted-foreground">{items.length}</Text>
                 </Text>
             </View>

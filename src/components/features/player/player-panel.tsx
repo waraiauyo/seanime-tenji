@@ -1,5 +1,6 @@
 import type { Anime_Episode, Onlinestream_VideoSource } from "@/api/generated/types"
 import { Button } from "@/components/ui/button"
+import { formatDecimal, t, tc, tn } from "@/lib/i18n"
 import type { PlayerState as PlayerStateType, PlayerTrack } from "@/lib/player"
 import type { PlayerPreferences } from "@/lib/player/player-preferences"
 import {
@@ -54,22 +55,22 @@ import type { PlayerPanel } from "./types"
 ///////////////////////////////////////////////////////////////////////////////
 
 const PANEL_META: Record<PlayerPanel, { title: string; icon?: React.ReactNode }> = {
-    main: { title: "Settings" },
-    episodes: { title: "Episodes", icon: <List size={15} color={BRAND_ACCENT} /> },
-    "audio-subtitles": { title: "Audio & Subtitles", icon: <Captions size={15} color={BRAND_ACCENT} /> },
-    speed: { title: "Playback Speed", icon: <Gauge size={15} color={BRAND_ACCENT} /> },
-    "seek-buttons": { title: "Forward / Back Seek", icon: <SkipForward size={15} color={BRAND_ACCENT} /> },
-    "double-tap-seek": { title: "Double-Tap Seek", icon: <RotateCw size={15} color={BRAND_ACCENT} /> },
-    "video-sources": { title: "Video Source", icon: <Clapperboard size={15} color={BRAND_ACCENT} /> },
-    "video-output": { title: "Video Renderer", icon: <Cpu size={15} color={BRAND_ACCENT} /> },
-    "subtitle-delay": { title: "Subtitle Delay", icon: <Timer size={15} color="#f59e0b" /> },
-    "audio-delay": { title: "Audio Delay", icon: <Timer size={15} color="#a78bfa" /> },
-    "subtitle-size": { title: "Subtitle Size", icon: <Type size={15} color={BRAND_ACCENT} /> },
-    "audio-tracks": { title: "Audio Tracks", icon: <Mic2 size={15} color={BRAND_ACCENT} /> },
-    "subtitle-tracks": { title: "Subtitle Tracks", icon: <Captions size={15} color={BRAND_ACCENT} /> },
-    "external-subtitles": { title: "Find Subtitles", icon: <Globe size={15} color={BRAND_ACCENT} /> },
-    "default-audio-lang": { title: "Default Audio Language", icon: <Languages size={15} color={BRAND_ACCENT} /> },
-    "default-subtitle-lang": { title: "Default Subtitle Language", icon: <Languages size={15} color="#f59e0b" /> },
+    main: { title: t("Settings") },
+    episodes: { title: t("Episodes"), icon: <List size={15} color={BRAND_ACCENT} /> },
+    "audio-subtitles": { title: t("Audio & Subtitles"), icon: <Captions size={15} color={BRAND_ACCENT} /> },
+    speed: { title: t("Playback Speed"), icon: <Gauge size={15} color={BRAND_ACCENT} /> },
+    "seek-buttons": { title: t("Forward / Back Seek"), icon: <SkipForward size={15} color={BRAND_ACCENT} /> },
+    "double-tap-seek": { title: t("Double-Tap Seek"), icon: <RotateCw size={15} color={BRAND_ACCENT} /> },
+    "video-sources": { title: t("Video Source"), icon: <Clapperboard size={15} color={BRAND_ACCENT} /> },
+    "video-output": { title: t("Video Renderer"), icon: <Cpu size={15} color={BRAND_ACCENT} /> },
+    "subtitle-delay": { title: t("Subtitle Delay"), icon: <Timer size={15} color="#f59e0b" /> },
+    "audio-delay": { title: t("Audio Delay"), icon: <Timer size={15} color="#a78bfa" /> },
+    "subtitle-size": { title: t("Subtitle Size"), icon: <Type size={15} color={BRAND_ACCENT} /> },
+    "audio-tracks": { title: t("Audio Tracks"), icon: <Mic2 size={15} color={BRAND_ACCENT} /> },
+    "subtitle-tracks": { title: t("Subtitle Tracks"), icon: <Captions size={15} color={BRAND_ACCENT} /> },
+    "external-subtitles": { title: t("Find Subtitles"), icon: <Globe size={15} color={BRAND_ACCENT} /> },
+    "default-audio-lang": { title: t("Default Audio Language"), icon: <Languages size={15} color={BRAND_ACCENT} /> },
+    "default-subtitle-lang": { title: t("Default Subtitle Language"), icon: <Languages size={15} color="#f59e0b" /> },
 }
 
 const PANEL_CARD_CLASS = "overflow-hidden rounded-xl border border-white/5 bg-white/[0.025]"
@@ -216,7 +217,7 @@ export function PlayerPanelOverlay(props: PlayerPanelOverlayProps) {
                     {panel === "seek-buttons" && (
                         <SeekAmountContent
                             current={prefs.buttonSeekSec}
-                            description="Choose how far the center rewind and forward controls jump during playback."
+                            description={t("Choose how far the center rewind and forward controls jump during playback.")}
                             onSelect={(seconds) => {
                                 updatePrefs({ buttonSeekSec: seconds })
                                 onClose()
@@ -226,7 +227,7 @@ export function PlayerPanelOverlay(props: PlayerPanelOverlayProps) {
                     {panel === "double-tap-seek" && (
                         <SeekAmountContent
                             current={prefs.doubleTapSeekSec}
-                            description="Choose how far a left or right double-tap jumps while watching."
+                            description={t("Choose how far a left or right double-tap jumps while watching.")}
                             onSelect={(seconds) => {
                                 updatePrefs({ doubleTapSeekSec: seconds })
                                 onClose()
@@ -303,7 +304,7 @@ export function PlayerPanelOverlay(props: PlayerPanelOverlayProps) {
                     )}
                     {panel === "default-audio-lang" && (
                         <LanguagePrefContent
-                            label="Audio" current={prefs.preferredAudioLanguages}
+                            label={t("Audio")} current={prefs.preferredAudioLanguages}
                             onSave={(v) => {
                                 updatePrefs({ preferredAudioLanguages: v })
                                 onNavigate("audio-subtitles")
@@ -392,42 +393,42 @@ function MainSettingsContent({
         accent?: string; action?: "pip" | "lock" | "toggle-auto-next" | "toggle-center-tap" | "toggle-side-swipe" | "toggle-auto-skip-op-ed" | "toggle-stats"
     }> = [
         {
-            label: "Playback Speed",
-            value: state.speed === 1.0 ? "Normal" : `${state.speed}x`,
+            label: t("Playback Speed"),
+            value: state.speed === 1.0 ? tc("speed", "Normal") : `${state.speed}x`,
             panel: "speed",
             icon: <Gauge size={15} color="rgba(255,255,255,0.6)" />,
         },
         {
-            label: "Double-Tap Seek",
+            label: t("Double-Tap Seek"),
             value: formatSecondsLabel(prefs.doubleTapSeekSec),
             panel: "double-tap-seek",
             icon: <RotateCw size={15} color="rgba(255,255,255,0.6)" />,
         },
         {
-            label: "Audio & Subtitles",
-            value: "Tracks, delays, size",
+            label: t("Audio & Subtitles"),
+            value: t("Tracks, delays, size"),
             panel: "audio-subtitles",
             icon: <Captions size={15} color="rgba(255,255,255,0.6)" />,
         },
         {
-            label: "Auto Next Episode",
-            value: prefs.autoNextEpisode ? "On" : "Off",
+            label: t("Auto Next Episode"),
+            value: prefs.autoNextEpisode ? t("On") : t("Off"),
             panel: "main",
             icon: <SkipForward size={15} color="rgba(255,255,255,0.6)" />,
             accent: prefs.autoNextEpisode ? BRAND_ACCENT : undefined,
             action: "toggle-auto-next",
         },
         {
-            label: "Auto Skip OP / ED",
-            value: prefs.autoSkipOpEd ? "On" : "Off",
+            label: t("Auto Skip OP / ED"),
+            value: prefs.autoSkipOpEd ? t("On") : t("Off"),
             panel: "main",
             icon: <SkipForward size={15} color="rgba(255,255,255,0.6)" />,
             accent: prefs.autoSkipOpEd ? BRAND_ACCENT : undefined,
             action: "toggle-auto-skip-op-ed",
         },
         {
-            label: "Tap to Play & Pause",
-            value: prefs.centerTapPlayPause ? "On" : "Off",
+            label: t("Tap to Play & Pause"),
+            value: prefs.centerTapPlayPause ? t("On") : t("Off"),
             panel: "main",
             icon: state.paused
                 ? <Play size={15} color="rgba(255,255,255,0.6)" fill="rgba(255,255,255,0.6)" />
@@ -436,30 +437,30 @@ function MainSettingsContent({
             action: "toggle-center-tap",
         },
         {
-            label: "Gesture Controls",
-            value: prefs.sideSwipeBrightnessVolume ? "On" : "Off",
+            label: t("Gesture Controls"),
+            value: prefs.sideSwipeBrightnessVolume ? t("On") : t("Off"),
             panel: "main",
             icon: <Sun size={15} color="rgba(255,255,255,0.6)" />,
             accent: prefs.sideSwipeBrightnessVolume ? BRAND_ACCENT : undefined,
             action: "toggle-side-swipe",
         },
         {
-            label: "Picture-in-Picture",
+            label: t("Picture-in-Picture"),
             value: "",
             panel: "main",
             icon: <PictureInPicture2 size={15} color="rgba(255,255,255,0.6)" />,
             action: "pip",
         },
         {
-            label: "Screen Lock",
+            label: t("Screen Lock"),
             value: "",
             panel: "main",
             icon: <Lock size={15} color="rgba(255,255,255,0.6)" />,
             action: "lock",
         },
         {
-            label: "Playback Stats",
-            value: prefs.showStats ? "On" : "Off",
+            label: t("Playback Stats"),
+            value: prefs.showStats ? t("On") : t("Off"),
             panel: "main",
             icon: <Activity size={15} color="rgba(255,255,255,0.6)" />,
             accent: prefs.showStats ? BRAND_ACCENT : undefined,
@@ -469,7 +470,7 @@ function MainSettingsContent({
 
     if (videoSources.length > 1 && videoSource) {
         rows.unshift({
-            label: "Video Source",
+            label: t("Video Source"),
             value: [videoSource.server, videoSource.quality].filter(Boolean).join(" · "),
             panel: "video-sources",
             icon: <Clapperboard size={15} color="rgba(255,255,255,0.6)" />,
@@ -478,8 +479,8 @@ function MainSettingsContent({
 
     if (Platform.OS === "android") {
         rows.push({
-            label: "Video Renderer",
-            value: prefs.androidVideoOutput === "gpu-next" ? "Modern" : "Compatibility",
+            label: t("Video Renderer"),
+            value: prefs.androidVideoOutput === "gpu-next" ? t("Modern") : t("Compatibility"),
             panel: "video-output",
             icon: <Cpu size={15} color="rgba(255,255,255,0.6)" />,
             accent: undefined,
@@ -509,7 +510,7 @@ function VideoSourcesContent({ sources, current, onSelect }: {
     return (
         <View className="gap-3">
             <Text className="px-0.5 text-xs leading-5 text-white/45">
-                Switching source keeps your current playback position.
+                {t("Switching source keeps your current playback position.")}
             </Text>
             <View className={PANEL_CARD_CLASS}>
                 {sources.map((source, index) => {
@@ -531,7 +532,7 @@ function VideoSourcesContent({ sources, current, onSelect }: {
                                     className={cn("text-sm text-white", active && "font-semibold text-player-text")}
                                     numberOfLines={1}
                                 >
-                                    {source.server || `Source ${index + 1}`}
+                                    {source.server || t("Source {{number}}", { number: index + 1 })}
                                 </Text>
                                 {!!detail && (
                                     <Text className="text-xs text-white/35" numberOfLines={1}>
@@ -558,21 +559,21 @@ function AudioSubtitlesContent({ state, prefs, onNavigate }: {
 
     const audioRows: Row[] = [
         {
-            label: "Track",
-            value: selectedAudio?.title || selectedAudio?.language || `${state.audioTracks.length} track${state.audioTracks.length !== 1 ? "s" : ""}`,
+            label: t("Track"),
+            value: selectedAudio?.title || selectedAudio?.language || tn("{{count}} track", "{{count}} tracks", state.audioTracks.length),
             panel: "audio-tracks",
             icon: <Mic2 size={14} color="rgba(255,255,255,0.6)" />,
         },
         {
-            label: "Delay",
-            value: state.audioDelay === 0 ? "Off" : `${state.audioDelay > 0 ? "+" : ""}${state.audioDelay.toFixed(1)}s`,
+            label: t("Delay"),
+            value: state.audioDelay === 0 ? tc("delay", "Off") : `${state.audioDelay > 0 ? "+" : ""}${formatDecimal(state.audioDelay, 1)}s`,
             panel: "audio-delay",
             icon: <Timer size={14} color="rgba(255,255,255,0.6)" />,
             accent: state.audioDelay !== 0 ? "#a78bfa" : undefined,
         },
         {
-            label: "Default Language",
-            value: prefs.preferredAudioLanguages.split(",")[0]?.trim() || "Not set",
+            label: t("Default Language"),
+            value: prefs.preferredAudioLanguages.split(",")[0]?.trim() || tc("language", "Not set"),
             panel: "default-audio-lang",
             icon: <Languages size={14} color="rgba(255,255,255,0.6)" />,
         },
@@ -580,35 +581,33 @@ function AudioSubtitlesContent({ state, prefs, onNavigate }: {
 
     const subtitleRows: Row[] = [
         {
-            label: "Track",
-            value: selectedSub?.title || selectedSub?.language || `${state.subtitleTracks.length} track${state.subtitleTracks.length !== 1
-                ? "s"
-                : ""}`,
+            label: t("Track"),
+            value: selectedSub?.title || selectedSub?.language || tn("{{count}} track", "{{count}} tracks", state.subtitleTracks.length),
             panel: "subtitle-tracks",
             icon: <Captions size={14} color="rgba(255,255,255,0.6)" />,
         },
         {
-            label: "Delay",
-            value: state.subtitleDelay === 0 ? "Off" : `${state.subtitleDelay > 0 ? "+" : ""}${state.subtitleDelay.toFixed(1)}s`,
+            label: t("Delay"),
+            value: state.subtitleDelay === 0 ? tc("delay", "Off") : `${state.subtitleDelay > 0 ? "+" : ""}${formatDecimal(state.subtitleDelay, 1)}s`,
             panel: "subtitle-delay",
             icon: <Timer size={14} color="rgba(255,255,255,0.6)" />,
             accent: state.subtitleDelay !== 0 ? "#f59e0b" : undefined,
         },
         {
-            label: "Font Size",
+            label: t("Font Size"),
             value: `${prefs.subtitleFontSize}`,
             panel: "subtitle-size",
             icon: <Type size={14} color="rgba(255,255,255,0.6)" />,
         },
         {
-            label: "Default Language",
-            value: prefs.preferredSubtitleLanguages.split(",")[0]?.trim() || "Not set",
+            label: t("Default Language"),
+            value: prefs.preferredSubtitleLanguages.split(",")[0]?.trim() || tc("language", "Not set"),
             panel: "default-subtitle-lang",
             icon: <Languages size={14} color="rgba(255,255,255,0.6)" />,
         },
         {
-            label: "Find Subtitles",
-            value: prefs.wyzieApiKey ? "" : "Key required",
+            label: t("Find Subtitles"),
+            value: prefs.wyzieApiKey ? "" : t("Key required"),
             panel: "external-subtitles",
             icon: <Globe size={14} color="rgba(255,255,255,0.6)" />,
         },
@@ -617,11 +616,11 @@ function AudioSubtitlesContent({ state, prefs, onNavigate }: {
     return (
         <View className="gap-4">
             <View>
-                <SectionLabel>Audio</SectionLabel>
+                <SectionLabel>{t("Audio")}</SectionLabel>
                 <SettingsCard rows={audioRows} onNavigate={onNavigate} />
             </View>
             <View>
-                <SectionLabel>Subtitles</SectionLabel>
+                <SectionLabel>{t("Subtitles")}</SectionLabel>
                 <SettingsCard rows={subtitleRows} onNavigate={onNavigate} />
             </View>
         </View>
@@ -640,7 +639,7 @@ function SpeedContent({ current, onSelect }: { current: number; onSelect: (s: nu
                                 {s}x
                             </Text>
                             {s === 1.0 && (
-                                <Text className="text-xs text-white/30">Normal</Text>
+                                <Text className="text-xs text-white/30">{tc("speed", "Normal")}</Text>
                             )}
                         </View>
                         {active && <Check size={14} color={BRAND_ACCENT} />}
@@ -675,7 +674,7 @@ function SeekAmountContent({ current, onSelect, description }: {
                                     {formatSecondsLabel(seconds)}
                                 </Text>
                                 {seconds === 3 && (
-                                    <Text className="text-xs text-white/30">Default</Text>
+                                    <Text className="text-xs text-white/30">{t("Default")}</Text>
                                 )}
                             </View>
                             {active && <Check size={14} color={BRAND_ACCENT} />}
@@ -699,14 +698,14 @@ function VideoOutputContent({ current, onSelect }: {
     }> = [
         {
             value: "gpu-next",
-            label: "Modern",
-            description: "Uses gpu-next for better compatibility with newer Android versions.",
-            badge: "Recommended",
+            label: t("Modern"),
+            description: t("Uses gpu-next for better compatibility with newer Android versions."),
+            badge: t("Recommended"),
         },
         {
             value: "gpu",
-            label: "Compatibility",
-            description: "Uses the legacy gpu renderer. Try this only if Modern has rendering issues.",
+            label: t("Compatibility"),
+            description: t("Uses the legacy gpu renderer. Try this only if Modern has rendering issues."),
             badge: "",
         },
     ]
@@ -754,10 +753,10 @@ function DelayContent({ label, current, step, onChange, onReset }: {
         <View className="items-center gap-7 pt-6">
             <View className="items-center gap-1">
                 <Text className={cn("text-4xl font-bold text-white/40", current !== 0 && accentClassName)} style={{ fontVariant: ["tabular-nums"] }}>
-                    {current > 0 ? "+" : ""}{current.toFixed(1)}s
+                    {current > 0 ? "+" : ""}{formatDecimal(current, 1)}s
                 </Text>
                 <Text className="text-xs text-white/30">
-                    {current === 0 ? "No delay" : current > 0 ? "Delayed" : "Earlier"}
+                    {current === 0 ? t("No delay") : current > 0 ? t("Delayed") : t("Earlier")}
                 </Text>
             </View>
             <View className="flex-row items-center gap-3.5">
@@ -772,7 +771,7 @@ function DelayContent({ label, current, step, onChange, onReset }: {
                             )}
                         >
                             <Text className={cn("text-sm font-semibold", current !== 0 ? "text-red-400" : "text-white/25")}>
-                                Reset
+                                {t("Reset")}
                             </Text>
                         </View>
                     )}
@@ -780,7 +779,9 @@ function DelayContent({ label, current, step, onChange, onReset }: {
                 <StepperButton onPress={() => onChange(step)} icon={<Plus size={18} color="#fff" />} />
             </View>
             <Text className="max-w-56 text-center text-xs leading-4 text-white/20">
-                {"Positive values delay the " + label.toLowerCase() + " track.\nNegative values make it play earlier."}
+                {label === "Subtitle"
+                    ? t("Positive values delay the subtitle track.\nNegative values make it play earlier.")
+                    : t("Positive values delay the audio track.\nNegative values make it play earlier.")}
             </Text>
         </View>
     )
@@ -797,7 +798,7 @@ function SubSizeContent({ current, onSelect }: { current: number; onSelect: (s: 
                             <Text className={cn("text-sm text-white", active && "font-semibold text-player-text")}>
                                 {s}
                             </Text>
-                            {s === 48 && <Text className="text-xs text-white/30">Default</Text>}
+                            {s === 48 && <Text className="text-xs text-white/30">{t("Default")}</Text>}
                         </View>
                         {active && <Check size={14} color={BRAND_ACCENT} />}
                     </PanelSelectableRow>
@@ -820,7 +821,7 @@ function TrackContent({
         return (
             <View className="items-center gap-2 pt-9">
                 <Captions size={28} color="rgba(255,255,255,0.15)" />
-                <Text className="text-sm text-white/30">No tracks available</Text>
+                <Text className="text-sm text-white/30">{t("No tracks available")}</Text>
             </View>
         )
     }
@@ -836,27 +837,27 @@ function TrackContent({
                 >
                     <View className="mr-2 flex-1">
                         <Text className={cn("text-sm text-white", isNoneSelected && "font-semibold text-player-text")} numberOfLines={1}>
-                            None
+                            {tc("track", "None")}
                         </Text>
                     </View>
                     {isNoneSelected && <Check size={14} color={BRAND_ACCENT} />}
                 </PanelSelectableRow>
             )}
-            {tracks.map((t, idx) => {
+            {tracks.map((track, idx) => {
                 const borderTop = allowNone ? true : idx > 0
                 return (
-                    <PanelSelectableRow key={t.id} active={t.selected} borderTop={borderTop} onPress={() => onSelect(t.id)}>
+                    <PanelSelectableRow key={track.id} active={track.selected} borderTop={borderTop} onPress={() => onSelect(track.id)}>
                         <View className="mr-2 flex-1">
-                            <Text className={cn("text-sm text-white", t.selected && "font-semibold text-player-text")} numberOfLines={1}>
-                                {t.title || t.language || `Track ${t.id}`}
+                            <Text className={cn("text-sm text-white", track.selected && "font-semibold text-player-text")} numberOfLines={1}>
+                                {track.title || track.language || t("Track {{id}}", { id: track.id })}
                             </Text>
-                            {(t.language || t.codec) && (
+                            {(track.language || track.codec) && (
                                 <Text className="mt-0.5 text-xs text-white/35" numberOfLines={1}>
-                                    {[t.language, t.codec].filter(Boolean).join(" \u00b7 ")}
+                                    {[track.language, track.codec].filter(Boolean).join(" \u00b7 ")}
                                 </Text>
                             )}
                         </View>
-                        {t.selected && <Check size={14} color={BRAND_ACCENT} />}
+                        {track.selected && <Check size={14} color={BRAND_ACCENT} />}
                     </PanelSelectableRow>
                 )
             })}
@@ -948,7 +949,7 @@ function ExternalSubtitleSearchContent({
                 console.error("Subtitle search failed", e)
             }
             setResults([])
-            setSearchError(e instanceof Error ? e.message : "Subtitle search failed")
+            setSearchError(e instanceof Error ? e.message : t("Subtitle search failed"))
         }
         finally {
             setIsSearching(false)
@@ -969,7 +970,7 @@ function ExternalSubtitleSearchContent({
             setAddedUrls(prev => new Set(prev).add(sub.url))
         }
         catch {
-            setSearchError("Failed to add subtitle track")
+            setSearchError(t("Failed to add subtitle track"))
         }
         finally {
             setAddingUrl(null)
@@ -981,7 +982,7 @@ function ExternalSubtitleSearchContent({
             <View className="items-center gap-2 pt-9">
                 <Globe size={28} color="rgba(255,255,255,0.15)" />
                 <Text className="text-sm text-white/30">
-                    Media info not available
+                    {t("Media info not available")}
                 </Text>
             </View>
         )
@@ -992,7 +993,7 @@ function ExternalSubtitleSearchContent({
             <View className="items-center gap-2 pt-9">
                 <Globe size={28} color="rgba(255,255,255,0.15)" />
                 <Text className="text-center text-sm leading-5 text-white/30">
-                    Could not resolve media ID.{"\n"}Subtitle search is unavailable.
+                    {t("Could not resolve media ID.\nSubtitle search is unavailable.")}
                 </Text>
             </View>
         )
@@ -1003,11 +1004,11 @@ function ExternalSubtitleSearchContent({
             <View className="gap-2">
                 {showApiKeyInput ? (
                     <View className="gap-2">
-                        <FilterRow label="Wyzie API Key">
+                        <FilterRow label={t("Wyzie API Key")}>
                             <TextInput
                                 value={apiKeyDraft}
                                 onChangeText={setApiKeyDraft}
-                                placeholder="Enter your Wyzie key"
+                                placeholder={t("Enter your Wyzie key")}
                                 placeholderTextColor="rgba(255,255,255,0.2)"
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -1024,7 +1025,7 @@ function ExternalSubtitleSearchContent({
                                     setShowApiKeyInput(false)
                                 }}
                             >
-                                <Text className="text-foreground">Save Key</Text>
+                                <Text className="text-foreground">{t("Save Key")}</Text>
                             </Button>
                         </View>
                     </View>
@@ -1034,13 +1035,13 @@ function ExternalSubtitleSearchContent({
                         variant="secondary"
                         onPress={() => setShowApiKeyInput(true)}
                     >
-                        <Text className="text-foreground">Change Key</Text>
+                        <Text className="text-foreground">{t("Change Key")}</Text>
                     </Button>
                 )}
                 {!wyzieApiKey.trim() && (
                     <View className="rounded-lg border border-amber-500/15 bg-amber-500/10 p-3">
                         <Text className="text-xs leading-5 text-white/70">
-                            Save a Wyzie API key before searching.
+                            {t("Save a Wyzie API key before searching.")}
                         </Text>
                     </View>
                 )}
@@ -1055,7 +1056,7 @@ function ExternalSubtitleSearchContent({
 
 
             <View className="gap-2">
-                <FilterRow label="Source">
+                <FilterRow label={t("Source")}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
                         {WYZIE_SOURCES.map(s => (
                             <FilterChip
@@ -1067,7 +1068,7 @@ function ExternalSubtitleSearchContent({
                         ))}
                     </ScrollView>
                 </FilterRow>
-                <FilterRow label="Language">
+                <FilterRow label={t("Language")}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
                         {SUBTITLE_LANGUAGE_OPTIONS.map(l => (
                             <FilterChip
@@ -1079,7 +1080,7 @@ function ExternalSubtitleSearchContent({
                         ))}
                     </ScrollView>
                 </FilterRow>
-                <FilterRow label="Format">
+                <FilterRow label={t("Format")}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
                         {SUBTITLE_FORMAT_OPTIONS.map(f => (
                             <FilterChip
@@ -1097,7 +1098,7 @@ function ExternalSubtitleSearchContent({
             {isSearching && (
                 <View className="items-center gap-2 py-6">
                     <ActivityIndicator size="small" color="rgba(255,255,255,0.5)" />
-                    <Text className="text-xs text-white/35">Searching...</Text>
+                    <Text className="text-xs text-white/35">{t("Searching...")}</Text>
                 </View>
             )}
 
@@ -1105,11 +1106,11 @@ function ExternalSubtitleSearchContent({
                 <View className="items-center gap-2 py-6">
                     <Search size={22} color="rgba(255,255,255,0.15)" />
                     <Text className="text-xs text-white/30">
-                        No subtitles found
+                        {t("No subtitles found")}
                     </Text>
                     {results.length > 0 && (
                         <Text className="text-center text-xs text-white/20">
-                            {results.length} result{results.length !== 1 ? "s" : ""} before filtering
+                            {tn("{{count}} result before filtering", "{{count}} results before filtering", results.length)}
                         </Text>
                     )}
                 </View>
@@ -1119,7 +1120,7 @@ function ExternalSubtitleSearchContent({
             {!isSearching && wyzieApiKey.trim() && filtered.length > 0 && (
                 <View className="gap-0.5">
                     <Text className="mb-1 px-0.5 text-xs font-semibold uppercase tracking-wider text-white/25">
-                        {filtered.length} result{filtered.length !== 1 ? "s" : ""}
+                        {tn("{{count}} result", "{{count}} results", filtered.length)}
                     </Text>
                     <View className={PANEL_CARD_CLASS}>
                         {filtered.map((sub, idx) => {
@@ -1225,14 +1226,14 @@ function LanguagePrefContent({ label, current, onSave }: {
     return (
         <View className="gap-4">
             <Text className="text-sm leading-5 text-white/50">
-                {"Enter comma-separated language codes in priority order. The first matching track will be auto-selected when a file loads."}
+                {t("Enter comma-separated language codes in priority order. The first matching track will be auto-selected when a file loads.")}
             </Text>
             <View className="gap-1.5">
-                <SectionLabel>{"Preferred " + label + " Languages"}</SectionLabel>
+                <SectionLabel>{t("Preferred {{label}} Languages", { label })}</SectionLabel>
                 <TextInput
                     value={value}
                     onChangeText={setValue}
-                    placeholder="e.g. jpn, jp, ja, japanese"
+                    placeholder={t("e.g. jpn, jp, ja, japanese")}
                     placeholderTextColor="rgba(255,255,255,0.2)"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -1242,13 +1243,13 @@ function LanguagePrefContent({ label, current, onSave }: {
             <Pressable onPress={() => onSave(value)}>
                 {({ pressed }) => (
                     <View className={cn("items-center rounded-xl border border-player-tint/25 bg-player-tint/15 py-3", pressed && "opacity-70")}>
-                        <Text className="text-sm font-semibold text-player-text">Save</Text>
+                        <Text className="text-sm font-semibold text-player-text">{t("Save")}</Text>
                     </View>
                 )}
             </Pressable>
             <View className="rounded-lg border border-white/5 bg-white/[0.02] p-3">
                 <Text className="text-xs leading-4 text-white/30">
-                    {"Examples:\n\u2022 Japanese audio: jpn, jp, ja, japanese\n\u2022 English subs: eng, en, english\n\u2022 Multi: jpn, eng, kor"}
+                    {t("Examples:\n\u2022 Japanese audio: jpn, jp, ja, japanese\n\u2022 English subs: eng, en, english\n\u2022 Multi: jpn, eng, kor")}
                 </Text>
             </View>
         </View>
@@ -1270,14 +1271,14 @@ function SubtitleLanguagePrefContent({
     return (
         <View className="gap-4">
             <Text className="text-sm leading-5 text-white/50">
-                {"Configure subtitle track defaults and filters. The first matching track that does not contain any of the ignored labels will be selected."}
+                {t("Configure subtitle track defaults and filters. The first matching track that does not contain any of the ignored labels will be selected.")}
             </Text>
             <View className="gap-1.5">
-                <SectionLabel>Preferred Subtitle Languages</SectionLabel>
+                <SectionLabel>{t("Preferred Subtitle Languages")}</SectionLabel>
                 <TextInput
                     value={prefVal}
                     onChangeText={setPrefVal}
-                    placeholder="e.g. eng, en, english"
+                    placeholder={t("e.g. eng, en, english")}
                     placeholderTextColor="rgba(255,255,255,0.2)"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -1285,30 +1286,30 @@ function SubtitleLanguagePrefContent({
                 />
             </View>
             <View className="gap-1.5">
-                <SectionLabel>Ignored Labels</SectionLabel>
+                <SectionLabel>{t("Ignored Labels")}</SectionLabel>
                 <TextInput
                     value={ignoredVal}
                     onChangeText={setIgnoredVal}
-                    placeholder="e.g. signs & songs, signs, songs"
+                    placeholder={t("e.g. signs & songs, signs, songs")}
                     placeholderTextColor="rgba(255,255,255,0.2)"
                     autoCapitalize="none"
                     autoCorrect={false}
                     className={PANEL_INPUT_CLASS}
                 />
                 <Text className="text-xs text-white/30 px-0.5">
-                    Avoid tracks containing these labels (comma-separated).
+                    {t("Avoid tracks containing these labels (comma-separated).")}
                 </Text>
             </View>
             <Pressable onPress={() => onSave(prefVal, ignoredVal)}>
                 {({ pressed }) => (
                     <View className={cn("items-center rounded-xl border border-player-tint/25 bg-player-tint/15 py-3", pressed && "opacity-70")}>
-                        <Text className="text-sm font-semibold text-player-text">Save</Text>
+                        <Text className="text-sm font-semibold text-player-text">{t("Save")}</Text>
                     </View>
                 )}
             </Pressable>
             <View className="rounded-lg border border-white/5 bg-white/[0.02] p-3">
                 <Text className="text-xs leading-4 text-white/30">
-                    {"Examples:\n\u2022 Preferred: eng, en, english\n\u2022 Ignored: signs & songs, signs, songs, sign, song"}
+                    {t("Examples:\n\u2022 Preferred: eng, en, english\n\u2022 Ignored: signs & songs, signs, songs, sign, song")}
                 </Text>
             </View>
         </View>
@@ -1335,7 +1336,7 @@ function EpisodesListContent({
     if (episodes.length === 0) {
         return (
             <Text className="py-6 text-center text-sm text-white/40">
-                No episodes available
+                {t("No episodes available")}
             </Text>
         )
     }

@@ -2,6 +2,7 @@ import { useServerMutation, useServerQuery } from "@/api/client/requests"
 import { CreatePlaylist_Variables, DeletePlaylist_Variables, UpdatePlaylist_Variables } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Anime_Playlist, Anime_PlaylistEpisode, Nullish } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -14,7 +15,7 @@ export function useCreatePlaylist() {
         mutationKey: [API_ENDPOINTS.PLAYLIST.CreatePlaylist.key],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.PLAYLIST.GetPlaylists.key] })
-            toast.success("Playlist created")
+            toast.success(t("Playlist created"))
         },
     })
 }
@@ -37,7 +38,7 @@ export function useUpdatePlaylist() {
         mutationKey: [API_ENDPOINTS.PLAYLIST.UpdatePlaylist.key],
         onSuccess: async () => {
             await queryClient.refetchQueries({ queryKey: [API_ENDPOINTS.PLAYLIST.GetPlaylists.key] })
-            toast.success("Playlist updated")
+            toast.success(t("Playlist updated"))
         },
     })
 }
@@ -51,7 +52,7 @@ export function useDeletePlaylist() {
         mutationKey: [API_ENDPOINTS.PLAYLIST.DeletePlaylist.key],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.PLAYLIST.GetPlaylists.key] })
-            toast.success("Playlist deleted")
+            toast.success(t("Playlist deleted"))
         },
     })
 }

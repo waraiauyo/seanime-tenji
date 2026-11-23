@@ -9,6 +9,7 @@ import { Anime_Entry, Manga_Entry } from "@/api/generated/types"
 import { useServerUrl } from "@/atoms/server.atoms"
 import { getConnectionSnapshot, subscribeToConnectionState } from "@/lib/connection-state"
 import { syncManualOfflineConnectionState } from "@/lib/connection-state"
+import { t } from "@/lib/i18n"
 import { manualOfflineModeAtom } from "@/lib/offline/manual-offline-mode"
 import { enqueueMutation, getPendingMutationCount, type PendingMutationConflictGuard } from "@/lib/offline/mutation-queue"
 import {
@@ -192,7 +193,7 @@ export function useSaveAnimeEntryOffline() {
             savedAt: Date.now(),
         })
         notifyChange()
-        toast.success(`"${title}" saved for offline`)
+        toast.success(t("\"{{title}}\" saved for offline", { title }))
     }, [])
 }
 
@@ -216,7 +217,7 @@ export function useSaveMangaEntryOffline() {
             savedAt: Date.now(),
         })
         notifyChange()
-        toast.success(`"${title}" saved for offline`)
+        toast.success(t("\"{{title}}\" saved for offline", { title }))
     }, [])
 }
 
@@ -227,7 +228,7 @@ export function useRemoveOfflineEntry() {
     return useCallback((type: OfflineEntryType, anilistId: number) => {
         removeOfflineEntry(type, anilistId)
         notifyChange()
-        toast.info("Removed from offline")
+        toast.info(t("Removed from offline"))
     }, [])
 }
 
@@ -271,7 +272,7 @@ export function useOfflineProgressUpdate() {
                 conflictGuard,
             )
             notifyChange()
-            toast.info("Progress update queued for sync")
+            toast.info(t("Progress update queued for sync"))
             return true
         },
         [isConnected],
@@ -297,7 +298,7 @@ export function useOfflineMangaProgressUpdate() {
                 conflictGuard,
             )
             notifyChange()
-            toast.info("Manga progress queued for sync")
+            toast.info(t("Manga progress queued for sync"))
             return true
         },
         [isConnected],
@@ -323,7 +324,7 @@ export function useOfflineListEntryEdit() {
                 conflictGuard,
             )
             notifyChange()
-            toast.info("List update queued for sync")
+            toast.info(t("List update queued for sync"))
             return true
         },
         [isConnected],
@@ -349,7 +350,7 @@ export function useOfflineListEntryDelete() {
                 conflictGuard,
             )
             notifyChange()
-            toast.info("List deletion queued for sync")
+            toast.info(t("List deletion queued for sync"))
             return true
         },
         [isConnected],

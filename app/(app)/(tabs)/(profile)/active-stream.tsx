@@ -3,6 +3,7 @@ import { useTorrentstreamStopStream } from "@/api/hooks/torrentstream.hooks"
 import { ProfileSubpageHeader } from "@/components/features/profile/profile-menu"
 import { Surface } from "@/components/shared/surface"
 import { Button } from "@/components/ui/button"
+import { formatDecimal, getIntlLocale, t, tc } from "@/lib/i18n"
 import { useServerConnectionState } from "@/lib/offline"
 import {
     activeStreamSessionAtom,
@@ -74,16 +75,16 @@ export default function ActiveStreamScreen() {
         }
 
         Alert.alert(
-            "Stop active stream?",
-            "This stops the server-side stream session.",
+            t("Stop active stream?"),
+            t("This stops the server-side stream session."),
             [
-                { text: "Cancel", style: "cancel" },
-                { text: "Stop", style: "destructive", onPress: stop },
+                { text: t("Cancel"), style: "cancel" },
+                { text: t("Stop"), style: "destructive", onPress: stop },
             ],
         )
     }, [activeStream, cancelDebridStream, clearLocalStreamState, isConnected, isStopping, stopTorrentStream])
 
-    const statusLabel = activeStream ? getStatusLabel(activeStream.status) : "No stream"
+    const statusLabel = activeStream ? getStatusLabel(activeStream.status) : t("No stream")
     const statusDetail = React.useMemo(() => {
         if (!activeStream) return null
 
@@ -94,8 +95,8 @@ export default function ActiveStreamScreen() {
         if (!torrentStatus) return activeStream.message || null
 
         const parts = [
-            `${torrentStatus.progressPercentage.toFixed(1)}% ready`,
-            `${torrentStatus.seeders} seeders`,
+            t("{{value}}% ready", { value: formatDecimal(torrentStatus.progressPercentage, 1) }),
+            t("{{count}} seeders", { count: torrentStatus.seeders }),
         ]
 
         if (torrentStatus.downloadSpeed) {
@@ -108,8 +109,8 @@ export default function ActiveStreamScreen() {
     return (
         <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
             <ProfileSubpageHeader
-                title="Active Stream"
-                detail="Server-side playback session"
+                title={t("Active Stream")}
+                detail={t("Server-side playback session")}
             />
 
             <ScrollView
@@ -133,16 +134,16 @@ export default function ActiveStreamScreen() {
                             </View>
 
                             <View className="mt-5 gap-3">
-                                <InfoRow label="Status" value={statusDetail || statusLabel} />
+                                <InfoRow label={t("Status")} value={statusDetail || statusLabel} />
                                 {!!activeStream.torrentName && activeStream.torrentName !== "-" ? (
-                                    <InfoRow label="Release" value={activeStream.torrentName} />
+                                    <InfoRow label={tc("torrent", "Release")} value={activeStream.torrentName} />
                                 ) : null}
                             </View>
 
                             {!isConnected ? (
                                 <View className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3">
                                     <Text className="text-sm text-amber-100/80">
-                                        Reconnect to the server to stop this stream.
+                                        {t("Reconnect to the server to stop this stream.")}
                                     </Text>
                                 </View>
                             ) : null}
@@ -157,7 +158,7 @@ export default function ActiveStreamScreen() {
                                 <View className="flex-row items-center justify-center gap-2">
                                     <Ionicons name="stop-circle" size={17} color="white" />
                                     <Text className="text-sm font-semibold text-white">
-                                        {isStopping ? "Stopping..." : "Stop Stream"}
+                                        {isStopping ? t("Stopping...") : t("Stop Stream")}
                                     </Text>
                                 </View>
                             </Button>
@@ -168,7 +169,7 @@ export default function ActiveStreamScreen() {
                                 <Ionicons name="checkmark-circle-outline" size={30} color="rgba(255,255,255,0.45)" />
                             </View>
                             <Text className="mt-4 text-base font-semibold text-white">
-                                No active stream
+                                {t("No active stream")}
                             </Text>
                         </Surface>
                     )}
@@ -194,16 +195,16 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 function getStatusLabel(status: "preparing" | "ready" | "playing"): string {
     switch (status) {
         case "preparing":
-            return "Preparing"
+            return t("Preparing")
         case "ready":
-            return "Ready"
+            return tc("stream", "Ready")
         case "playing":
-            return "Active"
+            return tc("stream", "Active")
     }
 }
 
 function formatStartedAt(value: number): string {
-    return new Date(value).toLocaleTimeString([], {
+    return new Date(value).toLocaleTimeString(getIntlLocale(), {
         hour: "2-digit",
         minute: "2-digit",
     })

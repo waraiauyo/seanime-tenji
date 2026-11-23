@@ -15,6 +15,7 @@ import { useDevScreenProfiler } from "@/hooks/use-dev-screen-profiler"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
 import { useHandleMangaChapters } from "@/hooks/use-manga-chapters"
 import { getAllDownloadedChaptersForMediaAllProviders } from "@/lib/downloads/manga-download-store"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected, useServerConnectionState } from "@/lib/offline"
 import { saveMangaDownloadEntrySnapshot } from "@/lib/offline/download-entry-snapshot-store"
 import { resolveOfflineMangaEntry } from "@/lib/offline/offline-entry-resolver"
@@ -145,12 +146,12 @@ export function MangaEntryScreen({ initialView = "chapters" }: MangaEntryScreenP
         return (
             <SafeView>
                 <LuffyError
-                    title="Unavailable offline"
-                    description="This manga's data isn't cached on your device. Connect to your server then try again."
+                    title={t("Unavailable offline")}
+                    description={t("This manga's data isn't cached on your device. Connect to your server then try again.")}
                 />
                 <View className="items-center mt-4">
                     <TouchableOpacity onPress={() => router.back()} className="px-6 py-3 rounded-full bg-white/10">
-                        <Text className="text-foreground font-medium">Go back</Text>
+                        <Text className="text-foreground font-medium">{t("Go back")}</Text>
                     </TouchableOpacity>
                 </View>
             </SafeView>

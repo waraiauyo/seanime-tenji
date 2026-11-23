@@ -5,6 +5,7 @@ import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
 import { FormSectionLabel } from "@/components/ui/form-field"
 import { Switch } from "@/components/ui/switch"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import Slider from "@react-native-community/slider"
@@ -37,7 +38,7 @@ export function MangaReaderSettingsSheet({
         <SeaBottomSheet
             open={open}
             onOpenChange={onOpenChange}
-            title="Reader Settings"
+            title={t("Reader Settings")}
             snapPoints={["82%"]}
             footer={
                 <View className="flex-row items-center gap-3">
@@ -47,32 +48,32 @@ export function MangaReaderSettingsSheet({
                         onPress={onReset}
                         disabled={!hasCustomSettings}
                     >
-                        <Text className="text-secondary-foreground text-sm font-medium">Reset</Text>
+                        <Text className="text-secondary-foreground text-sm font-medium">{t("Reset")}</Text>
                     </Button>
                     <Button className="flex-1 rounded-xl" onPress={() => onOpenChange(false)}>
-                        <Text className="text-primary-foreground text-sm font-semibold">Done</Text>
+                        <Text className="text-primary-foreground text-sm font-semibold">{t("Done")}</Text>
                     </Button>
                 </View>
             }
         >
             <View className="gap-5 pb-4">
-                <SettingsSection title="Reading Mode">
+                <SettingsSection title={t("Reading Mode")}>
                     <OptionGrid
                         options={[
-                            { value: MANGA_READING_MODE.LONG_STRIP, label: "Long Strip", icon: "swap-vertical" },
-                            { value: MANGA_READING_MODE.PAGED, label: "Single Page", icon: "albums-outline" },
-                            { value: MANGA_READING_MODE.DOUBLE_PAGE, label: "Double Page", icon: "book-outline" },
+                            { value: MANGA_READING_MODE.LONG_STRIP, label: t("Long Strip"), icon: "swap-vertical" },
+                            { value: MANGA_READING_MODE.PAGED, label: t("Single Page"), icon: "albums-outline" },
+                            { value: MANGA_READING_MODE.DOUBLE_PAGE, label: t("Double Page"), icon: "book-outline" },
                         ]}
                         value={settings.readingMode}
                         onChange={(value) => onSettingChange("readingMode", value)}
                     />
                 </SettingsSection>
 
-                <SettingsSection title="Reading Direction">
+                <SettingsSection title={t("Reading Direction")}>
                     <OptionGrid
                         options={[
-                            { value: MANGA_READING_DIRECTION.RTL, label: "Right to Left", icon: "arrow-back" },
-                            { value: MANGA_READING_DIRECTION.LTR, label: "Left to Right", icon: "arrow-forward" },
+                            { value: MANGA_READING_DIRECTION.RTL, label: t("Right to Left"), icon: "arrow-back" },
+                            { value: MANGA_READING_DIRECTION.LTR, label: t("Left to Right"), icon: "arrow-forward" },
                         ]}
                         value={settings.readingDirection}
                         onChange={(value) => onSettingChange("readingDirection", value)}
@@ -80,16 +81,16 @@ export function MangaReaderSettingsSheet({
                     />
                 </SettingsSection>
 
-                <SettingsSection title="Display">
+                <SettingsSection title={t("Display")}>
                     <Surface className="overflow-hidden">
                         <ToggleRow
-                            title="Reading progress bar"
+                            title={t("Reading progress bar")}
                             value={settings.showProgressBar}
                             onValueChange={(value) => onSettingChange("showProgressBar", value)}
                         />
                         <RowDivider />
                         <ToggleRow
-                            title="Page gaps"
+                            title={t("Page gaps")}
                             value={settings.pageGap}
                             onValueChange={(value) => onSettingChange("pageGap", value)}
                         />
@@ -97,18 +98,18 @@ export function MangaReaderSettingsSheet({
                             <>
                                 <RowDivider />
                                 <SliderRow
-                                    title="Gap amount"
-                                    description="Adjust the spacing between reader pages."
+                                    title={t("Gap amount")}
+                                    description={t("Adjust the spacing between reader pages.")}
                                     value={settings.pageGapAmount}
                                     min={0}
                                     max={24}
                                     step={1}
-                                    formatValue={(value) => `${value}px`}
+                                    formatValue={(value) => t("{{value}}px", { value })}
                                     onChange={(value) => onSettingChange("pageGapAmount", value)}
                                 />
                                 <RowDivider />
                                 <ToggleRow
-                                    title="Gap shadow"
+                                    title={t("Gap shadow")}
                                     value={settings.pageGapShadow}
                                     onValueChange={(value) => onSettingChange("pageGapShadow", value)}
                                 />
@@ -118,11 +119,11 @@ export function MangaReaderSettingsSheet({
                 </SettingsSection>
 
                 {settings.readingMode === MANGA_READING_MODE.DOUBLE_PAGE && (
-                    <SettingsSection title="Double Page Offset">
+                    <SettingsSection title={t("Double Page Offset")}>
                         <Surface className="overflow-hidden">
                             <StepperRow
-                                title="Leading solo pages"
-                                description="Adjusts spread pairing when a chapter begins with a cover."
+                                title={t("Leading solo pages")}
+                                description={t("Adjusts spread pairing when a chapter begins with a cover.")}
                                 min={0}
                                 max={6}
                                 step={1}

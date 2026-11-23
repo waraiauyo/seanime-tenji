@@ -3,6 +3,7 @@ import { DownloadMangaChaptersModal } from "@/components/features/manga/download
 import { formatMangaReaderHref, getPreferredStartChapter } from "@/components/features/manga/reader/manga-reader-utils"
 import { Button } from "@/components/ui/button"
 import { useAllDownloadedMangaChapters, useCompletedMangaChapters, useMangaDownloadQueueLength } from "@/lib/downloads/use-manga-downloads"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { Ionicons } from "@expo/vector-icons"
 import { useRouter } from "expo-router"
@@ -59,7 +60,7 @@ export function MangaEntryActionBar({
                         <View className="flex-row items-center gap-2">
                             <Ionicons name="book" size={15} color="black" />
                             <Text className="text-sm font-semibold text-primary-foreground" numberOfLines={1}>
-                                {progress > 0 ? `Ch. ${nextChapter.chapterNumber}` : "Start Reading"}
+                                {progress > 0 ? t("Ch. {{number}}", { number: nextChapter.chapterNumber }) : t("Start Reading")}
                             </Text>
                         </View>
                     </Button>
@@ -80,7 +81,7 @@ export function MangaEntryActionBar({
                                 </Text>
                             ) : !nextChapter ? (
                                 <Text className="text-sm font-medium text-secondary-foreground">
-                                    Download
+                                    {t("Download")}
                                 </Text>
                             ) : null}
                             {queueLength > 0 && (

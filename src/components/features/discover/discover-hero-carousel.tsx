@@ -3,6 +3,7 @@ import { useServerStatus } from "@/atoms/server.atoms"
 import { MediaEntryAudienceScore } from "@/components/features/media/media-entry-score"
 import { SeaImage } from "@/components/shared/sea-image"
 import { COLORS } from "@/constants/colors"
+import { t } from "@/lib/i18n"
 import { LinearGradient } from "expo-linear-gradient"
 import { router } from "expo-router"
 import React from "react"
@@ -457,7 +458,7 @@ export function DiscoverHeroCarouselInteractionLayer({ media, type, controller }
                                     letterSpacing: 0.5,
                                 }}
                             >
-                                {genre}
+                                {t(genre)}
                             </Text>
                         </React.Fragment>
                     ))}

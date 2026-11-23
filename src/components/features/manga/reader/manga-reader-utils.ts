@@ -3,6 +3,7 @@ import { getServerBaseUrl } from "@/api/client/server-url"
 import type { HibikeManga_ChapterDetails, Manga_PageContainer } from "@/api/generated/types"
 import { MANGA_READING_MODE, type MangaReaderSettings } from "@/components/features/manga/reader/manga-reader-state"
 import type { DownloadedMangaChapter } from "@/lib/downloads"
+import { t } from "@/lib/i18n"
 import type { Href } from "expo-router"
 
 type PageContainerPage = NonNullable<Manga_PageContainer["pages"]>[number]
@@ -59,9 +60,9 @@ export function getChapterProgressNumber(chapter: string | undefined): number {
 }
 
 export function formatPageLabel(pageIndexes: number[], totalPages: number): string {
-    if (pageIndexes.length === 0) return `Page 0 / ${totalPages}`
-    if (pageIndexes.length === 1) return `Page ${pageIndexes[0] + 1} / ${totalPages}`
-    return `Pages ${pageIndexes[0] + 1}-${pageIndexes[pageIndexes.length - 1] + 1} / ${totalPages}`
+    if (pageIndexes.length === 0) return t("Page {{page}} / {{total}}", { page: 0, total: totalPages })
+    if (pageIndexes.length === 1) return t("Page {{page}} / {{total}}", { page: pageIndexes[0] + 1, total: totalPages })
+    return t("Pages {{first}}-{{last}} / {{total}}", { first: pageIndexes[0] + 1, last: pageIndexes[pageIndexes.length - 1] + 1, total: totalPages })
 }
 
 export function getMangaPageUrl(

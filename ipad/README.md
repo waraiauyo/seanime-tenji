@@ -21,6 +21,9 @@ built and installed straight from Xcode with a paid Apple developer account.
   multi-audio preferences for auto-selected torrents. The first save copies the preferred
   streaming resolution into the profile, because the server ignores that setting once a profile
   exists.
+- The app is translated to French. The language follows the device and can be changed in
+  Profile → Language. How it works and how to add text or a language:
+  `src/lib/i18n/README.md`.
 - `package-lock.json` pins the dependency versions Tenji v0.4.0 was released with.
 
 ## Build and install

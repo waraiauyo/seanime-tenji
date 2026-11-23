@@ -12,6 +12,7 @@ import {
     useMangaDownloadDiskUsage,
 } from "@/lib/downloads"
 import { type DownloadedMangaInfo } from "@/lib/downloads/manga-download-store"
+import { t, tn } from "@/lib/i18n"
 import { Ionicons } from "@expo/vector-icons"
 import { Image } from "expo-image"
 import { Redirect, router } from "expo-router"
@@ -46,12 +47,12 @@ function MobileMangaDownloadsScreen() {
     const handleClearAll = () => {
         if (downloadedManga.length === 0) return
         Alert.alert(
-            "Clear all manga downloads",
-            `This will delete all downloaded manga chapters (${diskUsage.formatted}) from your device. This cannot be undone.`,
+            t("Clear all manga downloads"),
+            t("This will delete all downloaded manga chapters ({{size}}) from your device. This cannot be undone.", { size: diskUsage.formatted }),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Delete All",
+                    text: t("Delete All"),
                     style: "destructive",
                     onPress: () => clearAll(),
                 },
@@ -66,7 +67,7 @@ function MobileMangaDownloadsScreen() {
                 <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
                     <Ionicons name="chevron-back" size={24} color="white" />
                 </TouchableOpacity>
-                <Text className="text-xl font-bold text-foreground">Manga Downloads</Text>
+                <Text className="text-xl font-bold text-foreground">{t("Manga Downloads")}</Text>
             </View>
 
             <ScrollView
@@ -75,22 +76,22 @@ function MobileMangaDownloadsScreen() {
             >
 
                 <Surface variant="muted" className="p-4 gap-3">
-                    <FormSectionLabel>Storage</FormSectionLabel>
+                    <FormSectionLabel>{t("Storage")}</FormSectionLabel>
 
                     <View className="flex-row justify-between items-center">
-                        <Text className="text-white/70 text-sm">Disk usage</Text>
+                        <Text className="text-white/70 text-sm">{t("Disk usage")}</Text>
                         <Text className="text-foreground text-sm font-medium">{diskUsage.formatted}</Text>
                     </View>
 
                     <View className="flex-row justify-between items-center">
-                        <Text className="text-white/70 text-sm">Downloaded chapters</Text>
+                        <Text className="text-white/70 text-sm">{t("Downloaded chapters")}</Text>
                         <Text className="text-foreground text-sm font-medium">
                             {downloadedManga.reduce((sum, m) => sum + m.downloadedCount, 0)}
                         </Text>
                     </View>
 
                     <View className="flex-row justify-between items-center">
-                        <Text className="text-white/70 text-sm">Downloaded manga</Text>
+                        <Text className="text-white/70 text-sm">{t("Downloaded manga")}</Text>
                         <Text className="text-foreground text-sm font-medium">{downloadedManga.length}</Text>
                     </View>
                 </Surface>
@@ -105,9 +106,9 @@ function MobileMangaDownloadsScreen() {
                         onPress={() => router.push("/(app)/(media)/manga-download-queue" as never)}
                     >
                         <View className="flex-1 pr-3">
-                            <FormSectionLabel>Queue</FormSectionLabel>
+                            <FormSectionLabel>{t("Queue")}</FormSectionLabel>
                             <Text className="text-sm text-white/70">
-                                {formatQueueSummary(activeDownloads.length, failedDownloads.length, "chapter")}
+                                {formatQueueSummary(activeDownloads.length, failedDownloads.length)}
                             </Text>
                         </View>
                         <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.3)" />
@@ -118,7 +119,7 @@ function MobileMangaDownloadsScreen() {
                 {downloadedManga.length > 0 && (
                     <Surface variant="muted" className="overflow-hidden">
                         <View className="px-4 pt-4 pb-2">
-                            <FormSectionLabel>Downloaded Manga</FormSectionLabel>
+                            <FormSectionLabel>{t("Downloaded Manga")}</FormSectionLabel>
                         </View>
 
                         {downloadedMangaPagination.hasMultiplePages && (
@@ -145,22 +146,22 @@ function MobileMangaDownloadsScreen() {
                 {downloadedManga.length === 0 && activeDownloads.length === 0 && (
                     <View className="py-16 items-center gap-3">
                         <Ionicons name="book-outline" size={40} color="rgba(255,255,255,0.2)" />
-                        <Text className="text-white/40 text-sm">No manga downloads yet</Text>
+                        <Text className="text-white/40 text-sm">{t("No manga downloads yet")}</Text>
                     </View>
                 )}
 
 
                 {downloadedManga.length > 0 && (
                     <Surface variant="danger" className="p-4 gap-3">
-                        <FormSectionLabel>Danger Zone</FormSectionLabel>
+                        <FormSectionLabel>{t("Danger Zone")}</FormSectionLabel>
                         <TouchableOpacity
                             className="flex-row items-center justify-between py-2"
                             onPress={handleClearAll}
                         >
                             <View className="flex-1">
-                                <Text className="text-white text-sm font-medium">Clear all manga downloads</Text>
+                                <Text className="text-white text-sm font-medium">{t("Clear all manga downloads")}</Text>
                                 <Text className="text-white/40 text-xs mt-0.5">
-                                    Remove all downloaded chapters and free up {diskUsage.formatted}
+                                    {t("Remove all downloaded chapters and free up {{size}}", { size: diskUsage.formatted })}
                                 </Text>
                             </View>
                             <Ionicons name="trash-outline" size={18} color="rgba(239,68,68,0.7)" />
@@ -202,7 +203,7 @@ function MangaDownloadRow({ manga }: { manga: DownloadedMangaInfo }) {
                     {manga.title}
                 </Text>
                 <Text className="text-white/40 text-xs mt-0.5">
-                    {manga.downloadedCount} chapter{manga.downloadedCount !== 1 ? "s" : ""}
+                    {tn("{{count}} chapter", "{{count}} chapters", manga.downloadedCount)}
                 </Text>
             </View>
             <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.25)" />
@@ -210,13 +211,13 @@ function MangaDownloadRow({ manga }: { manga: DownloadedMangaInfo }) {
     )
 }
 
-function formatQueueSummary(activeCount: number, failedCount: number, itemLabel: string): string {
+function formatQueueSummary(activeCount: number, failedCount: number): string {
     const parts: string[] = []
     if (activeCount > 0) {
-        parts.push(`${activeCount} ${itemLabel}${activeCount === 1 ? "" : "s"} in queue`)
+        parts.push(tn("{{count}} chapter in queue", "{{count}} chapters in queue", activeCount))
     }
     if (failedCount > 0) {
-        parts.push(`${failedCount} failed`)
+        parts.push(t("{{count}} failed", { count: failedCount }))
     }
-    return parts.join(" · ") || `No active ${itemLabel}s or failures`
+    return parts.join(" · ") || t("No active chapters or failures")
 }

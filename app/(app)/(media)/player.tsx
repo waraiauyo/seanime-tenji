@@ -39,6 +39,7 @@ import type { PlayerPanel } from "@/components/features/player/types"
 import { createGestureRefs, syncGestureRef } from "@/components/features/player/types"
 import { TVPlayerControls, TVPlayerDialog, TVPlayerPanel } from "@/components/tv"
 import { isLocalServer } from "@/lib/downloads"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import {
     currentPlaybackSourceAtom,
@@ -881,7 +882,7 @@ function PlayerScreenInner() {
     }, [nextEpisodeNumber, nextLocalPlaybackSource, source])
 
     const nextEpisodeLabel = nextEpisode?.displayTitle
-        ?? (nextEpisodeNumber ? `Episode ${nextEpisodeNumber}` : "the next episode")
+        ?? (nextEpisodeNumber ? t("Episode {{number}}", { number: nextEpisodeNumber }) : t("the next episode"))
 
     const canAutoAdvance = canPlayNext
         && source?.nextEpisodeAction !== "torrentstream-manual"
@@ -908,7 +909,7 @@ function PlayerScreenInner() {
             })
             if (!newSource) {
                 if (!isServerConnected) {
-                    toast.info("Episode isn't downloaded on this device")
+                    toast.info(t("Episode isn't downloaded on this device"))
                 }
                 return
             }
@@ -1010,17 +1011,17 @@ function PlayerScreenInner() {
 
         if (source.nextEpisodeAction === "torrentstream-manual" || source.nextEpisodeAction === "debridstream-manual") {
             setNextEpisodePrompt({
-                title: "Choose next episode source?",
-                description: `Continuing to ${nextEpisodeLabel} will return you to the source picker.`,
-                confirmLabel: "Continue",
+                title: t("Choose next episode source?"),
+                description: t("Continuing to {{episode}} will return you to the source picker.", { episode: nextEpisodeLabel }),
+                confirmLabel: t("Continue"),
             })
             return
         }
         if (shouldConfirmEarlySkip) {
             setNextEpisodePrompt({
-                title: "Play next episode?",
-                description: `${formatTime(remainingTime)} is still left in this episode. Start ${nextEpisodeLabel} now?`,
-                confirmLabel: "Play next",
+                title: t("Play next episode?"),
+                description: t("{{time}} is still left in this episode. Start {{episode}} now?", { time: formatTime(remainingTime), episode: nextEpisodeLabel }),
+                confirmLabel: t("Play next"),
             })
             return
         }
@@ -1149,14 +1150,14 @@ function PlayerScreenInner() {
         return (
             <View className="flex-1 bg-black items-center justify-center px-6">
                 <StatusBar hidden />
-                <Text className="text-red-400 text-lg font-semibold mb-2">Playback Error</Text>
+                <Text className="text-red-400 text-lg font-semibold mb-2">{t("Playback Error")}</Text>
                 <Text className="text-white/70 text-center mb-6">{error}</Text>
                 <RNPressable
                     onPress={handleBack}
                     hasTVPreferredFocus={Platform.isTV}
                     className="rounded-xl border-2 border-transparent bg-white/10 px-6 py-3 focus:border-brand-100"
                 >
-                    <Text className="text-white font-medium">Go Back</Text>
+                    <Text className="text-white font-medium">{t("Go Back")}</Text>
                 </RNPressable>
             </View>
         )
@@ -1254,11 +1255,11 @@ function PlayerScreenInner() {
                             seekSec={prefs.buttonSeekSec}
                             canPlayNext={canPlayNext}
                             canShowEpisodes={(source?.episodes?.length ?? 0) > 1}
-                            skipLabel={showSkipIntro ? "Skip intro" : showSkipOutro ? "Skip outro" : undefined}
+                            skipLabel={showSkipIntro ? t("Skip intro") : showSkipOutro ? t("Skip outro") : undefined}
                             onSkip={(showSkipIntro || showSkipOutro) ? () => {
                                 const target = showSkipIntro ? skipData.op!.interval.endTime : skipData.ed!.interval.endTime
                                 playerSeekTo(target)
-                                toast.info(showSkipIntro ? "Skipped opening intro" : "Skipped ending outro")
+                                toast.info(showSkipIntro ? t("Skipped opening intro") : t("Skipped ending outro"))
                             } : undefined}
                             onTogglePlayPause={player.togglePlayPause}
                             onSeekRelative={player.seekRelative}
@@ -1329,10 +1330,10 @@ function PlayerScreenInner() {
                     Platform.isTV ? (
                         <TVPlayerDialog
                             open
-                            eyebrow="Up next"
+                            eyebrow={t("Up next")}
                             title={nextEpisodeLabel}
-                            text={`Playing automatically in ${autoNext.autoNextCountdown}s`}
-                            confirmLabel="Play now"
+                            text={t("Playing automatically in {{countdown}}s", { countdown: autoNext.autoNextCountdown })}
+                            confirmLabel={t("Play now")}
                             onCancel={autoNext.cancelAutoNext}
                             onConfirm={autoNext.triggerAutoNext}
                         />
@@ -1354,7 +1355,7 @@ function PlayerScreenInner() {
                     Platform.isTV ? (
                         <TVPlayerDialog
                             open
-                            eyebrow="Next episode"
+                            eyebrow={t("Next episode")}
                             title={nextEpisodePrompt.title}
                             text={nextEpisodePrompt.description}
                             confirmLabel={nextEpisodePrompt.confirmLabel}
@@ -1388,7 +1389,7 @@ function PlayerScreenInner() {
                             onPress={() => {
                                 const targetTime = showSkipIntro ? skipData.op!.interval.endTime : skipData.ed!.interval.endTime
                                 playerSeekTo(targetTime)
-                                toast.info(showSkipIntro ? "Skipped opening intro" : "Skipped ending outro")
+                                toast.info(showSkipIntro ? t("Skipped opening intro") : t("Skipped ending outro"))
                             }}
                         >
                             {({ pressed }) => (
@@ -1399,7 +1400,7 @@ function PlayerScreenInner() {
                                     )}
                                 >
                                     <Text className="text-xs font-medium text-white/90">
-                                        {showSkipIntro ? "Skip Intro" : "Skip Outro"}
+                                        {showSkipIntro ? t("Skip Intro") : t("Skip Outro")}
                                     </Text>
                                     <SkipForward size={11} color="rgba(255,255,255,0.9)" />
                                 </View>
@@ -1517,10 +1518,10 @@ function PlayerScreenInner() {
                 {Platform.isTV && (
                     <TVPlayerDialog
                         open={showExitPrompt}
-                        eyebrow="Stop playback"
-                        title="Leave the player?"
-                        text={`Stop playing “${source?.media?.title?.userPreferred ?? source?.media?.title?.english ?? "this episode"}”?`}
-                        confirmLabel="Stop"
+                        eyebrow={t("Stop playback")}
+                        title={t("Leave the player?")}
+                        text={t("Stop playing “{{title}}”?", { title: source?.media?.title?.userPreferred ?? source?.media?.title?.english ?? t("this episode") })}
+                        confirmLabel={t("Stop")}
                         danger
                         onCancel={() => {
                             setShowExitPrompt(false)

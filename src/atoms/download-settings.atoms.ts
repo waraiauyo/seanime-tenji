@@ -1,4 +1,5 @@
 import { createAtomStorage, getStoredJsonValue } from "@/atoms/storage"
+import { t } from "@/lib/i18n"
 import NetInfo from "@react-native-community/netinfo"
 import { atomWithStorage } from "jotai/utils"
 
@@ -38,8 +39,8 @@ export async function getDownloadNetworkBlockReason(): Promise<string | null> {
     if (!getDownloadSettings().wifiOnly) return null
 
     const state = await NetInfo.fetch()
-    if (!state.isConnected) return "No network connection"
+    if (!state.isConnected) return t("No network connection")
     if (state.type === "wifi" || state.type === "ethernet") return null
 
-    return "Only download on Wi-Fi is enabled"
+    return t("Only download on Wi-Fi is enabled")
 }

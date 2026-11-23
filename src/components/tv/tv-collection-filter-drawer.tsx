@@ -4,6 +4,7 @@ import { TVFilterChoiceRow } from "@/components/tv/tv-filter-choice-row"
 import { TVButton } from "@/components/tv/tv-focus"
 import { tvSize } from "@/components/tv/tv-scale"
 import { TVTagFilter } from "@/components/tv/tv-tag-filter"
+import { t } from "@/lib/i18n"
 import mediaTags from "@/lib/search/media-tags.json"
 import {
     SEARCH_FORMATS_ANIME,
@@ -67,8 +68,8 @@ export function TVCollectionFilterDrawer({
         <TVDrawer
             open={open}
             onOpenChange={onOpenChange}
-            title="List filters"
-            subtitle={active ? `${active} active` : "AniList collection"}
+            title={t("List filters")}
+            subtitle={active ? t("{{count}} active", { count: active }) : t("AniList collection")}
             width={tvSize(900)}
         >
             <ScrollView
@@ -81,7 +82,7 @@ export function TVCollectionFilterDrawer({
                 }}
             >
                 <TVFilterChoiceRow
-                    label="Sort by"
+                    label={t("Sort by")}
                     values={COLLECTION_SORTING_OPTIONS}
                     selected={value => draft.sorting === value}
                     onPress={value => setDraft(current => ({
@@ -90,7 +91,7 @@ export function TVCollectionFilterDrawer({
                     }))}
                 />
                 <TVFilterChoiceRow
-                    label="Format"
+                    label={t("Format")}
                     values={SEARCH_FORMATS_ANIME}
                     allowAll
                     selected={value => (draft.format ?? "") === value}
@@ -100,7 +101,7 @@ export function TVCollectionFilterDrawer({
                     }))}
                 />
                 <TVFilterChoiceRow
-                    label="Season"
+                    label={t("Season")}
                     values={SEARCH_SEASONS}
                     allowAll
                     selected={value => (draft.season ?? "") === value}
@@ -110,7 +111,7 @@ export function TVCollectionFilterDrawer({
                     }))}
                 />
                 <TVFilterChoiceRow
-                    label="Year"
+                    label={t("Year")}
                     values={SEARCH_YEARS.map(value => ({ value, label: value }))}
                     allowAll
                     selected={value => (draft.year ?? "") === value}
@@ -120,7 +121,7 @@ export function TVCollectionFilterDrawer({
                     }))}
                 />
                 <TVFilterChoiceRow
-                    label="Status"
+                    label={t("Status")}
                     values={SEARCH_STATUS}
                     allowAll
                     selected={value => (draft.status ?? "") === value}
@@ -130,8 +131,8 @@ export function TVCollectionFilterDrawer({
                     }))}
                 />
                 <TVFilterChoiceRow
-                    label="Genres"
-                    values={SEARCH_MEDIA_GENRES.map(value => ({ value, label: value }))}
+                    label={t("Genres")}
+                    values={SEARCH_MEDIA_GENRES.map(value => ({ value, label: t(value) }))}
                     selected={value => draft.genre?.includes(value) ?? false}
                     onPress={value => toggle("genre", value)}
                 />
@@ -152,13 +153,13 @@ export function TVCollectionFilterDrawer({
                     style={{ flexDirection: "row", gap: tvSize(12) }}
                 >
                     <TVButton
-                        label="Reset"
+                        label={t("Reset")}
                         variant="secondary"
                         icon={<Ionicons name="refresh-outline" size={tvSize(20)} color="white" />}
                         onPress={() => setDraft({ ...DEFAULT_COLLECTION_PARAMS })}
                     />
                     <TVButton
-                        label={active ? `Apply (${active})` : "Apply"}
+                        label={active ? t("Apply ({{count}})", { count: active }) : t("Apply")}
                         variant="primary"
                         icon={<Ionicons name="checkmark" size={tvSize(20)} color="white" />}
                         onPress={() => {

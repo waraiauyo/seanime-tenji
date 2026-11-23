@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/co
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { IMAGES } from "@/constants/images"
+import { t, tc } from "@/lib/i18n"
 import { logger } from "@/lib/utils/logger"
 import { toast } from "@/lib/utils/toast"
 import { useQueryClient } from "@tanstack/react-query"
@@ -45,12 +46,12 @@ export default function Screen() {
     const handleOnContinue = React.useCallback(() => {
         let sanitizedUrl = inputValue.trim()
         if (!sanitizedUrl) {
-            showErrorToast("Please enter a valid server URL")
+            showErrorToast(t("Please enter a valid server URL"))
             return
         }
 
         if (!sanitizedUrl.startsWith("http://") && !sanitizedUrl.startsWith("https://")) {
-            showErrorToast("URL must start with http:// or https://")
+            showErrorToast(t("URL must start with http:// or https://"))
             return
         }
         void (async () => {
@@ -80,7 +81,7 @@ export default function Screen() {
                 await setServerAuthToken(hashedPassword)
                 await setServerUrl(sanitizedUrl)
 
-                toast.success(`Server connection saved\n${sanitizedUrl}`, {
+                toast.success(t("Server connection saved\n{{url}}", { url: sanitizedUrl }), {
                     position: "bottom",
                     visibilityTime: 1000,
                 })
@@ -92,18 +93,18 @@ export default function Screen() {
                     ? error.message
                     : (typeof error === "object" && error !== null && "error" in error && typeof error.error === "string"
                         ? error.error
-                        : "Unable to connect to the server")
+                        : t("Unable to connect to the server"))
 
                 if (message === "UNAUTHENTICATED") {
                     if (trimmedPassword) {
-                        showErrorToast("Server password is incorrect")
+                        showErrorToast(t("Server password is incorrect"))
                     } else if (Platform.isTV) {
                         setPasswordRequired(true)
                     } else {
-                        showErrorToast("This server requires a password")
+                        showErrorToast(t("This server requires a password"))
                     }
                 } else if (message.includes("Network request failed") || message.includes("Failed to fetch")) {
-                    showErrorToast("Could not reach the server")
+                    showErrorToast(t("Could not reach the server"))
                 } else {
                     showErrorToast(message)
                 }
@@ -154,13 +155,13 @@ export default function Screen() {
                     <CardHeader className="items-center">
                         {/*<CardTitle className="pb-2 text-center">Configuration</CardTitle>*/}
                         <CardDescription>
-                            <Text>Enter your Seanime server URL and password.</Text>
+                            <Text>{t("Enter your Seanime server URL and password.")}</Text>
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <View className="gap-4">
                             <View className="gap-2">
-                                <Label htmlFor="server-url-input" nativeID="server-url-label">Server URL</Label>
+                                <Label htmlFor="server-url-input" nativeID="server-url-label">{t("Server URL")}</Label>
                                 <Input
                                     nativeID="server-url-input"
                                     className="w-full"
@@ -174,11 +175,11 @@ export default function Screen() {
                             </View>
 
                             <View className="gap-2">
-                                <Label htmlFor="server-password-input" nativeID="server-password-label">Server Password</Label>
+                                <Label htmlFor="server-password-input" nativeID="server-password-label">{t("Server Password")}</Label>
                                 <Input
                                     nativeID="server-password-input"
                                     className="w-full"
-                                    placeholder="Optional"
+                                    placeholder={tc("password", "Optional")}
                                     value={passwordValue}
                                     onChangeText={setPasswordValue}
                                     autoCapitalize="none"
@@ -187,7 +188,7 @@ export default function Screen() {
                                     textContentType="password"
                                 />
                                 <Text className="text-xs text-white/45">
-                                    Leave this blank if the server does not require a password.
+                                    {t("Leave this blank if the server does not require a password.")}
                                 </Text>
                             </View>
                         </View>
@@ -199,7 +200,7 @@ export default function Screen() {
                             onPress={handleOnContinue}
                             disabled={isSubmitting}
                         >
-                            <Text>{isSubmitting ? "Connecting..." : "Continue"}</Text>
+                            <Text>{isSubmitting ? t("Connecting...") : t("Continue")}</Text>
                         </Button>
                     </CardFooter>
                 </Card>

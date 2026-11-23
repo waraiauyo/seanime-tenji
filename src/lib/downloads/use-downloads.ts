@@ -36,6 +36,7 @@ import {
     isEpisodeDownloaded,
     subscribeToDownloadChanges,
 } from "@/lib/downloads/download-store"
+import { t, tn } from "@/lib/i18n"
 import { toast } from "@/lib/utils/toast"
 import { useCallback, useMemo, useSyncExternalStore } from "react"
 
@@ -230,11 +231,11 @@ export function useStartEpisodeDownload(entry: Anime_Entry | undefined) {
         (episode: Anime_Episode) => {
             void (async () => {
                 if (!serverUrl || !entry) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
                 if (!episode.localFile?.path) {
-                    toast.error("No local file available for this episode")
+                    toast.error(t("No local file available for this episode"))
                     return
                 }
 
@@ -244,7 +245,7 @@ export function useStartEpisodeDownload(entry: Anime_Entry | undefined) {
                     return
                 }
 
-                toast.info(`Downloading ${episode.displayTitle}...`)
+                toast.info(t("Downloading {{title}}...", { title: episode.displayTitle }))
                 startEpisodeDownload(serverUrl, entry, episode).catch(() => {
                     // errors are handled inside startEpisodeDownload
                 })
@@ -264,12 +265,12 @@ export function useStartAnimeBatchDownload(entry: Anime_Entry | undefined) {
         (episodes: Anime_Episode[]) => {
             void (async () => {
                 if (!serverUrl || !entry) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
                 const downloadable = episodes.filter(ep => ep.localFile?.path)
                 if (downloadable.length === 0) {
-                    toast.error("No episodes available for download")
+                    toast.error(t("No episodes available for download"))
                     return
                 }
 
@@ -279,7 +280,7 @@ export function useStartAnimeBatchDownload(entry: Anime_Entry | undefined) {
                     return
                 }
 
-                toast.info(`Downloading ${downloadable.length} episode${downloadable.length > 1 ? "s" : ""}...`)
+                toast.info(tn("Downloading {{count}} episode...", "Downloading {{count}} episodes...", downloadable.length))
                 startBatchDownload(serverUrl, entry, downloadable).catch(() => {
                     // errors are handled inside startBatchDownload
                 })
@@ -297,7 +298,7 @@ export function useCancelAnimeDownload() {
         (mediaId: number, episode: Anime_Episode) => {
             const episodeId = getDownloadEpisodeId(episode.aniDBEpisode, episode.type, episode.episodeNumber, episode.localFile?.path)
             cancelAnimeDownload(mediaId, episodeId)
-            toast.info("Download cancelled")
+            toast.info(t("Download cancelled"))
         },
         [],
     )
@@ -310,7 +311,7 @@ export function useDeleteAnimeDownload() {
     return useCallback(
         (mediaId: number, episodeId: string) => {
             deleteAnimeDownloadedFile(mediaId, episodeId)
-            toast.info("Download removed")
+            toast.info(t("Download removed"))
         },
         [],
     )
@@ -327,7 +328,7 @@ export function useDeleteAnimeQueueItems() {
                 }
             })
 
-            toast.info(`Removed ${episodes.length} queued download${episodes.length > 1 ? "s" : ""}`)
+            toast.info(tn("Removed {{count}} queued download", "Removed {{count}} queued downloads", episodes.length))
         },
         [],
     )
@@ -341,7 +342,7 @@ export function useDeleteAllAnimeDownloadsForMedia() {
         (mediaId: number) => {
             void (async () => {
                 await deleteAllAnimeDownloadsForMedia(mediaId)
-                toast.info("All downloads removed")
+                toast.info(t("All downloads removed"))
             })()
         },
         [],
@@ -355,7 +356,7 @@ export function useClearAllAnimeDownloads() {
     return useCallback(() => {
         void (async () => {
             await clearAllAnimeDownloads()
-            toast.info("All downloads cleared")
+            toast.info(t("All downloads cleared"))
         })()
     }, [])
 }
@@ -367,7 +368,7 @@ export function useRetryAnimeDownload() {
         (episode: DownloadedEpisode) => {
             void (async () => {
                 if (!serverUrl) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -377,7 +378,7 @@ export function useRetryAnimeDownload() {
                     return
                 }
 
-                toast.info(`Retrying ${episode.displayTitle}...`)
+                toast.info(t("Retrying {{title}}...", { title: episode.displayTitle }))
                 retryAnimeDownload(serverUrl, episode).catch(() => {
                 })
             })()
@@ -394,7 +395,7 @@ export function useRetryAllFailedAnimeDownloads() {
             void (async () => {
                 if (episodes.length === 0) return
                 if (!serverUrl) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -404,7 +405,7 @@ export function useRetryAllFailedAnimeDownloads() {
                     return
                 }
 
-                toast.info(`Retrying ${episodes.length} failed download${episodes.length > 1 ? "s" : ""}...`)
+                toast.info(tn("Retrying {{count}} failed download...", "Retrying {{count}} failed downloads...", episodes.length))
                 retryFailedAnimeDownloads(serverUrl, episodes).catch(() => {
                 })
             })()
@@ -420,7 +421,7 @@ export function useResumeAnimeDownload() {
         (episode: DownloadedEpisode) => {
             void (async () => {
                 if (!serverUrl) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -430,7 +431,7 @@ export function useResumeAnimeDownload() {
                     return
                 }
 
-                toast.info(`Resuming ${episode.displayTitle}...`)
+                toast.info(t("Resuming {{title}}...", { title: episode.displayTitle }))
                 resumeAnimeDownload(serverUrl, episode).catch(() => {
                 })
             })()
@@ -447,7 +448,7 @@ export function useResumeAllAnimeDownloads() {
             void (async () => {
                 if (episodes.length === 0) return
                 if (!serverUrl) {
-                    toast.error("Server not connected")
+                    toast.error(t("Server not connected"))
                     return
                 }
 
@@ -457,7 +458,7 @@ export function useResumeAllAnimeDownloads() {
                     return
                 }
 
-                toast.info(`Resuming ${episodes.length} queued download${episodes.length > 1 ? "s" : ""}...`)
+                toast.info(tn("Resuming {{count}} queued download...", "Resuming {{count}} queued downloads...", episodes.length))
                 resumeStalledAnimeDownloads(serverUrl, episodes).catch(() => {
                 })
             })()

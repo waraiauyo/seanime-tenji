@@ -10,6 +10,7 @@ import {
 } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { AL_BaseAnime, Anime_Entry, Anime_LocalFile, Anime_MissingEpisodes, Anime_UpcomingEpisodes, Nullish } from "@/api/generated/types"
+import { t } from "@/lib/i18n"
 import {
     createListDataConflictGuard,
     getServerLocalAnimeRecord,
@@ -82,7 +83,7 @@ export function useAnimeEntryManualMatch() {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key] })
             queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.LIBRARY_EXPLORER.GetLibraryExplorerFileTree.key] })
-            toast.success("Files matched")
+            toast.success(t("Files matched"))
         },
     })
 }
@@ -137,7 +138,7 @@ export function useUpdateAnimeEntryProgress(id: Nullish<string | number>, episod
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key, String(id)] })
             }
             if (showToast) {
-                toast.success("Progress updated successfully")
+                toast.success(t("Progress updated successfully"))
             }
         },
     })

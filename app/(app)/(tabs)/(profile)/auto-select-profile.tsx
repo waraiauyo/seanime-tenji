@@ -13,6 +13,7 @@ import {
     hasSavedAutoSelectProfile,
     normalizeAutoSelectPreference,
 } from "@/lib/auto-select-profile"
+import { t, tc } from "@/lib/i18n"
 import { Ionicons } from "@expo/vector-icons"
 import { Redirect } from "expo-router"
 import * as React from "react"
@@ -32,18 +33,21 @@ const PREFERENCE_ROWS: PreferenceRowConfig[] = [
     {
         key: "multipleSubsPreference",
         icon: "chatbubble-ellipses-outline",
-        label: "Multiple Subtitles",
-        detail: "Releases named with several subtitle languages, like Multi-Subs",
-        noun: "multi-sub",
+        label: t("Multiple Subtitles"),
+        detail: t("Releases named with several subtitle languages, like Multi-Subs"),
+        noun: t("multi-sub"),
     },
     {
         key: "multipleAudioPreference",
         icon: "mic-outline",
-        label: "Multiple Audio",
-        detail: "Releases named with several audio tracks, like Dual Audio",
-        noun: "multi-audio",
+        label: t("Multiple Audio"),
+        detail: t("Releases named with several audio tracks, like Dual Audio"),
+        noun: t("multi-audio"),
     },
 ]
+
+// The labels live in a module that is also loaded by the Node tests, so they are translated here.
+const PREFERENCE_OPTIONS = AUTO_SELECT_PREFERENCE_OPTIONS.map(option => ({ ...option, label: tc("preference", option.label) }))
 
 export default function AutoSelectProfileScreen() {
     if (Platform.isTV) {
@@ -79,8 +83,8 @@ function MobileAutoSelectProfileScreen() {
     return (
         <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
             <ProfileSubpageHeader
-                title="Auto-Select Profile"
-                detail="How the server picks a torrent for you."
+                title={t("Auto-Select Profile")}
+                detail={t("How the server picks a torrent for you.")}
             />
 
             {isLoading ? (
@@ -95,11 +99,11 @@ function MobileAutoSelectProfileScreen() {
                 >
                     {!profile ? (
                         <View className="mx-4 mt-4 gap-4">
-                            <ProfileMenuSection title="Profile">
+                            <ProfileMenuSection title={t("Profile")}>
                                 <ProfileMenuItem
                                     icon="refresh"
-                                    label="Couldn't load the profile"
-                                    detail="Check the server connection, then try again"
+                                    label={t("Couldn't load the profile")}
+                                    detail={t("Check the server connection, then try again")}
                                     accessory={isRefetching
                                         ? <ActivityIndicator size="small" color="rgba(255,255,255,0.45)" />
                                         : undefined}
@@ -112,7 +116,7 @@ function MobileAutoSelectProfileScreen() {
                         <View className="mx-4 mt-4 gap-4">
                             {/* One save at a time: the server replaces the whole profile on each save. */}
                             <View pointerEvents={isSaving ? "none" : "auto"}>
-                                <ProfileMenuSection title="Release Preferences">
+                                <ProfileMenuSection title={t("Release Preferences")}>
                                     {PREFERENCE_ROWS.map((row, index) => (
                                         <React.Fragment key={row.key}>
                                             {index > 0 ? <RowDivider /> : null}
@@ -127,15 +131,15 @@ function MobileAutoSelectProfileScreen() {
                             </View>
 
                             <Text className="px-1 text-xs leading-5 text-white/35">
-                                Applies when the server auto-selects a torrent for torrent or debrid streaming. The profile is
-                                stored on the server, so it is shared with your other devices.
+                                {t("Applies when the server auto-selects a torrent for torrent or debrid streaming. The profile is stored on the server, so it is shared with your other devices.")}
                             </Text>
 
                             <Text className="px-1 text-xs leading-5 text-white/35">
                                 {hasSavedAutoSelectProfile(profile)
-                                    ? "Other profile options, like release groups and resolutions, keep their values. Edit them from the Seanime web interface."
-                                    : `No profile is saved yet. Changing a preference creates one and keeps your preferred streaming resolution (${fallbackResolutions.join(
-                                        ", ")}).`}
+                                    ? t("Other profile options, like release groups and resolutions, keep their values. Edit them from the Seanime web interface.")
+                                    : t("No profile is saved yet. Changing a preference creates one and keeps your preferred streaming resolution ({{resolutions}}).", {
+                                        resolutions: fallbackResolutions.join(", "),
+                                    })}
                             </Text>
                         </View>
                     )}
@@ -167,7 +171,7 @@ function PreferenceRow({
             {/* Five segments are tight on narrow phones, so the control reaches a little past the row padding. */}
             <View className="-mx-1">
                 <SegmentedControl
-                    options={AUTO_SELECT_PREFERENCE_OPTIONS}
+                    options={PREFERENCE_OPTIONS}
                     value={value}
                     onChange={onChange}
                 />
@@ -183,14 +187,14 @@ function PreferenceRow({
 function describePreference(preference: Anime_AutoSelectPreference, noun: string): string {
     switch (preference) {
         case "never":
-            return `Skips every ${noun} release.`
+            return t("Skips every {{noun}} release.", { noun })
         case "avoid":
-            return `Between otherwise equal torrents, the ${noun} release loses.`
+            return t("Between otherwise equal torrents, the {{noun}} release loses.", { noun })
         case "prefer":
-            return `Between otherwise equal torrents, the ${noun} release wins.`
+            return t("Between otherwise equal torrents, the {{noun}} release wins.", { noun })
         case "only":
-            return `Skips everything else. Auto-select fails when no ${noun} release is found.`
+            return t("Skips everything else. Auto-select fails when no {{noun}} release is found.", { noun })
         default:
-            return `Treats ${noun} releases like any other.`
+            return t("Treats {{noun}} releases like any other.", { noun })
     }
 }

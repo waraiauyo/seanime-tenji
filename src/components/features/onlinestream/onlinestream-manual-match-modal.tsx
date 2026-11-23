@@ -7,6 +7,7 @@ import {
 } from "@/api/hooks/onlinestream.hooks"
 import { SheetFooter, SheetFooterButton } from "@/components/shared/sheet-footer"
 import { SeaBottomSheet } from "@/components/ui/bottom-sheet"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Ionicons } from "@expo/vector-icons"
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
@@ -65,7 +66,7 @@ export function OnlinestreamManualMatchModal({
 
     return (
         <SeaBottomSheet
-            title="Manual Match"
+            title={t("Manual Match")}
             open={open}
             onOpenChange={onOpenChange}
             index={1}
@@ -76,7 +77,7 @@ export function OnlinestreamManualMatchModal({
                         variant="cancel"
                         onPress={() => onOpenChange(false)}
                     >
-                        <Text className="font-medium text-foreground/70">Close</Text>
+                        <Text className="font-medium text-foreground/70">{t("Close")}</Text>
                     </SheetFooterButton>
                     {currentMapping?.animeId && (
                         <SheetFooterButton
@@ -87,7 +88,7 @@ export function OnlinestreamManualMatchModal({
                             {isRemoving ? (
                                 <ActivityIndicator size="small" color="#ef4444" />
                             ) : (
-                                <Text className="font-medium text-red-400">Remove mapping</Text>
+                                <Text className="font-medium text-red-400">{t("Remove mapping")}</Text>
                             )}
                         </SheetFooterButton>
                     )}
@@ -104,7 +105,7 @@ export function OnlinestreamManualMatchModal({
                             onChangeText={setQuery}
                             onSubmitEditing={handleSearch}
                             returnKeyType="search"
-                            placeholder="Search title..."
+                            placeholder={t("Search title...")}
                             placeholderTextColor="rgba(255,255,255,0.3)"
                             className="ml-2 flex-1 text-sm text-white"
                             autoCapitalize="none"
@@ -123,7 +124,7 @@ export function OnlinestreamManualMatchModal({
                         {isSearching ? (
                             <ActivityIndicator size="small" color="white" />
                         ) : (
-                            <Text className="text-sm font-medium text-primary-foreground">Search</Text>
+                            <Text className="text-sm font-medium text-primary-foreground">{t("Search")}</Text>
                         )}
                     </Pressable>
                 </View>
@@ -131,7 +132,7 @@ export function OnlinestreamManualMatchModal({
                 {currentMapping?.animeId && (
                     <View className="bg-brand-300/10 border border-brand-300/20 rounded-xl px-3 py-2">
                         <Text className="text-xs text-brand-300">
-                            Currently mapped to: {currentMapping.animeId}
+                            {t("Currently mapped to: {{id}}", { id: currentMapping.animeId })}
                         </Text>
                     </View>
                 )}
@@ -139,7 +140,7 @@ export function OnlinestreamManualMatchModal({
 
                 {searchResults && searchResults.length === 0 && (
                     <View className="py-8 items-center">
-                        <Text className="text-white/40 text-sm">No results found</Text>
+                        <Text className="text-white/40 text-sm">{t("No results found")}</Text>
                     </View>
                 )}
 
@@ -159,7 +160,7 @@ export function OnlinestreamManualMatchModal({
                             {result.title}
                         </Text>
                         <Text className="text-xs text-white/40 mt-1">
-                            {result.subOrDub === "both" ? "Sub & Dub" : result.subOrDub === "dub" ? "Dub" : "Sub"}
+                            {result.subOrDub === "both" ? t("Sub & Dub") : result.subOrDub === "dub" ? t("Dub") : t("Sub")}
                         </Text>
                     </Pressable>
                 ))}

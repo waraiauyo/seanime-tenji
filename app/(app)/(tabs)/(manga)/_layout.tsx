@@ -1,4 +1,5 @@
 import { StackScreen_MainStyle } from "@/components/shared/styles"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Stack } from "expo-router"
 import { View } from "react-native"
@@ -10,7 +11,7 @@ export default function MangaLayout() {
                 <Stack.Screen
                     name="index"
                     options={{
-                        title: "Manga",
+                        title: t("Manga"),
                         ...StackScreen_MainStyle,
                     }}
                 />

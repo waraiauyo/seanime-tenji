@@ -3,6 +3,7 @@ import { DownloadEpisodesModal } from "@/components/features/media/download-epis
 import { ServerDownloadModal } from "@/components/features/media/server-download-modal"
 import { Button } from "@/components/ui/button"
 import { useCompletedEpisodesForMedia, useIsLocalServer } from "@/lib/downloads"
+import { t } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { Ionicons } from "@expo/vector-icons"
 import React, { useMemo, useState } from "react"
@@ -64,7 +65,7 @@ export function AnimeEntryActionBar({
                                 </Text>
                             ) : !nextEpisode ? (
                                 <Text className="text-sm font-medium text-secondary-foreground">
-                                    Download
+                                    {t("Download")}
                                 </Text>
                             ) : null}
                         </View>
@@ -81,7 +82,7 @@ export function AnimeEntryActionBar({
                         <View className="flex-row items-center gap-2">
                             <Ionicons name="cloud-download-outline" size={17} color="white" />
                             <Text className="text-sm font-medium text-secondary-foreground">
-                                {(hasDownloadableEpisodes || (nextEpisode && onContinueWatching)) ? "Server" : "Download on Server"}
+                                {(hasDownloadableEpisodes || (nextEpisode && onContinueWatching)) ? t("Server") : t("Download on Server")}
                             </Text>
                         </View>
                     </Button>

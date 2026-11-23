@@ -12,6 +12,7 @@ import { Surface } from "@/components/shared/surface"
 import { FormSectionLabel } from "@/components/ui/form-field"
 import { usePlaybackCoordinator } from "@/lib/player"
 import { getEpisodeSpoilerState } from "@/lib/anime-spoilers"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Ionicons } from "@expo/vector-icons"
 import { useAtom } from "jotai"
@@ -188,8 +189,8 @@ function TVAnimeEntryOnlinestreamSection({
                 key={onlineEp.number}
                 image={onlineEp.metadata?.episodeMetadata?.image || onlineEp.image || entry.media?.bannerImage}
                 duration={onlineEp.metadata?.episodeMetadata?.length}
-                title={spoiler.hideTitle ? `Episode ${onlineEp.number}` : onlineEp.title || `Episode ${onlineEp.number}`}
-                subtitle={spoiler.hideTitle ? undefined : `Episode ${onlineEp.number}`}
+                title={spoiler.hideTitle ? t("Episode {{number}}", { number: onlineEp.number }) : onlineEp.title || t("Episode {{number}}", { number: onlineEp.number })}
+                subtitle={spoiler.hideTitle ? undefined : t("Episode {{number}}", { number: onlineEp.number })}
                 completed={isWatched}
                 blurred={spoiler.hideThumbnail}
                 onPress={() => handleEpisodePress(onlineEp)}
@@ -206,7 +207,7 @@ function TVAnimeEntryOnlinestreamSection({
                 {controller.providerExtensions.length > 0 && (
                     <View style={{ gap: tvSize(10) }}>
                         <Text className="text-white/60 font-semibold" style={{ fontSize: tvSize(20) }}>
-                            Provider
+                            {t("Provider")}
                         </Text>
                         <TVFocusGuideView trapFocusLeft trapFocusRight>
                             <FlatList
@@ -232,7 +233,7 @@ function TVAnimeEntryOnlinestreamSection({
                 {controller.availableServers.length > 0 && (
                     <View style={{ gap: tvSize(10) }}>
                         <Text className="text-white/60 font-semibold" style={{ fontSize: tvSize(20) }}>
-                            Server
+                            {t("Server")}
                         </Text>
                         <TVFocusGuideView trapFocusLeft trapFocusRight>
                             <FlatList
@@ -259,7 +260,7 @@ function TVAnimeEntryOnlinestreamSection({
                     {controller.availableQualities.length > 0 && (
                         <View style={{ gap: tvSize(10) }}>
                             <Text className="text-white/60 font-semibold" style={{ fontSize: tvSize(20) }}>
-                                Quality
+                                {t("Quality")}
                             </Text>
                             <TVFocusGuideView trapFocusLeft trapFocusRight>
                                 <FlatList
@@ -291,19 +292,19 @@ function TVAnimeEntryOnlinestreamSection({
                             const actions = [
                                 controller.currentProvider?.supportsDub && {
                                     key: "dubbed",
-                                    label: "Dubbed Audio",
+                                    label: t("Dubbed Audio"),
                                     active: controller.dubbed,
                                     onPress: () => controller.setDubbed(!controller.dubbed)
                                 },
                                 {
                                     key: "manual-match",
-                                    label: "Manual Match",
+                                    label: t("Manual Match"),
                                     icon: <Ionicons name="search" size={tvSize(22)} color="white" />,
                                     onPress: () => setManualMatchOpen(true)
                                 },
                                 {
                                     key: "clear-cache",
-                                    label: "Clear Cache",
+                                    label: t("Clear Cache"),
                                     icon: <Ionicons name="refresh-outline" size={tvSize(22)} color="white" />,
                                     onPress: controller.handleEmptyCache
                                 }
@@ -328,7 +329,7 @@ function TVAnimeEntryOnlinestreamSection({
                 <CenteredSpinner />
             ) : controller.episodes.length > 0 ? (
                 <TVEpisodeGrid
-                    title="Episodes"
+                    title={t("Episodes")}
                     episodes={controller.episodes}
                     pageSize={EPISODE_PAGE_SIZE}
                     initialPage={initialPage}
@@ -344,7 +345,7 @@ function TVAnimeEntryOnlinestreamSection({
                 <View className="py-16 items-center gap-3">
                     <Ionicons name="videocam-off-outline" size={40} color="rgba(255,255,255,0.2)" />
                     <Text className="text-white/40 text-sm text-center px-8">
-                        No episodes found for this provider.{"\n"}Try a different provider or use manual matching.
+                        {t("No episodes found for this provider.\nTry a different provider or use manual matching.")}
                     </Text>
                 </View>
             )}
@@ -389,25 +390,25 @@ function MobileAnimeEntryOnlinestreamSection({
             <View className="px-4 mb-5">
                 <Surface variant="muted" className="p-3.5 gap-4">
                     <View className="gap-2">
-                        <FormSectionLabel>Provider</FormSectionLabel>
+                        <FormSectionLabel>{t("Provider")}</FormSectionLabel>
                         {controller.isLoadingProviders ? (
                             <ActivityIndicator size="small" color="rgba(255,255,255,0.5)" />
                         ) : controller.providerExtensions.length === 0 ? (
-                            <Text className="text-sm text-white/35">No online streaming extensions installed</Text>
+                            <Text className="text-sm text-white/35">{t("No online streaming extensions installed")}</Text>
                         ) : (
                             <NativeSelect
                                 options={controller.providerExtensions.map((p: any) => ({ id: p.id, label: p.name }))}
                                 selectedId={controller.provider}
                                 onSelect={controller.setProvider}
-                                title="Select Provider"
-                                placeholder="Select provider"
+                                title={t("Select Provider")}
+                                placeholder={t("Select provider")}
                             />
                         )}
                     </View>
 
                     {controller.availableServers.length > 1 && (
                         <View className="gap-2">
-                            <FormSectionLabel>Server</FormSectionLabel>
+                            <FormSectionLabel>{t("Server")}</FormSectionLabel>
                             <View className="flex-row flex-wrap gap-2">
                                 {controller.availableServers.map((server: string) => {
                                     const selected = controller.selectedServer === server
@@ -440,7 +441,7 @@ function MobileAnimeEntryOnlinestreamSection({
                     <View className="items-center gap-4">
                         {controller.currentProvider?.supportsDub ? (
                             <LabeledSwitch
-                                label="Dubbed"
+                                label={t("Dubbed")}
                                 checked={controller.dubbed}
                                 onToggle={() => controller.setDubbed(!controller.dubbed)}
                             />
@@ -450,7 +451,7 @@ function MobileAnimeEntryOnlinestreamSection({
 
                         {controller.availableQualities.length > 1 && (
                             <View className="gap-2 w-full">
-                                <FormSectionLabel>Quality</FormSectionLabel>
+                                <FormSectionLabel>{t("Quality")}</FormSectionLabel>
                                 <View className="flex-row flex-wrap gap-2">
                                     {controller.availableQualities.map((quality: string) => {
                                         const normalizedSelected = controller.selectedQuality?.includes("p")
@@ -522,14 +523,14 @@ function MobileAnimeEntryOnlinestreamSection({
                 <View className="py-16 items-center gap-3">
                     <Ionicons name="videocam-off-outline" size={40} color="rgba(255,255,255,0.2)" />
                     <Text className="text-white/40 text-sm text-center px-8">
-                        No episodes found for this provider.{"\n"}Try a different provider or use manual matching.
+                        {t("No episodes found for this provider.\nTry a different provider or use manual matching.")}
                     </Text>
                 </View>
             )}
 
             {!controller.isLoadingEpisodes && controller.episodes.length > 0 && (
                 <View className="px-4">
-                    <Text className="text-xl font-bold text-foreground mb-3">Episodes</Text>
+                    <Text className="text-xl font-bold text-foreground mb-3">{t("Episodes")}</Text>
                     {controller.episodes.length > EPISODE_PAGE_SIZE && (
                         <View className="mb-3 -mx-4">
                             <EpisodePageSelector
@@ -547,7 +548,7 @@ function MobileAnimeEntryOnlinestreamSection({
 
                             const animeEpisode: Anime_Episode = onlineEp.metadata ?? {
                                 type: "main",
-                                displayTitle: `Episode ${onlineEp.number}`,
+                                displayTitle: t("Episode {{number}}", { number: onlineEp.number }),
                                 episodeTitle: onlineEp.title ?? "",
                                 episodeNumber: onlineEp.number,
                                 absoluteEpisodeNumber: onlineEp.number,

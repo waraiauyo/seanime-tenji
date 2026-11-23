@@ -9,6 +9,7 @@ import { FormField, FormSectionLabel } from "@/components/ui/form-field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Text } from "@/components/ui/text"
+import { t, tc } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { cn } from "@/lib/utils"
 import { Ionicons } from "@expo/vector-icons"
@@ -52,20 +53,20 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
         const options: Array<ChipOption<AL_MediaListStatus> | undefined> = [
             !isNotYetReleased ? {
                 value: "CURRENT" as const,
-                label: type === "anime" ? "Watching" : "Reading",
+                label: type === "anime" ? t("Watching") : t("Reading"),
                 icon: type === "anime" ? "play-circle-outline" : "book-outline",
             } : undefined,
             {
                 value: "PLANNING" as const,
-                label: "Planning",
+                label: t("Planning"),
                 icon: "bookmark-outline",
             },
-            !isNotYetReleased ? { value: "PAUSED" as const, label: "Paused", icon: "pause-circle-outline" } : undefined,
-            !isNotYetReleased ? { value: "COMPLETED" as const, label: "Completed", icon: "checkmark-circle-outline" } : undefined,
-            !isNotYetReleased ? { value: "DROPPED" as const, label: "Dropped", icon: "close-circle-outline" } : undefined,
+            !isNotYetReleased ? { value: "PAUSED" as const, label: t("Paused"), icon: "pause-circle-outline" } : undefined,
+            !isNotYetReleased ? { value: "COMPLETED" as const, label: t("Completed"), icon: "checkmark-circle-outline" } : undefined,
+            !isNotYetReleased ? { value: "DROPPED" as const, label: t("Dropped"), icon: "close-circle-outline" } : undefined,
             !isNotYetReleased ? {
                 value: "REPEATING" as const,
-                label: type === "anime" ? "Rewatching" : "Rereading",
+                label: type === "anime" ? t("Rewatching") : t("Rereading"),
                 icon: "refresh-circle-outline",
             } : undefined,
         ]
@@ -129,14 +130,14 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
     const handleRemove = React.useCallback(() => {
         if (!entry?.mediaId || !isConnected) return
 
-        const title = entry.media?.title?.userPreferred ?? "this entry"
+        const title = entry.media?.title?.userPreferred ?? t("this entry")
         Alert.alert(
-            "Remove from list?",
-            `This removes ${title} from your AniList ${type === "anime" ? "anime" : "manga"} list.`,
+            t("Remove from list?"),
+            t("This removes {{title}} from your AniList {{type}} list.", { title, type: type === "anime" ? "anime" : "manga" }),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("Cancel"), style: "cancel" },
                 {
-                    text: "Remove",
+                    text: t("Remove"),
                     style: "destructive",
                     onPress: () => removeEntry({ mediaId: entry.mediaId, type }),
                 },
@@ -180,7 +181,7 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
                             onPress={() => setOpen(false)}
                             disabled={isMutating}
                         >
-                            <Text className="font-medium text-foreground/70">Cancel</Text>
+                            <Text className="font-medium text-foreground/70">{t("Cancel")}</Text>
                         </SheetFooterButton>
                         <SheetFooterButton
                             variant="primary"
@@ -194,9 +195,9 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
                                     color="#09090b"
                                 />
                                 <Text className="font-semibold text-primary-foreground">
-                                    {isSaving ? "Saving..." : !isConnected ? (isInList ? "Queue changes" : "Queue add") : isInList
-                                        ? "Save changes"
-                                        : "Add to list"}
+                                    {isSaving ? t("Saving...") : !isConnected ? (isInList ? tc("button", "Queue changes") : tc("button", "Queue add")) : isInList
+                                        ? tc("button", "Save changes")
+                                        : t("Add to list")}
                                 </Text>
                             </View>
                         </SheetFooterButton>
@@ -206,7 +207,7 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
                 <View className="gap-6">
 
                     <View className="gap-3">
-                        <FormSectionLabel icon="albums-outline">Status</FormSectionLabel>
+                        <FormSectionLabel icon="albums-outline">{t("Status")}</FormSectionLabel>
                         <ChipSelector
                             options={statusOptions}
                             value={formState.status}
@@ -219,13 +220,13 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
                             <View className="flex gap-3">
                                 <FormField
                                     className="flex-1"
-                                    label="Score"
+                                    label={t("Score")}
                                     icon="star-outline"
                                     trailing={Platform.OS !== "android" && formState.score ?
                                         <View className="text-md text-muted-foreground flex-row"><Text className="text-foreground font-semibold">{formState.score}</Text><Text
                                             className="text-muted-foreground"
                                         >{` / 10`}</Text></View> : Platform.OS !== "android"
-                                            ? <Text className="text-muted-foreground text-xs">Not scored</Text>
+                                            ? <Text className="text-muted-foreground text-xs">{t("Not scored")}</Text>
                                             : undefined}
                                 >
                                     {Platform.OS === "android" ? (
@@ -255,7 +256,7 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
 
                                 <FormField
                                     className="flex-1"
-                                    label={type === "anime" ? "Episodes" : "Chapters"}
+                                    label={type === "anime" ? t("Episodes") : t("Chapters")}
                                     icon={type === "anime" ? "film-outline" : "library-outline"}
                                     trailing={maxProgress ? <Text className="text-xs text-white/35">/ {maxProgress}</Text> : undefined}
                                     // hint={maxProgress ? `${maxProgress} available` : "Total unknown"}
@@ -272,20 +273,20 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
                             <Separator />
 
                             <View className="gap-3">
-                                <FormSectionLabel icon="calendar-outline">Dates</FormSectionLabel>
+                                <FormSectionLabel icon="calendar-outline">{t("Dates")}</FormSectionLabel>
                                 <View className="gap-3">
-                                    <FormField label="Start date">
+                                    <FormField label={t("Start date")}>
                                         <DatePicker
                                             value={formState.startedAt}
                                             onChange={value => handleChange("startedAt", value)}
-                                            placeholder="Select a start date"
+                                            placeholder={t("Select a start date")}
                                         />
                                     </FormField>
-                                    <FormField label="Completion date">
+                                    <FormField label={t("Completion date")}>
                                         <DatePicker
                                             value={formState.completedAt}
                                             onChange={value => handleChange("completedAt", value)}
-                                            placeholder="Select a completion date"
+                                            placeholder={t("Select a completion date")}
                                         />
                                     </FormField>
                                 </View>
@@ -312,7 +313,7 @@ export function EditAnilistEntry(props: EditAnilistEntryProps) {
                                             color="rgba(248, 113, 113, 0.78)"
                                         />
                                         <Text className="text-sm font-medium text-red-300/80">
-                                            {isRemoving ? "Removing..." : "Remove from list"}
+                                            {isRemoving ? t("Removing...") : t("Remove from list")}
                                         </Text>
                                     </View>
                                 </Button>
@@ -384,7 +385,7 @@ const ScoreStepper = React.memo(function ScoreStepper({ value, onChange }: Score
 
             <View className="flex-1 items-center justify-center">
                 <Text className="text-base font-semibold text-foreground">
-                    {value ? `${value} / 10` : "Not scored"}
+                    {value ? `${value} / 10` : t("Not scored")}
                 </Text>
             </View>
 

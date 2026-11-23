@@ -13,6 +13,7 @@ import {
 } from "@/components/features/discover/discover-queries"
 import { OfflineBanner } from "@/components/shared/offline-banner"
 import { TV, TVButton, TVHeroCarousel, type TVHeroItem, TVPageSkeleton, TVPillButton, TVShelf, tvSize } from "@/components/tv"
+import { t, tc } from "@/lib/i18n"
 import { cleanHtml, mediaTitle } from "@/lib/media-metadata"
 import { useIsServerConnected } from "@/lib/offline"
 import { SEARCH_MEDIA_GENRES } from "@/lib/search/search-constants"
@@ -53,16 +54,16 @@ export function TVDiscoverScreen() {
                 image: media.bannerImage
                     ?? media.coverImage?.extraLarge
                     ?? media.coverImage?.large,
-                kicker: "Trending right now",
+                kicker: t("Trending right now"),
                 title: mediaTitle(media),
                 meta: [
                     media.seasonYear,
-                    media.format?.replaceAll("_", " "),
-                    media.genres?.slice(0, 3).join("  ·  "),
+                    media.format && t(media.format.replaceAll("_", " ")),
+                    media.genres?.slice(0, 3).map(name => t(name)).join("  ·  "),
                 ].filter(Boolean).join("  ·  "),
                 description: cleanHtml(media.description),
                 score: hideScore ? undefined : media.meanScore,
-                actionLabel: "Open anime",
+                actionLabel: t("Open anime"),
                 onAction: () => router.push(`/(app)/entry/anime/${media.id}`),
             }))
     ), [hideScore, trendingMedia])
@@ -70,37 +71,37 @@ export function TVDiscoverScreen() {
     const shelves = React.useMemo<Shelf[]>(() => [
         {
             key: "trending",
-            title: "Trending right now",
+            title: t("Trending right now"),
             media: trendingMedia,
         },
         {
             key: "recent",
-            title: "Aired recently",
+            title: t("Aired recently"),
             media: recent.media,
         },
         {
             key: "season",
-            title: `Top of ${getCurrentSeasonLabel()}`,
+            title: t("Top of {{season}}", { season: getCurrentSeasonLabel() }),
             media: current.data?.Page?.media?.filter(Boolean) as AL_BaseAnime[] ?? [],
         },
         {
             key: "past-season",
-            title: `Best of ${getPreviousSeasonLabel()}`,
+            title: t("Best of {{season}}", { season: getPreviousSeasonLabel() }),
             media: past.data?.Page?.media?.filter(Boolean) as AL_BaseAnime[] ?? [],
         },
         {
             key: "upcoming",
-            title: "Coming soon",
+            title: t("Coming soon"),
             media: upcoming.data?.Page?.media?.filter(Boolean) as AL_BaseAnime[] ?? [],
         },
         {
             key: "movies",
-            title: "Trending movies",
+            title: t("Trending movies"),
             media: movies.data?.Page?.media?.filter(Boolean) as AL_BaseAnime[] ?? [],
         },
         {
             key: "missed",
-            title: "You might have missed",
+            title: t("You might have missed"),
             media: missed.data ?? [],
         },
     ].filter(shelf => shelf.media.length > 0), [
@@ -130,7 +131,7 @@ export function TVDiscoverScreen() {
                 >
                     <Ionicons name="cloud-offline-outline" size={tvSize(48)} color="rgba(255,255,255,0.2)" />
                     <Text className="font-semibold text-white/45" style={{ fontSize: tvSize(22) }}>
-                        Connect to your server to discover content
+                        {t("Connect to your server to discover content")}
                     </Text>
                 </View>
             </View>
@@ -168,12 +169,12 @@ export function TVDiscoverScreen() {
                 >
                     <View>
                         <Text className="font-bold text-white" style={{ marginTop: tvSize(3), fontSize: tvSize(28) }}>
-                            Genre
+                            {t("Genre")}
                         </Text>
                     </View>
                     <TVButton
                         ref={setSearchButton}
-                        label="Search anime"
+                        label={t("Search anime")}
                         variant="secondary"
                         size="compact"
                         icon={<Ionicons name="search" size={tvSize(20)} color="white" />}
@@ -197,7 +198,7 @@ export function TVDiscoverScreen() {
                         }}
                         renderItem={({ item, index }) => (
                             <TVPillButton
-                                label={item ?? "All"}
+                                label={item ? t(item) : tc("genres", "All")}
                                 active={genre === item}
                                 preferred={heroItems.length === 0 && index === 0}
                                 onPress={() => setGenre(item)}

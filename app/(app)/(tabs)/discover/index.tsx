@@ -28,6 +28,7 @@ import { TVDiscoverScreen } from "@/components/tv/tv-discover-screen"
 import { COLORS } from "@/constants/colors"
 import { useDevScreenProfiler } from "@/hooks/use-dev-screen-profiler"
 import { useIOSScrollRefreshRateWorkaround } from "@/hooks/use-ios-scroll-refresh-rate-workaround"
+import { t, tc } from "@/lib/i18n"
 import { useIsServerConnected } from "@/lib/offline"
 import { getHorizontalMediaCardRowHeight, getHorizontalMediaCardWidth } from "@/lib/responsive-card-layout"
 import { SEARCH_MEDIA_GENRES } from "@/lib/search/search-constants"
@@ -99,7 +100,7 @@ function MobileDiscoverScreen() {
                     <View className="flex-1 items-center justify-center px-8">
                         <Ionicons name="cloud-offline-outline" size={40} color="rgba(255,255,255,0.2)" />
                         <Text className="text-white/30 text-sm mt-3 text-center">
-                            Connect to your server to discover content
+                            {t("Connect to your server to discover content")}
                         </Text>
                     </View>
                 </TabFadeView>
@@ -158,12 +159,12 @@ export function DiscoverModeToggle({
     return (
         <View className="mb-2 flex-row self-center rounded-xl p-0.5">
             <TogglePill
-                label="Anime"
+                label={t("Anime")}
                 isActive={mode === "anime"}
                 onPress={() => onChangeMode("anime")}
             />
             <TogglePill
-                label="Manga"
+                label={t("Manga")}
                 isActive={mode === "manga"}
                 onPress={() => onChangeMode("manga")}
             />
@@ -441,8 +442,8 @@ function DiscoverAnimeSections({
     const moviesMedia = movies?.Page?.media?.filter(Boolean) ?? []
     const trendingGenreOptions = React.useMemo(
         () => [
-            { label: "All", value: null },
-            ...SEARCH_MEDIA_GENRES.map(genre => ({ label: genre, value: genre })),
+            { label: tc("genres", "All"), value: null },
+            ...SEARCH_MEDIA_GENRES.map(genre => ({ label: t(genre), value: genre })),
         ],
         [],
     )
@@ -467,7 +468,7 @@ function DiscoverAnimeSections({
                                 onChange={onChangeTrendingGenre}
                             />
                             <DiscoverHorizontalSection
-                                title="Trending Right Now"
+                                title={t("Trending Right Now")}
                                 type="anime"
                                 enabled={trendingEnabled}
                                 isLoading={trendingLoading}
@@ -482,7 +483,7 @@ function DiscoverAnimeSections({
                 case "current-season":
                     return (
                         <DiscoverHorizontalSection
-                            title={`Top of ${getCurrentSeasonLabel()}`}
+                            title={t("Top of {{season}}", { season: getCurrentSeasonLabel() })}
                             type="anime"
                             enabled={currentSeasonEnabled}
                             isLoading={currentSeasonLoading}
@@ -496,7 +497,7 @@ function DiscoverAnimeSections({
                 case "aired-recently":
                     return (
                         <DiscoverHorizontalSection
-                            title="Aired Recently"
+                            title={t("Aired Recently")}
                             type="anime"
                             enabled={recentlyAiredEnabled}
                             isLoading={recentlyAiredLoading}
@@ -510,7 +511,7 @@ function DiscoverAnimeSections({
                 case "past-season":
                     return (
                         <DiscoverHorizontalSection
-                            title={`Best of ${getPreviousSeasonLabel()}`}
+                            title={t("Best of {{season}}", { season: getPreviousSeasonLabel() })}
                             type="anime"
                             enabled={pastSeasonEnabled}
                             isLoading={pastSeasonLoading}
@@ -524,7 +525,7 @@ function DiscoverAnimeSections({
                 case "upcoming":
                     return (
                         <DiscoverHorizontalSection
-                            title="Coming Soon"
+                            title={t("Coming Soon")}
                             type="anime"
                             enabled={upcomingEnabled}
                             isLoading={upcomingLoading}
@@ -538,7 +539,7 @@ function DiscoverAnimeSections({
                 case "movies":
                     return (
                         <DiscoverHorizontalSection
-                            title="Trending Movies"
+                            title={t("Trending Movies")}
                             type="anime"
                             enabled={moviesEnabled}
                             isLoading={moviesLoading}
@@ -552,7 +553,7 @@ function DiscoverAnimeSections({
                 case "missed":
                     return (
                         <DiscoverHorizontalSection
-                            title="You Might Have Missed"
+                            title={t("You Might Have Missed")}
                             type="anime"
                             enabled={missedEnabled}
                             isLoading={missedLoading}
@@ -635,7 +636,7 @@ function DiscoverMangaSections({
             case "jp":
                 return (
                     <DiscoverHorizontalSection
-                        title="Trending Manga"
+                        title={t("Trending Manga")}
                         type="manga"
                         enabled={jpEnabled}
                         isLoading={mangaJPLoading}
@@ -647,7 +648,7 @@ function DiscoverMangaSections({
             case "kr":
                 return (
                     <DiscoverHorizontalSection
-                        title="Trending Manhwa"
+                        title={t("Trending Manhwa")}
                         type="manga"
                         enabled={krEnabled}
                         isLoading={manhwaKRLoading}
@@ -659,7 +660,7 @@ function DiscoverMangaSections({
             case "cn":
                 return (
                     <DiscoverHorizontalSection
-                        title="Trending Manhua"
+                        title={t("Trending Manhua")}
                         type="manga"
                         enabled={cnEnabled}
                         isLoading={manhuaCNLoading}

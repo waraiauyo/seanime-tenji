@@ -2,6 +2,7 @@ import { TVButton, TVPillButton } from "@/components/tv/tv-focus"
 import { TVScoreBadge } from "@/components/tv/tv-score-badge"
 import { TV, tvSize } from "@/components/tv/tv-scale"
 import { TVHeroSkeleton } from "@/components/tv/tv-skeleton"
+import { t } from "@/lib/i18n"
 import { Ionicons } from "@/lib/icons/Ionicons"
 import { Image } from "expo-image"
 import { LinearGradient } from "expo-linear-gradient"
@@ -183,7 +184,7 @@ export const TVHeroCarousel = React.memo(function TVHeroCarousel({
                         <>
                             <TVPillButton
                                 label=""
-                                accessibilityLabel="Previous featured title"
+                                accessibilityLabel={t("Previous featured title")}
                                 onPress={() => move(index - 1)}
                                 icon={(focused) => (
                                     <Ionicons
@@ -195,7 +196,7 @@ export const TVHeroCarousel = React.memo(function TVHeroCarousel({
                             />
                             <TVPillButton
                                 label=""
-                                accessibilityLabel="Next featured title"
+                                accessibilityLabel={t("Next featured title")}
                                 onPress={() => move(index + 1)}
                                 icon={(focused) => (
                                     <Ionicons
