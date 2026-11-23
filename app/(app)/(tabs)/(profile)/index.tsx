@@ -264,15 +264,26 @@ function MobileProfileScreen() {
                         />
                     </ProfileMenuSection>
 
-                    {activeStream ? (
+                    {(activeStream || isServerConnected) ? (
                         <ProfileMenuSection title="Streaming">
-                            <ProfileMenuItem
-                                icon={activeStream.streamMode === "debrid" ? "cloud-outline" : "radio-outline"}
-                                label="Playback Session"
-                                detail={streamLabel(activeStream)}
-                                accessory={<ActiveStreamBadge status={activeStream.status} />}
-                                onPress={() => router.push("/(app)/(tabs)/(profile)/active-stream" as never)}
-                            />
+                            {activeStream ? (
+                                <ProfileMenuItem
+                                    icon={activeStream.streamMode === "debrid" ? "cloud-outline" : "radio-outline"}
+                                    label="Playback Session"
+                                    detail={streamLabel(activeStream)}
+                                    accessory={<ActiveStreamBadge status={activeStream.status} />}
+                                    onPress={() => router.push("/(app)/(tabs)/(profile)/active-stream" as never)}
+                                />
+                            ) : null}
+                            {(activeStream && isServerConnected) ? <RowDivider /> : null}
+                            {isServerConnected ? (
+                                <ProfileMenuItem
+                                    icon="funnel-outline"
+                                    label="Auto-Select Profile"
+                                    detail="Multi-sub and multi-audio preferences"
+                                    onPress={() => router.push("/(app)/(tabs)/(profile)/auto-select-profile" as never)}
+                                />
+                            ) : null}
                         </ProfileMenuSection>
                     ) : null}
 

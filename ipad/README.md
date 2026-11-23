@@ -17,6 +17,10 @@ built and installed straight from Xcode with a paid Apple developer account.
   with the show's title (from the open upstream
   [pull request #44](https://github.com/5rahim/seanime-tenji/pull/44)). Drop this change if
   upstream merges it.
+- The profile tab has an Auto-Select Profile screen that sets the server's multi-sub and
+  multi-audio preferences for auto-selected torrents. The first save copies the preferred
+  streaming resolution into the profile, because the server ignores that setting once a profile
+  exists.
 - `package-lock.json` pins the dependency versions Tenji v0.4.0 was released with.
 
 ## Build and install

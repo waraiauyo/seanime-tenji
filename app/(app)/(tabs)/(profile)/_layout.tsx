@@ -7,6 +7,7 @@ export default function ProfileLayout() {
             <Stack.Screen name="server-downloads" />
             <Stack.Screen name="unmatched" />
             <Stack.Screen name="download-settings" />
+            <Stack.Screen name="auto-select-profile" />
             <Stack.Screen name="my-lists" />
             <Stack.Screen name="active-stream" />
             <Stack.Screen name="logs" />
